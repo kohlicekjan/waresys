@@ -4,7 +4,7 @@
 		http://i.stack.imgur.com/pXzYv.png
 
 	- naistalovat systém 
-		- Raspbian (Lite - bez GUI)
+		- Raspbian (Lite)
 			Win32DiskImager
 			user: pi
 			password: raspberry
@@ -17,31 +17,57 @@
 
 
 	- vzdáleně připojit k RPi
-		- Raspbian
+		- Raspbian (Lite)
 			sudo raspi-config
+				-Expand Filesystem
+				-Change User Password
+				-Internationalisation Options
+				-Advanced Options
+					-GPIO
+					-Update
 
+
+			mkdir share
+			chmod 0777 share
+			cd share
+
+			sudo apt-get update
+			sudo apt-get install python3
+			#sudo pip install ptvsd
 			sudo apt-get install samba samba-common-bin
-			mkdir ~/share
-			sudo nano /etc/samba/smb.conf
-				wins support = yes
 
+			sudo nano /etc/samba/smb.conf
 				[RPiShare]
+				path=/home/pi/share
+				browsable=yes
+				writable=yes
+				only guest=no
+				create mask=0700
+				directory mask=0700
+				public=yes
+
+
+			<!--
+				 [RPiShare]
 				 comment = Raspberry Pi Share
 				 path = /home/pi/share
 				 valid users = @users
 				 create mask=0700
 				 directory mask=0700
-				 browseable=Yes
-				 writeable=Yes
+				 browsable=Yes
+				 writable=Yes
 				 only guest=no		 
 				 public=no
-				 read only = no
+				 read only = no 
 
-			sudo smbpasswd -a pi
-			sudo /etc/init.d/samba restart
+				
+				sudo smbpasswd -a pi
+				sudo /etc/init.d/samba restart
+			-->
 
 		- Windows Core IoT
 			- webové rozhraní
+			- visual studio
 
 	- načíst ID z karty
 		- Raspbian
