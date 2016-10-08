@@ -5,8 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ae7a1fbb-c2fb-4c92-adf5-e170f147c14e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>reader_rfid\module.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,7 +26,31 @@
     <Compile Include="docs\conf.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="reader_rfid\conf\settings.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reader_rfid\core\core.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reader_rfid\module.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reader_rfid\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reader_rfid\client_mqtt.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reader_rfid\reader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reader_rfid\__main__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="setup.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\module_test.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="tests\__init__.py">
@@ -36,6 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="docs\" />
+    <Folder Include="reader_rfid\" />
+    <Folder Include="reader_rfid\conf\" />
+    <Folder Include="reader_rfid\core\" />
     <Folder Include="tests\" />
   </ItemGroup>
   <ItemGroup>
