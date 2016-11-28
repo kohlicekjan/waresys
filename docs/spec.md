@@ -19,13 +19,13 @@
 	- vzdáleně připojit k RPi
 		- Raspbian (Lite)
 			sudo raspi-config
-				-Expand Filesystem
-				-Change User Password
-				-Internationalisation Options
-				-Advanced Options
-					-GPIO
-					-Update
-
+				- Expand Filesystem
+				- Change User Password
+				- Internationalisation Options
+				- Advanced Options
+					- GPIO
+					- SPI
+					- Update
 
 			mkdir share
 			chmod 0777 share
@@ -48,15 +48,8 @@
 
 
 			<!--
-				 [RPiShare]
 				 comment = Raspberry Pi Share
-				 path = /home/pi/share
-				 valid users = @users
-				 create mask=0700
-				 directory mask=0700
-				 browsable=Yes
-				 writable=Yes
-				 only guest=no		 
+				 valid users = @users		 
 				 public=no
 				 read only = no 
 
@@ -74,6 +67,11 @@
 			- povolit GPIO v configu
 				sudo raspi-config
 
+			- Visual studio
+				- Environment->Documents->Save documents as Unicode
+				- Publish
+				- Python Application
+
 		- pomocí jednoho tagu změnit stav (přidávání, odebírání)
 			- stav signalizovat pomocí LED
 
@@ -81,56 +79,136 @@
 		- MQTT
 			- klient
 				- Paho
-			- Brokers
-				- Mosca
-				- Mosquitto
 
+	?
+		určitě posílat ID karty
+		přijímat barvu LED diody? Barvy v konfigu možná v databázi?
+		pamatovat a posílat stav?
+			
 2. server
 	- Node.js
-	- protokol MQTT pro čtečku RFID
-	- protokol HTTP pro klienta 
-		- api
 
-	- databáze - vlastní struktura
-		- SQLite
-		- MangoDB - vyzkoušet
+	- MQTT Broker Server - NASTAVIT AUTH!!!!!!!!!!!!!! https://github.com/mcollina/mosca/wiki/Authentication-&-Authorization
+		- druh
+			- Mosca 
+				- nodejs modul
+				- uložiště
+					- Redis - nevím
+					- MongoDB - už používám jasná volba
 
-3. cloud
-	- Amazon Web Services (12 měsícu zdarma)
-	- Google Cloud Platform (60 dní zdarma)
-	- Azure (30 dení zdarma)?
-		
+			- Mosquitto - specialni aplikace od Eclipse
 
-	Zdarma
-		- Známé
-			- Ubidots- https://ubidots.com/
-			- Nearbus - http://www.nearbus.net/
-			- Carriots - https://www.carriots.com/	
+		- výhody
+			Jedná se o publikování / odběr protokol
+			Má několik kvalitě úrovní služeb (QoS)
+			Má at-nejméně jednou a přesně-once sémantika
+			Má nízkou režii (2 bajty na minimum)
+			To podporuje offline posílání zpráv
+			To udrží zprávy, jako klíč / hodnota úložiště
 
-		- Neznámé
-			- ThingSpeak - https://thingspeak.com/
-			- https://ifttt.com/
-			- https://freeboard.io/
-			- https://thethings.io/
-			- https://www.heroku.com/
-			- https://hcp.sap.com/try.html
-			- http://www.ibm.com/cloud-computing/bluemix/solutions/
+	- logging
+		- winston - nejpoužívanější, hodně přispůsobení 
+		- bunyan - format v json (nelze formatovat), rotate file  
 
-4. klient
-	- mobilni aplikace
-	- Android - Java, Xamarin (Android, iOS, Win Phone) - .net
+	- API
+		- REST - standart 
+			- GET: /api/item
+			- GET: /api/item/1
+			- POST: /api/item
+			- PUT: /api/item/1
+			- DELETE: /api/item/1
+		- Socket.io
+	
+	- DB 
+		- druh
+			- MangoDB 
+				- NoSQL 
+				- můžu nainstalovat kam chci
+				- mongod.bat
+					START mongod.exe --dbpath "C:\Users\K\Desktop\BPINI_Tools\MongoDB\bin\data"
+				- module (http://voidcanvas.com/mongoose-vs-mongodb-native/)
+					- mongoose - použivanější, schema (omezení), využívá mongodb
+					- mongodb - rychlejší
+
+				- UI admin
+					- mongo-express = použivanější
+						- npm install mongo-express
+
+			- SQLite
+				- nevyhovuje požadavku = vzdálené připojení
+
+		- struktura
+			- item (_id, name, description, amount, created, updated)
+			- tag (_id, uid, type, item, created, updated)
+
+		- testy
+			- moduly
+			- integrační testy
+				- api
+					-item
+						-zalozeni (OK, chyba...)
+						-hledani (OK, CHYBA...)
+					-card
+					-auth
+
+		configurace
+			-config
+				- extra jednoduché použití
+			-nconf
+				- nejpoužívajší
+				- nevidím přínos
+
+	?		
+		testy
+		nastavit rate limit
+		update tagu.type -> změnit i tag.item
+		update změnit tag.updated, item.updated
+		dokumetace na adrese /api = swagger
+
+		- Upravit podle mobilní aplikace
+			- token rozšířit o další informace např. IP adressa
+			- API auth = jak generovat heslo
+
+		- Upravit podle RPi
+			-mqtt auth
+
+3. klient
+	- mobilní aplikace
+
+	- vývojová platforma
+		- Android 
+			- Java 
+
+		- Xamarin 
+			- .NET
+			- Android, UWP, iOS(nemám Apple)
 	
 	- zakladní funkce
-		- Přehled s vyhledáváním
-		- Editace
-		- Vkládání
-		- Smazání
-		- Notifikace
-		
+		- Přehled s vyhledáváním položek
+		- Editace položek
+		- Vkládání položek
+		- Smazání položek
+		- Změna typu tagu
+
 
 
 zdroje:
-	http://www.root.cz/clanky/protokol-mqtt-komunikacni-standard-pro-iot/
-	http://www.root.cz/
-	https://www.youtube.com
-	http://www.lupa.cz/
+	http://stackoverflow.com/
+	
+	-MQTT
+	https://www.root.cz/clanky/protokol-mqtt-komunikacni-standard-pro-iot/
+
+	-API
+	https://scotch.io/tutorials/build-a-restful-api-using-node-and-express-4
+	https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+	https://www.zdrojak.cz/clanky/javascript-na-serveru-rest-api/
+	https://www.zdrojak.cz/clanky/javascript-na-serveru-implementace-rest-api/
+	https://www.zdrojak.cz/clanky/rest-architektura-pro-webove-api/
+	http://www.restapitutorial.com/
+
+	http://mongoosejs.com/docs/
+	http://mongoosejs.com/docs/api.html#schema_string_SchemaString-minlength
+
+
+
+	
