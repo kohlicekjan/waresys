@@ -12,7 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3a0d17d6-6b9a-49c4-92c6-da93f935c6e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>app.js</StartupFile>
+    <StartupFile>api.js</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -20,7 +20,7 @@
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
     <StartWebBrowser>false</StartWebBrowser>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -30,9 +30,39 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app.js" />
     <Content Include="package.json" />
-    <Content Include="README.md" />
+    <Content Include="test\mocha.opts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="api.js" />
+    <Compile Include="config\default.js" />
+    <Compile Include="config\development.js" />
+    <Compile Include="config\production.js" />
+    <Compile Include="config\test.js" />
+    <Compile Include="lib\error.js" />
+    <Compile Include="lib\logger.js" />
+    <Compile Include="lib\util.js" />
+    <Compile Include="routes\v1\auth.js" />
+    <Compile Include="models\tag.js" />
+    <Compile Include="models\item.js" />
+    <Compile Include="mqtt_broker.js" />
+    <Compile Include="routes\v1\tag.js" />
+    <Compile Include="routes\v1\index.js" />
+    <Compile Include="routes\v1\item.js" />
+    <Compile Include="server.js" />
+    <Compile Include="test\api\auth.test.js" />
+    <Compile Include="test\api\tag.test.js" />
+    <Compile Include="test\api\item.test.js" />
+    <Compile Include="test\common.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="models\" />
+    <Folder Include="config\" />
+    <Folder Include="lib\" />
+    <Folder Include="routes\v1\" />
+    <Folder Include="test\" />
+    <Folder Include="routes\" />
+    <Folder Include="test\api\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
