@@ -13,17 +13,13 @@
         port: 3000,
         keyPrivate: 'tajnyklic',
         keyPublic: 'klic',
-        log: {
-            filename: './logs/api/api.log'
-        }
+        log: './logs/api/api.log'
     },
 
     broker: {
         port: 3200,
         mongodbUri: 'mongodb://127.0.0.1:27017/mqtt',
-        log: {
-            filename: './logs/broker/broker.log'
-        }
+        log: './logs/broker/broker.log'
     }
 
 };
