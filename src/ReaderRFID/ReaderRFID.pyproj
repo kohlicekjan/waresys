@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ae7a1fbb-c2fb-4c92-adf5-e170f147c14e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>reader_rfid\module.py</StartupFile>
+    <StartupFile>reader_rfid\__main__.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,25 +23,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="docs\conf.py">
+    <Compile Include="reader_rfid\rc522.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="reader_rfid\conf\settings.py">
+    <Compile Include="reader_rfid\led_rgb.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="reader_rfid\core\core.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="reader_rfid\module.py">
+    <Compile Include="reader_rfid\utils.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="reader_rfid\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="reader_rfid\client_mqtt.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="reader_rfid\reader.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="reader_rfid\__main__.py">
@@ -50,23 +41,14 @@
     <Compile Include="setup.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="tests\module_test.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="tests\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="docs\" />
     <Folder Include="reader_rfid\" />
-    <Folder Include="reader_rfid\conf\" />
-    <Folder Include="reader_rfid\core\" />
-    <Folder Include="tests\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="docs\index.rst" />
-    <Content Include="docs\Makefile" />
+    <Content Include="Makefile" />
+    <Content Include="reader_rfid.cfg" />
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

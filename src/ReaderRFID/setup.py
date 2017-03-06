@@ -1,16 +1,18 @@
-from setuptools import setup, find_packages
-#from distutils.core import setup
+# coding=utf-8
 
-setup(name = "ReaderRFID",
-      version ="0.1dev",
-      description='This project reads the RFID server and forwards it, the LED is used for status indication.',
-      #long_description='',
-      author = "Jan Kohlíček",
-      author_email = "kohlicekjan@gmail.com",
-      url = 'https://bitbucket.org/kohlicekjan/bpini',
-      license = 'BSD',
-      packages = find_packages(exclude=['tests', 'tests.*']),
-      #install_requires = ['numpy==1.8.1', 'scikit-learn==0.14.1'],
-      entry_points = {'console_scripts' : {'main = read_rfid.module:main'}},
-      #classifiers = []
-      )
+from setuptools import setup, find_packages
+
+import reader_rfid
+
+VERSION = reader_rfid.__version__
+
+setup(name = 'ReaderRFID',
+    version = VERSION,
+    author = "Jan Kohlíček",
+    url = 'https://bitbucket.org/kohlicekjan/bpini',
+    description='This project reads the RFID server and forwards it, the LED is used for status indication.',
+    packages = ['reader_rfid'],
+    install_requires = [
+        'RPi.GPIO==0.6.3',
+        'paho-mqtt==1.2',
+        'pi-rc522==1.1.0'])
