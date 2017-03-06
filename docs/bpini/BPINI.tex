@@ -1,49 +1,36 @@
-\documentclass{bakalarka}
-\usepackage[utf8]{inputenc} 
-\usepackage[czech]{babel}
-\usepackage{ae}
-\usepackage{fancyhdr}
-\usepackage[pdftex]{graphicx}
+\documentclass[czech,BP]{thesiskiv}
+
 \author{Jan Kohlíček}
+\declarationmale
+
 \title{Skladové hospodářství pomocí RFID a RaspberryPi}
-\titlet{}
-\titlett{}
-\university{Západočeská univerzita v Plzni}
-\faculty{Fakulta aplikovaných věd}
-\department{Katedra informatiky a výpočetní techniky}
-\subject{Bakalářská práce}
-\town{Plzeň}
+
+\abstracttexten{The text of the abstract (in English). It contains the English translation of the thesis title and a short description of the thesis.}
+
+\abstracttextcz{Text abstraktu (česky). Obsahuje krátkou anotaci (cca 10 řádek) v češtině. Budete ji potřebovat i při vyplňování údajů o bakalářské práci ve STAGu. Český i anglický abstrakt by měly být na stejné stránce a měly by si obsahem co možná nejvíce odpovídat (samozřejmě není možný doslovný překlad!).
+}
+
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex]{hyperref}
+\hypersetup{colorlinks=true,
+  unicode=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  bookmarksopen=true}
+\usepackage[numbers,sort&compress]{natbib}
+
 \begin{document}
 
-
-
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{\textit{#1}}{}}
-\renewcommand{\sectionmark}[1]{\markright{\textit{#1}}{}}
-\cfoot{\thepage}
-\lhead{\leftmark}
-\rhead{\rightmark}
 \maketitle
-\chapter*{Prohlášení}
-\thispagestyle{empty}
-Prohlašuji, že jsem bakalářskou práci vypracoval samostatně a výhradně s~použitím citovaných pramenů.
-\vskip 1.5em
-V Plzni dne \today
-\vskip 0.7em
-\hskip 9cm Jan Kohlíček
-\chapter*{Abstract}
-\thispagestyle{empty}
-Text of abstract.
 \tableofcontents
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{\textit{#1}}{}}
-\renewcommand{\sectionmark}[1]{\markright{\textit{#1}}{}}
-\cfoot{\thepage}
-\lhead{\leftmark}
-\rhead{\rightmark}
-\parskip 1em
+
+
 \chapter{Úvod}
-	
+	\cite{KnuthAOCP2}
+	\cite{Hoare1961}
+	\cite{Graphics2D}
 	
 \chapter{Analýza}
 
@@ -105,17 +92,17 @@ Text of abstract.
 
 
 \chapter{Server}
-		\subsection{Komunikační protokol}
+		\section{Komunikační protokol}
 			\subsection{HTTP}
 		
 			\subsection{MQTT}
 	
-		\subsection{Databáze}
+		\section{Databáze}
 			\subsection{MongoDB}
 		
 			\subsection{MySQL}
 	
-		\subsection{API}
+		\section{API}
 			\subsection{REST}
 		
 			\subsection{WebSockets}	
@@ -126,13 +113,11 @@ Text of abstract.
 
 \chapter{Závěr}
 
-
-\chapter*{Literatura}
+\bibliographystyle{csplainnatkiv}
+{\raggedright\small
+\bibliography{literature}
+}
 
 \chapter*{Uživatelský manuál}
 
-
-\appendix
-\bibliographystyle{csplainnat}
-\bibliography{bakalarka}
 \end{document}

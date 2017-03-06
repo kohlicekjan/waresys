@@ -18,24 +18,27 @@
 
 	- vzdáleně připojit k RPi
 		- Raspbian (Lite)
+			PRVNI SPUSTENI DLOUHO POCKAT
+			VYTVOŘIT SOUBOR "ssh" VE SLOZCE "/boot/" PRO POVOLENÍ 
+
 			sudo raspi-config
 				- Expand Filesystem
 				- Change User Password
 				- Internationalisation Options
-				- Advanced Options
-					- GPIO
 					- SPI
+				- Advanced Options
+					- GPIO	
 					- Update
 
-			mkdir share
-			chmod 0777 share
-			cd share
-
 			sudo apt-get update
-			sudo apt-get install python3
-			#sudo pip install ptvsd
-			sudo apt-get install samba samba-common-bin
+			sudo apt-get dist-upgrade
 
+
+			mkdir share
+			chmod 777 share
+			cd share
+	
+			sudo apt-get install samba samba-common-bin
 			sudo nano /etc/samba/smb.conf
 				[RPiShare]
 				path=/home/pi/share
@@ -44,51 +47,38 @@
 				only guest=no
 				create mask=0700
 				directory mask=0700
-				public=yes
+				public=no
 
-
-			<!--
-				 comment = Raspberry Pi Share
-				 valid users = @users		 
-				 public=no
-				 read only = no 
-
-				
-				sudo smbpasswd -a pi
-				sudo /etc/init.d/samba restart
-			-->
+			sudo smbpasswd -a pi
 
 		- Windows Core IoT
 			- webové rozhraní
 			- visual studio
 
 	- načíst ID z karty
-		- Raspbian
-			- povolit GPIO v configu
-				sudo raspi-config
-
-			- Visual studio
-				- Environment->Documents->Save documents as Unicode
-				- Publish
-				- Python Application
-
 		- pomocí jednoho tagu změnit stav (přidávání, odebírání)
 			- stav signalizovat pomocí LED
 
-	- poslat ID na server přes protokol MQTT
-		- MQTT
-			- klient
-				- Paho
+	- automatické nastavení a instalace
+		- nastvení configu
+		- aktualiza
+		- instalce baličků
+		- instalce modulů
+		- nastaveni automatické ho spustení Reader_RFID
+		- zajistit jen jedno spusteni
+
+	- komunikace
+		- MQTT protokol
 
 	?
-		určitě posílat ID karty
-		přijímat barvu LED diody? Barvy v konfigu možná v databázi?
-		pamatovat a posílat stav?
-			
+		přidat config 
+		vylepšit logováni
+		přeformátovat kód
+
 2. server
 	- Node.js
 
-	- MQTT Broker Server - NASTAVIT AUTH!!!!!!!!!!!!!! https://github.com/mcollina/mosca/wiki/Authentication-&-Authorization
+	- MQTT Broker Server
 		- druh
 			- Mosca 
 				- nodejs modul
@@ -108,7 +98,18 @@
 
 	- logging
 		- winston - nejpoužívanější, hodně přispůsobení 
-		- bunyan - format v json (nelze formatovat), rotate file  
+		- bunyan - format v json (nelze formatovat), rotate file 
+			- používáho hodně modulů
+			- přešel jsem na něj
+
+
+
+	-Framework
+		- Express - nejpoužívajší, nejobecnější faramework
+		- Restify - framework určený pro API, používá ho Netflix
+
+	- Auth
+		-http://passportjs.org/docs/other-api
 
 	- API
 		- REST - standart 
@@ -160,17 +161,10 @@
 
 	?		
 		testy
-		nastavit rate limit
 		update tagu.type -> změnit i tag.item
 		update změnit tag.updated, item.updated
 		dokumetace na adrese /api = swagger
-
-		- Upravit podle mobilní aplikace
-			- token rozšířit o další informace např. IP adressa
-			- API auth = jak generovat heslo
-
-		- Upravit podle RPi
-			-mqtt auth
+		zkusit z npm projekt json-server 
 
 3. klient
 	- mobilní aplikace
@@ -179,9 +173,7 @@
 		- Android 
 			- Java 
 
-		- Xamarin 
-			- .NET
-			- Android, UWP, iOS(nemám Apple)
+		- xamarin
 	
 	- zakladní funkce
 		- Přehled s vyhledáváním položek
@@ -208,7 +200,3 @@ zdroje:
 
 	http://mongoosejs.com/docs/
 	http://mongoosejs.com/docs/api.html#schema_string_SchemaString-minlength
-
-
-
-	
