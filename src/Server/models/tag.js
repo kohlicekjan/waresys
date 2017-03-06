@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 var Item = require("./item");
 
 var tagSchema = new Schema({
-    uid: { type: String, trim: true, required: true, unique: true }, 
-    type: { type: String, enum: ['unknown', 'state', 'item'], default: 'unknown', required: true },
+    uid: { type: String, lowercase: true, trim: true, required: true, unique: true }, 
+    type: { type: String, enum: ['unknown', 'mode', 'item'], default: 'unknown', required: true },
     item: { type: Schema.Types.ObjectId, ref: 'Item', index: true },
     created: { type: Date, default: Date.now, required: true },
     updated: { type: Date, default: Date.now, required: true }
@@ -35,18 +35,20 @@ tagSchema.pre('save', function (next) {
     next();
 });
 
-tagSchema.pre('update', function () {
+tagSchema.pre('update', function (next) {
     if (this.type != 'item')
         this.item = undefined;
+
+    next();
 });
 
-//BookSchema.pre('save', next => {
-//    now = new Date();
-//    if (!this.createdAt) {
-//        this.createdAt = now;
-//    }
-//    next();
-//});
+
+tagSchema.methods.findItem = function (callback) {
+    Item.findById(this.item, function (err, item) {
+        callback(err, item);
+    });
+};
+
 
 
 module.exports = mongoose.model('Tag', tagSchema);

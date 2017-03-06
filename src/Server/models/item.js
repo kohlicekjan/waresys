@@ -10,14 +10,15 @@ var itemSchema = new Schema({
 
 }, { autoIndex: false, safe: true, strict: true, versionKey: false });
 
-itemSchema.pre('save', function (next) {
-    this.updated = Date.now();
-    next();
-});
+//itemSchema.pre('save', function (next) {
+//    this.updated = Date.now();
+//    next();
+//});
 
-itemSchema.pre('update', function (next) {
-    this.updated = Date.now();
-    next();
-});
+//itemSchema.pre('update', function (next) {
+//    this.updated = Date.now();
+//    next();
+//});
+
 
 module.exports = mongoose.model('Item', itemSchema);

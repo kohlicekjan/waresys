@@ -1,25 +1,27 @@
 ﻿module.exports = {
-    
+    env: process.env.NODE_ENV || 'development',
+
     mongodb: {
         uri: 'mongodb://127.0.0.1:27017/warehouse',
-        options: {
-            server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
-            replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
-        }
+        options: {}
     },
 
     api: {
         host: 'localhost',
         port: 3000,
-        keyPrivate: 'tajnyklic',
-        keyPublic: 'klic',
-        log: './logs/api/api.log'
+        log: './logs/api/api.log',
+        secure: {
+            keyPath: './ssl/tls-key.pem',
+            certPath: './ssl/tls-cert.pem',
+        }
     },
 
-    broker: {
-        port: 3200,
-        mongodbUri: 'mongodb://127.0.0.1:27017/mqtt',
-        log: './logs/broker/broker.log'
+    server: {
+        host: '10.10.90.26',
+        port: 1883,
+        log: './logs/server/server.log',
+        auth: [
+            { username: 'reader_rfid', password: 'heslo' }
+        ]
     }
-
 };
