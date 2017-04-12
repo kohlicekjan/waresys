@@ -4,18 +4,18 @@ var Schema = mongoose.Schema;
 var Item = require("./item");
 
 var tagSchema = new Schema({
-    uid: { type: String, lowercase: true, trim: true, required: true, unique: true }, 
+    uid: { type: String, lowercase: true, trim: true, required: true, unique: true },
     type: { type: String, enum: ['unknown', 'mode', 'item'], default: 'unknown', required: true },
-    item: { type: Schema.Types.ObjectId, ref: 'Item', index: true },
-    created: { type: Date, default: Date.now, required: true },
-    updated: { type: Date, default: Date.now, required: true }
+    item: { type: Schema.Types.ObjectId, ref: 'Item', index: true }
+});
 
-}, { autoIndex: false, safe: true, strict: true, versionKey: false });
-
+tagSchema.set('strict', true);
+tagSchema.set('versionKey', false);
+tagSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
 tagSchema.path('item').validate(function (value, respond) {
 
-    Item.findById( value, function (err, item) {
+    Item.findById(value, function (err, item) {
         if (err || !item) {
             respond(false);
         } else {
@@ -27,28 +27,38 @@ tagSchema.path('item').validate(function (value, respond) {
 
 
 tagSchema.pre('save', function (next) {
-    this.updated = Date.now();
-
     if (this.type != 'item')
         this.item = undefined;
+    else if (this.item == null)
+        this.type = 'unknown';
 
     next();
 });
-
-tagSchema.pre('update', function (next) {
-    if (this.type != 'item')
-        this.item = undefined;
-
-    next();
-});
-
-
-tagSchema.methods.findItem = function (callback) {
-    Item.findById(this.item, function (err, item) {
-        callback(err, item);
-    });
-};
-
-
 
 module.exports = mongoose.model('Tag', tagSchema);
+
+
+/**
+ * @swagger
+ * definitions:
+ *   Tag:
+ *     type: object
+ *     properties:
+ *       uid:
+ *         type: string
+ *       type:
+ *         type: string
+ *         default: unknown
+ *         enum:
+ *           - unknown
+ *           - item
+ *           - mode
+ *       item:
+ *         $ref: '#/definitions/Item'
+ *       created:
+ *         type: string
+ *         format: date-time
+ *       updated:
+ *         type: string
+ *         format: date-time
+ */

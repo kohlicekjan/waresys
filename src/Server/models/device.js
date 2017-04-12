@@ -7,27 +7,63 @@ var deviceSchema = new Schema({
     version: { type: String, trim: true },
     description: { type: String, trim: true },
     status: { type: String, enum: ['unknown', 'active', 'inactive', 'error'], default: 'unknown', required: true },
+    allowed: { type: Boolean, default: false },
 
     serial_number: { type: String, trim: true },
     ip_address: { type: String, trim: true },
 
-    //location: {
-    //    description: { type: String, trim: true },
-    //    coordinates: [{ type: Number }]
-    //},
     metadata: { type: Schema.Types.Mixed },
-
-    created: { type: Date, default: Date.now, required: true },
-    updated: { type: Date, default: Date.now, required: true }
     //messages: [{ type: Schema.Types.ObjectId }]
+});
 
-}, { autoIndex: false, safe: true, strict: true, versionKey: false });
+deviceSchema.set('strict', true);
+deviceSchema.set('versionKey', false);
+deviceSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
 
 deviceSchema.virtual('client_id').get(function () {
     return this.name + '/' + this.device_id;
 });
 
-
-
 module.exports = mongoose.model('Device', deviceSchema);
+
+/**
+ * @swagger
+ * definitions:
+ *   Device:
+ *     type: object
+ *     properties:
+ *       device_id:
+ *         type: string
+ *       name:
+ *         type: string
+ *       client_id:
+ *         type: string
+ *       version:
+ *         type: integer
+ *       description:
+ *         type: string
+ *       status:
+ *         type: string
+ *         default: unknown
+ *         enum:
+ *           - unknown
+ *           - active
+ *           - inactive
+ *           - error
+ *       allowed:
+ *         type: boolean
+ *         default: false
+ *       serial_number:
+ *         type: string
+ *       ip_address:
+ *         type: string
+ *       metadata:
+ *         type: string
+ *       created:
+ *         type: string
+ *         format: date-time
+ *       updated:
+ *         type: string
+ *         format: date-time
+ */

@@ -1,6 +1,7 @@
 ﻿var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 var bcrypt = require('bcryptjs');
+
+var Schema = mongoose.Schema;
 
 var SALT_LENGTH = 10;
 
@@ -9,11 +10,12 @@ var userSchema = new Schema({
     password: { type: String, default: '', required: true, select: false },
     firstname: { type: String, default: '', trim: true, },
     lastname: { type: String, default: '', trim: true },
-    //email: { type: String, default: '', trim: true, unique: true },
-    roles: { type: [{ type: String, enum: ['admin'] }] },
-    created: { type: Date, default: Date.now, required: true },
-    updated: { type: Date, default: Date.now, required: true }
-}, { autoIndex: false, safe: true, strict: true, versionKey: false });
+    roles: { type: [{ type: String, enum: ['admin'] }] }
+});
+
+userSchema.set('strict', true);
+userSchema.set('versionKey', false);
+userSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
 
 userSchema.virtual('fullname').get(function () {
@@ -34,13 +36,40 @@ userSchema.pre('save', function (next) {
 
 });
 
-
-userSchema.methods.validPassword = function (candidatePassword, callback) {
-    bcrypt.compare(candidatePassword, this.password, function (err, valid) {
-        if (err) return callback(err, false);
-        callback(null, valid);
-    });
+userSchema.methods.validPassword = function (candidatePassword) {
+    return bcrypt.compareSync(candidatePassword, this.password);
 };
 
 
 module.exports = mongoose.model('User', userSchema);
+
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     type: object
+ *     properties:
+ *       username:
+ *         type: string
+ *       password:
+ *         type: string
+ *         format: password
+ *       firstname:
+ *         type: integer
+ *       fullname:
+ *         type: string
+ *       lastname:
+ *         type: string
+ *       roles:
+ *         type: array
+ *         items:
+ *           type: string
+ *           enum:
+ *             - admin
+ *       created:
+ *         type: string
+ *         format: date-time
+ *       updated:
+ *         type: string
+ *         format: date-time
+ */

@@ -32,6 +32,15 @@
   <ItemGroup>
     <Content Include="Makefile" />
     <Content Include="package.json" />
+    <Content Include="public\swagger-ui\favicon-16x16.png" />
+    <Content Include="public\swagger-ui\favicon-32x32.png" />
+    <Content Include="public\swagger-ui\index.html" />
+    <Content Include="public\swagger-ui\oauth2-redirect.html" />
+    <Content Include="public\swagger-ui\swagger-ui-bundle.js.map" />
+    <Content Include="public\swagger-ui\swagger-ui-standalone-preset.js.map" />
+    <Content Include="public\swagger-ui\swagger-ui.css" />
+    <Content Include="public\swagger-ui\swagger-ui.css.map" />
+    <Content Include="public\swagger-ui\swagger-ui.js.map" />
     <Content Include="test\mocha.opts" />
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +49,9 @@
     <Compile Include="config\development.js" />
     <Compile Include="config\production.js" />
     <Compile Include="config\test.js" />
+    <Compile Include="devices\basic.js" />
+    <Compile Include="devices\index.js" />
+    <Compile Include="devices\readerRFID.js" />
     <Compile Include="lib\logger.js" />
     <Compile Include="models\device.js" />
     <Compile Include="models\user.js" />
@@ -47,24 +59,28 @@
     <Compile Include="routes\v1\auth.js" />
     <Compile Include="models\tag.js" />
     <Compile Include="models\item.js" />
+    <Compile Include="routes\v1\devices.js" />
     <Compile Include="server.js" />
-    <Compile Include="routes\v1\tag.js" />
+    <Compile Include="routes\v1\tags.js" />
     <Compile Include="routes\v1\index.js" />
-    <Compile Include="routes\v1\item.js" />
-    <Compile Include="routes\v1\user.js" />
-    <Compile Include="test\api\auth.test.js" />
-    <Compile Include="test\api\tag.test.js" />
-    <Compile Include="test\api\item.test.js" />
+    <Compile Include="routes\v1\items.js" />
+    <Compile Include="routes\v1\users.js" />
+    <Compile Include="public\swagger-ui\swagger-ui-bundle.js" />
+    <Compile Include="public\swagger-ui\swagger-ui-standalone-preset.js" />
+    <Compile Include="public\swagger-ui\swagger-ui.js" />
+    <Compile Include="test\example.test.js" />
     <Compile Include="test\common.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="config\" />
     <Folder Include="lib\" />
+    <Folder Include="devices\" />
+    <Folder Include="public\" />
+    <Folder Include="public\swagger-ui\" />
     <Folder Include="routes\v1\" />
     <Folder Include="test\" />
     <Folder Include="routes\" />
-    <Folder Include="test\api\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
