@@ -10,7 +10,7 @@ var userSchema = new Schema({
     password: { type: String, default: '', required: true, select: false },
     firstname: { type: String, default: '', trim: true, },
     lastname: { type: String, default: '', trim: true },
-    roles: { type: [{ type: String, enum: ['admin'] }] }
+    roles: { type: [{ type: String, enum: ['admin', 'user'] }] }
 });
 
 userSchema.set('strict', true);
@@ -66,6 +66,7 @@ module.exports = mongoose.model('User', userSchema);
  *           type: string
  *           enum:
  *             - admin
+ *             - user
  *       created:
  *         type: string
  *         format: date-time

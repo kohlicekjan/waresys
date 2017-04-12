@@ -8,21 +8,7 @@ var config = require('config');
 
 const router = new Router();
 
-
 var User = require('../../models/user');
-
-
-router.get('/account', function (req, res, next) {
-
-
-});
-
-router.put('/password', function (req, res, next) {
-
-
-});
-
-
 
 /**
  * @swagger
@@ -42,52 +28,74 @@ passport.use(new BasicStrategy(function (username, password, done) {
             return done(null, false, { msg: 'Not found user' });
 
         if (user.validPassword(password))
-            return done(null, user);            
+            return done(null, user);
         else
             return done(null, false, { msg: 'Wrong password' });
-            
+
     });
 }));
 
 
-module.exports.authenticate = function (req, res, next) {
+module.exports.authenticate = function authenticate(req, res, next) {
     passport.authenticate('basic', { session: false }, function (err, user, info) {
         if (err)
             return next(err);
 
-        if (!user) {
-            return next(new restify.NotAuthorizedError(info));
-        }
+        if (!user)
+            return next(new restify.NotAuthorizedError('Username or password is incorrect'));
+
+        req.user = user;
         return next();
     })(req, res, next);
 }
 
 
+module.exports.isRole = function (role) {
+    return function (req, res, next) {
+        if (req.user.roles.indexOf(role) < 0) {
+            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+        }
+        return next();
+    }
+}
 
 
-//var opts = {
-//    jwtFromRequest = ExtractJwt.fromAuthHeader(),
-//    secretOrKey = 'secret',
-//    issuer = 'accounts.examplesoft.com',
-//    audience = 'yoursite.net'
-//};
 
-//passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
-//    User.findOne({ id: jwt_payload.sub }, function (err, user) {
-//        if (err) {
-//            return done(err, false);
-//        }
-//        if (user) {
-//            return done(null, user);
-//        } else {
-//            return done(null, false);
-//            // or you could create a new account
-//        }
-//    });
-//}));
+router.use(module.exports.authenticate);
 
-//passport.authenticate('jwt', { session: false })
 
+router.get('/account', function (req, res, next) {
+    res.json({
+        _id: req.user._id,
+        username: req.user.username,
+        fullname: req.user.fullname,
+        roles: req.user.roles
+    });
+
+});
+
+router.put('/password', function (req, res, next) {
+    var user = req.user;
+
+    if (!user.validPassword(req.body.oldPassword))
+        return next(new restify.BadRequestError('Wrong old password'));
+
+    user.password = req.body.password;
+
+    user.save(function (err, user) {
+        if (err)
+            return next(new restify.BadRequestError(err.message));
+
+        if (!user)
+            return next(new restify.InternalError("Error saving user"));
+
+        user = user.toObject();
+        delete user.password;
+
+        req.log.info('update user', user);
+        res.send(200);
+    });
+});
 
 
 

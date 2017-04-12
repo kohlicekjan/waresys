@@ -19,7 +19,7 @@ User.findOne({ 'username': 'admin' }).exec(function (err, user) {
 });
 
 router.use(auth.authenticate);
-
+router.use(auth.isRole('admin'));
 
 
 /**
@@ -129,10 +129,12 @@ router.get('/users/:user_id', function (req, res, next) {
  *         description: User's roles
  *         in: formData
  *         type: array
+ *         required: true
  *         items:
  *           type: string
  *           enum:
  *             - admin
+ *             - user
  *     responses:
  *       200:
  *         description: Successfully created
@@ -158,6 +160,9 @@ router.post('/users', function (req, res, next) {
 
         if (!user)
             return next(new restify.InternalError("Error saving user"));
+
+        user = user.toObject();
+        delete user.password;
 
         req.log.info('create user', user);
         res.json(201, user);
@@ -203,10 +208,12 @@ router.post('/users', function (req, res, next) {
  *         description: User's roles
  *         in: formData
  *         type: array
+ *         required: true
  *         items:
  *           type: string
  *           enum:
  *             - admin
+ *             - user
  *     responses:
  *       200:
  *         description: Successfully updated
@@ -229,7 +236,8 @@ router.put('/users/:user_id', function (req, res, next) {
             return next(new restify.NotFoundError('User not found'));
 
         user.username = req.body.username;
-        user.password = req.body.password;
+        if (req.body.password != undefined)
+            user.password = req.body.password;
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
         user.roles = req.body.roles;
@@ -240,6 +248,9 @@ router.put('/users/:user_id', function (req, res, next) {
 
             if (!user)
                 return next(new restify.InternalError("Error saving user"));
+
+            user = user.toObject();
+            delete user.password;
 
             req.log.info('update user', user);
             res.json(user);

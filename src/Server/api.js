@@ -17,8 +17,6 @@ server.pre(restify.pre.sanitizePath());
 
 server.use(restify.requestLogger({ log: logger }));
 server.use(restify.acceptParser(server.acceptable));
-//server.use(restify.fullResponse()); //mozna az moc informaci pro produkci
-//server.use(restify.authorizationParser());
 server.use(restify.queryParser({ mapParams: false }));
 server.use(restify.bodyParser({ mapParams: false }));
 server.use(restify.gzipResponse());
@@ -27,8 +25,6 @@ server.use(restify.throttle({
     rate: 50,
     ip: true
 }));
-
-
 server.use(passport.initialize());
 
 server.on('uncaughtException', function (req, res, route, err) {
@@ -37,7 +33,6 @@ server.on('uncaughtException', function (req, res, route, err) {
 });
 
 server.on('after', restify.auditLogger({ log: logger }));
-
 
 server.listen(config.port.http, config.host, function () {
 

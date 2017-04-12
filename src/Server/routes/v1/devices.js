@@ -8,7 +8,7 @@ var auth = require('./auth');
 var Device = require('../../models/device');
 
 router.use(auth.authenticate);
-
+router.use(auth.isRole('admin'));
 
 /**
  * @swagger
