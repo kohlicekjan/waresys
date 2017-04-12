@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Makefile" />
-    <Content Include="reader_rfid.cfg" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <PropertyGroup>

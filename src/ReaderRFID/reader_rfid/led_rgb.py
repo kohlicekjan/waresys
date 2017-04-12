@@ -41,10 +41,6 @@ class LedRGB(object):
 
         self.__color = color
     
-    @staticmethod
-    def cleanup():
-        GPIO.cleanup()
-    
     @property
     def pins(self):
         return self.__pins
