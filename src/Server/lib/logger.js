@@ -22,8 +22,7 @@ module.exports = function (filename) {
                 path: filename,
                 level: 'info',
                 period: '1d',
-                count: 5,
-                src: true
+                count: 5
             },
             {
                 type: 'raw',
