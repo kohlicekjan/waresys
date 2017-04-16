@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var config = require('config');
 var passport = require('passport');
 
-var logger = require('./lib/logger')(config.log);
+var logger = require('./lib/logger');
 
 var server = restify.createServer({
     name: config.name,

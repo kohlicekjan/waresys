@@ -1,6 +1,4 @@
-﻿var config = require('config');
-
-var logger = require('../lib/logger')(config.log);
+﻿var logger = require('../lib/logger');
 
 var Device = require('../models/device');
 

@@ -5,14 +5,14 @@ var mongoose = require('mongoose');
 var util = require('util');
 var config = require('config');
 
-var logger = require('./lib/logger')(config.log);
+var logger = require('./lib/logger');
 
 
 var Device = require('./models/device');
 var devices = require('./devices');
 
 var server = new mosca.Server({
-    id: 'bpini',
+    id: config.name,
     host: config.host,
     port: config.port.mqtt,
     backend: {
@@ -24,11 +24,11 @@ var server = new mosca.Server({
     stats: false,
     publishNewClient: false,
     publishClientDisconnect: false,
-    publishSubscriptions: false,
-    logger: {
-        name: 'server',
-        level: 'debug'
-    }
+    publishSubscriptions: false
+    //logger: {
+    //    name: 'server',
+    //    level: 'debug'
+    //}
 });
 
 server.on('ready', function () {

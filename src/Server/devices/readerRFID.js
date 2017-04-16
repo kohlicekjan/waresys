@@ -1,7 +1,6 @@
 ﻿var util = require('util');
-var config = require('config');
 
-var logger = require('../lib/logger')(config.log);
+var logger = require('../lib/logger');
 
 var Tag = require('../models/tag');
 var Device = require('../models/device');
