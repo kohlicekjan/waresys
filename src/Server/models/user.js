@@ -40,6 +40,9 @@ userSchema.methods.validPassword = function (candidatePassword) {
     return bcrypt.compareSync(candidatePassword, this.password);
 };
 
+userSchema.set('toJSON', {
+    virtuals: true
+});
 
 module.exports = mongoose.model('User', userSchema);
 

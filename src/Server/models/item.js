@@ -11,6 +11,11 @@ itemSchema.set('strict', true);
 itemSchema.set('versionKey', false);
 itemSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
+
+itemSchema.set('toJSON', {
+    virtuals: true
+});
+
 module.exports = mongoose.model('Item', itemSchema);
 
 /**

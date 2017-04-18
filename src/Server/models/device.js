@@ -22,7 +22,11 @@ deviceSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
 
 deviceSchema.virtual('client_id').get(function () {
-    return this.name + '/' + this.device_id;
+    return (this.name + '/' + this.device_id);
+});
+
+deviceSchema.set('toJSON', {
+    virtuals: true
 });
 
 module.exports = mongoose.model('Device', deviceSchema);

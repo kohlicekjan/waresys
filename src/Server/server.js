@@ -65,7 +65,6 @@ var authenticate = function (client, username, password, callback) {
         var update = {
             device_id: id,
             name: name,
-            status: 'active',
             ip_address: client.connection.stream.remoteAddress
         };
         var options = { new: true, upsert: true, setDefaultsOnInsert: true };
@@ -116,7 +115,7 @@ server.on('clientConnected', function (client) {
 
     var [name, id] = client.id.split('/');
 
-    Device.findOne({ device_id: id, name: name }, function (err, device) {
+    Device.findOneAndUpdate({ device_id: id, name: name }, { status: 'active' }, function (err, device) {
         if (device) {
 
             devices.readerRFID.metadata(server, device);

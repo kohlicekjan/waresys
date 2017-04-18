@@ -26,13 +26,25 @@ tagSchema.path('item').validate(function (value, respond) {
 }, 'Item does not exist');
 
 
+tagSchema.path('uid').validate(function (value, respond) {
+    var a = parseInt(value, 16);
+    respond(a.toString(16) === value.toLowerCase());
+
+}, 'UID does not hex code');
+
+
 tagSchema.pre('save', function (next) {
     if (this.type != 'item')
         this.item = undefined;
     else if (this.item == null)
         this.type = 'unknown';
 
+    this.uid = this.uid.toLowerCase();
     next();
+});
+
+tagSchema.set('toJSON', {
+    virtuals: true
 });
 
 module.exports = mongoose.model('Tag', tagSchema);

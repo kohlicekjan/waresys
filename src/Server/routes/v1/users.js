@@ -44,6 +44,10 @@ router.use(auth.isRole('admin'));
 router.get('/users', querymen.middleware(), function (req, res, next) {
     var query = req.querymen;
 
+    query.query.username = { $ne: 'admin' };
+    query.query._id = { $ne: req.user._id };
+
+
     User.find(query.query, query.select, query.cursor, function (err, users) {
         if (err)
             return next(new restify.BadRequestError(err.message));
@@ -89,6 +93,11 @@ router.get('/users/:user_id', function (req, res, next) {
 
         if (!user)
             return next(new restify.NotFoundError('User not found'));
+
+
+        req.log.info(req.user._id);
+        if (user._id.toString() == req.user._id.toString() || user.username == 'admin')
+            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
 
         res.json(user);
     });
@@ -235,6 +244,9 @@ router.put('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new restify.NotFoundError('User not found'));
 
+        if (user._id.toString() == req.user._id.toString() || user.username == 'admin')
+            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+
         user.username = req.body.username;
         if (req.body.password != undefined)
             user.password = req.body.password;
@@ -287,12 +299,20 @@ router.put('/users/:user_id', function (req, res, next) {
  */
 router.del('/users/:user_id', function (req, res, next) {
 
-    User.findByIdAndRemove(req.params.user_id, function (err, user) {
+    User.findById(req.params.user_id, function (err, user) {
         if (err)
             return next(new restify.BadRequestError(err.message));
 
         if (!user)
             return next(new restify.NotFoundError('User not found'));
+
+        if (user._id.toString() == req.user._id.toString() || user.username == 'admin')
+            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+
+        user.remove(function (err) {
+            if (err)
+                return next(new restify.InternalError("Error removing user"));
+        });
 
         req.log.info('delete user: %j', user);
         res.send(204);

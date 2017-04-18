@@ -14,7 +14,6 @@ module.exports.actions = function (server, actionType, device, data) {
 function info(device, data) {
     device.serial_number = data.serial_number;
     device.version = data.version;
-    device.markModified('object');
     device.save(function (err, device) {
         if (err)
             logger.error(err);

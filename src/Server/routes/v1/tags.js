@@ -85,6 +85,57 @@ router.get('/tags/:tag_id', function (req, res, next) {
 
 });
 
+/**
+ * @swagger
+ * /tags/uid/{uid}:
+ *   get:
+ *     tags:
+ *       - tags
+ *     description: Returns a single tag
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: uid
+ *         description: Tag's uid
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: A single tag
+ *         schema:
+ *           $ref: '#/definitions/Tag'
+ *       400:
+ *         description: Bad request error
+ *     security:
+ *       - Bearer: []
+ */
+router.get('/tags/uid/:tag_uid', function (req, res, next) {
+
+    Tag.findOne({ 'uid': req.params.tag_uid }).populate('item').exec(function (err, tag) {
+        if (err)
+            return next(new restify.BadRequestError(err.message));
+
+        if (!tag) {
+            tag = new Tag();
+            tag.uid = req.params.tag_uid
+            tag.save(function (err, tag) {
+                if (err)
+                    return next(new restify.BadRequestError(err.message));
+
+                if (!tag)
+                    return next(new restify.InternalError("Error saving tag"));
+
+                req.log.info('create tag', tag);
+                res.json(tag);
+            });
+        } else {
+            res.json(tag);
+        }
+    });
+
+});
+
 
 /**
  * @swagger

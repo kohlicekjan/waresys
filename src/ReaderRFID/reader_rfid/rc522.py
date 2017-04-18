@@ -15,7 +15,7 @@ class RFID(RFID):
                 if(self.undetected_num > 2):
                     (error, uid) = self.anticoll()
                     if not error:                                    
-                        return ''.join('{0:02x}'.format(x) for x in uid)
+                        return uid
                     else:
                         return None
                 

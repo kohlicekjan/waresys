@@ -60,7 +60,7 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe(MQTT_TOPIC_LED.format(client._client_id), 0)
         client.message_callback_add(MQTT_TOPIC_LED.format(client._client_id), message_led)   
 
-        data = {'serial_number': utils.serial_number(), 'vesion': reader_rfid.__version__}
+        data = {'serial_number': utils.serial_number(), 'version': reader_rfid.__version__}
         client.publish(MQTT_TOPIC_INFO.format(client._client_id), json.dumps(data))
 
 
@@ -112,9 +112,10 @@ def main():
         try:
             uid = rfid.read_uid()
             if(uid is not None):
-                logging.info("Read TAG (UID): {0}".format(uid))
+                uid_hex = ''.join('{0:02x}'.format(uid[x]) for x in range(4))
+                logging.info("Read TAG UID: {0}".format(uid_hex))
 
-                infot = client.publish(MQTT_TOPIC_TAG.format(client._client_id), json.dumps({'uid': uid}), qos=1, retain=False)
+                infot = client.publish(MQTT_TOPIC_TAG.format(client._client_id), json.dumps({'uid': uid_hex}), qos=1, retain=False)
                 infot.wait_for_publish()  
             else:
                 color = led_rgb.Color(color_hex='#ff0000')
