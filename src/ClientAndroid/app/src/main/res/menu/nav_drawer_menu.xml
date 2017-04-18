@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/group_user"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_items"
+            android:icon="@drawable/ic_menu_storage"
+            android:title="@string/nav_items" />
+        <item
+            android:id="@+id/nav_tags"
+            android:icon="@drawable/ic_menu_nfc"
+            android:title="@string/nav_tags" />
+
+        <!--<item-->
+        <!--android:id="@+id/nav_reader"-->
+        <!--android:icon="@drawable/ic_cast_black_24dp"-->
+        <!--android:title="@string/nav_reader" />-->
+    </group>
+
+    <group
+        android:id="@+id/group_admin"
+        android:checkableBehavior="single"
+        android:visible="false">
+        <item
+            android:id="@+id/nav_devices"
+            android:icon="@drawable/ic_menu_devices"
+            android:title="@string/nav_devices" />
+        <item
+            android:id="@+id/nav_users"
+            android:icon="@drawable/ic_menu_people"
+            android:title="@string/nav_users" />
+    </group>
+
+    <group
+        android:id="@+id/grp3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_menu_account"
+            android:title="@string/nav_account" />
+    </group>
+
+</menu>

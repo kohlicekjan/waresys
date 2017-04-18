@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_vertical_margin"
+    android:layout_marginLeft="@dimen/card_horizontal_margin"
+    android:layout_marginRight="@dimen/card_horizontal_margin"
+    android:layout_marginTop="@dimen/card_vertical_margin"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/card_padding"
+        android:paddingEnd="5dp">
+
+
+        <TextView
+            android:id="@+id/device_client_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="@dimen/card_space_horizontal_margin"
+            android:layout_toStartOf="@+id/device_allowed"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="name/id"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/card_text" />
+
+        <Switch
+            android:id="@+id/device_allowed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:textSize="@dimen/card_sub_text" />
+
+        <TextView
+            android:id="@+id/text_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/device_client_id"
+            android:text="@string/card_device_version"
+            android:textSize="@dimen/card_sub_text" />
+
+
+        <TextView
+            android:id="@+id/device_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/device_client_id"
+            android:layout_marginStart="@dimen/card_space_horizontal_margin"
+            android:layout_toEndOf="@+id/text_version"
+            android:text="1.0.0"
+            android:textSize="@dimen/card_sub_text" />
+
+        <RelativeLayout
+            android:id="@+id/device_info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/device_allowed"
+            android:layout_marginTop="@dimen/card_space_vertical_margin">
+
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+
+
+                android:text="@string/card_device_status"
+                android:textSize="@dimen/card_sub_text" />
+
+            <TextView
+                android:id="@+id/text_ip_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/text_status"
+                android:text="@string/card_device_ip_address"
+                android:textSize="@dimen/card_sub_text" />
+
+            <TextView
+                android:id="@+id/text_serial_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/text_ip_address"
+                android:text="@string/card_device_serial_number"
+                android:textSize="@dimen/card_sub_text" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/device_info_text"
+            android:layout_alignBottom="@+id/device_info_text"
+            android:layout_marginStart="@dimen/card_space_horizontal_margin"
+            android:layout_toEndOf="@+id/device_info_text">
+
+            <TextView
+                android:id="@+id/device_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="aktivní"
+                android:textSize="@dimen/card_sub_text" />
+
+            <TextView
+                android:id="@+id/device_ip_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/device_status"
+                android:text="127.0.0.1"
+                android:textSize="@dimen/card_sub_text" />
+
+            <TextView
+                android:id="@+id/device_serial_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/device_ip_address"
+                android:text="00000000737c800d"
+                android:textSize="@dimen/card_sub_text" />
+
+        </RelativeLayout>
+
+
+        <include
+            android:id="@+id/layout_timestamp"
+            layout="@layout/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/device_info_text"
+            android:layout_marginTop="@dimen/card_space_vertical_margin" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

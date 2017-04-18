@@ -1,3 +1,139 @@
 <resources>
     <string name="app_name">BPINI</string>
+
+    <string name="user_role_admin">administrátor</string>
+    <string name="user_role_user">Uživatel</string>
+
+    <string-array name="user_roles">
+        <item>@string/user_role_user</item>
+        <item>@string/user_role_admin</item>
+    </string-array>
+
+
+    <string name="tag_type_unknown">neznámý</string>
+    <string name="tag_type_mode">režim</string>
+    <string name="tag_type_item">položka</string>
+
+    <string-array name="tag_types">
+        <item>@string/tag_type_unknown</item>
+        <item>@string/tag_type_mode</item>
+        <item>@string/tag_type_item</item>
+    </string-array>
+
+
+    <string name="device_status_unknown">neznámý</string>
+    <string name="device_status_active">aktivní</string>
+    <string name="device_status_inactive">neaktivní</string>
+    <string name="device_status_error">chyba</string>
+
+    <string-array name="device_statuses">
+        <item>@string/device_status_unknown</item>
+        <item>@string/device_status_active</item>
+        <item>@string/device_status_inactive</item>
+        <item>@string/device_status_error</item>
+    </string-array>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_items">Položky</string>
+    <string name="nav_tags">Tagy</string>
+    <string name="nav_devices">Zařízení</string>
+    <string name="nav_users">Uživatelé</string>
+    <string name="nav_reader">Čtečka</string>
+    <string name="nav_account">Účet</string>
+    <string name="nav_settings">Nastavení</string>
+
+    <string name="action_login">Přihlásit se</string>
+    <string name="action_logout">Odhlásit se</string>
+    <string name="action_change_password">Změnit heslo</string>
+    <string name="action_save">Uložit</string>
+
+
+    <!-- LoginActivity-->
+    <string name="login_title">Přihlásit</string>
+    <string name="login_input_host">Host</string>
+    <string name="login_input_username">Uživatelské jméno</string>
+    <string name="login_input_password">Heslo</string>
+    <string name="login_loggingin">Přihlášování...</string>
+
+
+    <!-- AccountActivity-->
+    <string name="account_title">Účet</string>
+
+
+    <!-- PasswordActivity-->
+    <string name="password_title">Změnit heslo</string>
+    <string name="password_input_password_old">Staré heslo</string>
+    <string name="password_input_password_new">Nové heslo</string>
+    <string name="password_input_password_again">Potvrďte nové heslo</string>
+
+
+    <!-- ItemListFragmnet-->
+    <string name="item_list_title">Položky</string>
+    <string name="item_list_empty">Žádné položky</string>
+
+    <!-- ItemFromActivity-->
+    <string name="item_form_title_edit">Upravit položku</string>
+    <string name="item_form_title_new">Nová položka</string>
+    <string name="item_form_input_name">Název</string>
+    <string name="item_form_input_description">Popis</string>
+    <string name="item_form_input_amount">Množství</string>
+    <string name="item_form_text_created">Založení uživatele</string>
+    <string name="item_form_text_updated">Poslední změna</string>
+
+
+    <!-- TagListFragmnet-->
+    <string name="tag_list_title">Tagy</string>
+    <string name="tag_list_empty">Žádné tagy</string>
+
+    <!-- TagFromActivity-->
+    <string name="tag_form_title_edit">Upravit tag</string>
+    <string name="tag_form_input_uid">UID</string>
+    <string name="tag_form_input_type">Typ</string>
+    <string name="tag_form_input_item">Položka</string>
+    <string name="tag_form_text_created">Založení uživatele</string>
+    <string name="tag_form_text_updated">Poslední změna</string>
+
+    <!-- DeviceListFragmnet-->
+    <string name="device_list_title">Zařízení</string>
+    <string name="device_list_empty">Žádné zařízení</string>
+
+    <!-- UserListFragmnet-->
+    <string name="user_list_title">Uživatelé</string>
+    <string name="user_list_empty">Žádní uživatelé</string>
+
+    <!-- UserFormActivity-->
+    <string name="user_form_title_edit">Upravit uživatel</string>
+    <string name="user_form_title_new">Nový uživatel</string>
+
+    <string name="user_form_input_username">Uživatelské jméno</string>
+    <string name="user_form_input_password">Heslo</string>
+    <string name="user_form_input_firstname">Jméno</string>
+    <string name="user_form_input_lastname">Příjmení</string>
+    <string name="user_form_input_roles">Práva</string>
+    <string name="user_form_text_created">Založení uživatele</string>
+    <string name="user_form_text_updated">Poslední změna</string>
+
+
+    <string name="card_item_roles">práva:</string>
+
+
+    <string name="card_device_version">verze:</string>
+    <string name="card_device_status">stav:</string>
+    <string name="card_device_serial_number">sériové číslo:</string>
+    <string name="card_device_ip_address">IP adresa:</string>
+
+    <string name="card_tag_type">typ:</string>
+    <string name="card_tag_item">položka:</string>
+
+    <string name="timestamp_created">vytvořeno:</string>
+    <string name="timestamp_updated">změněno:</string>
+
+
+    <string name="warning_no_connection">Při synchronizaci této složky došlo k chybě. Zkuste to znovu později.</string>
+    <string name="warning_no_internet">Více výsledků uvidíte, když se připojíte k internetu.</string>
+
+
 </resources>

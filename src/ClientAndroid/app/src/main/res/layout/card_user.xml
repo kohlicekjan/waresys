@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_vertical_margin"
+    android:layout_marginLeft="@dimen/card_horizontal_margin"
+    android:layout_marginRight="@dimen/card_horizontal_margin"
+    android:layout_marginTop="@dimen/card_vertical_margin"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/card_padding">
+
+        <TextView
+            android:id="@+id/user_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="username"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/card_text" />
+
+        <TextView
+            android:id="@+id/user_fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/user_username"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="fullname"
+            android:textSize="@dimen/card_sub_text" />
+
+        <TextView
+            android:id="@+id/text_roles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/user_fullname"
+            android:layout_marginTop="@dimen/card_space_vertical_margin"
+            android:text="@string/card_item_roles"
+            android:textSize="@dimen/card_sub_text" />
+
+        <TextView
+            android:id="@+id/user_roles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/text_roles"
+            android:layout_marginStart="@dimen/card_space_horizontal_margin"
+            android:layout_toEndOf="@+id/text_roles"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="role"
+            android:textSize="@dimen/card_sub_text" />
+
+
+        <include
+            android:id="@+id/layout_timestamp"
+            layout="@layout/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/text_roles"
+            android:layout_marginTop="@dimen/card_space_vertical_margin" />
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
