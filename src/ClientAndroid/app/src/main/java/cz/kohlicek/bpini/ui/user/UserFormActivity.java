@@ -14,6 +14,8 @@ import cz.kohlicek.bpini.R;
 public class UserFormActivity extends AppCompatActivity {
 
     public static final String USER_ID = "user_id";
+    private String userId;
+
     @BindView(R.id.input_username)
     TextInputEditText inputUsername;
     @BindView(R.id.input_password)
@@ -22,7 +24,7 @@ public class UserFormActivity extends AppCompatActivity {
     TextInputLayout layoutUsername;
     @BindView(R.id.layout_password)
     TextInputLayout layoutPassword;
-    private String id_user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class UserFormActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra(USER_ID)) {
             setTitle(R.string.user_form_title_edit);
-            id_user = getIntent().getStringExtra(USER_ID);
+            userId = getIntent().getStringExtra(USER_ID);
         } else {
             setTitle(R.string.user_form_title_new);
 

@@ -44,7 +44,8 @@ public class UserAdapter extends BaseRecyclerViewAdapter<User> {
 
             userHolder.userUsername.setText(user.getUsername());
             userHolder.userFullname.setText(user.getFullname());
-            userHolder.userRoles.setText("sad");user.getRoles();
+            userHolder.userRoles.setText("sad");
+            user.getRoles();
 
             userHolder.userCreated.setText(user.getCreatedFormat("dd.MM.yyyy HH:mm"));
             userHolder.userUpdated.setText(user.getUpdatedFormat("dd.MM.yyyy HH:mm"));
@@ -52,7 +53,7 @@ public class UserAdapter extends BaseRecyclerViewAdapter<User> {
     }
 
 
-    class UserViewHolder extends RecyclerView.ViewHolder {
+    class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.user_username)
         public TextView userUsername;
@@ -73,6 +74,14 @@ public class UserAdapter extends BaseRecyclerViewAdapter<User> {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+            if(onClickListener!=null) {
+                itemView.setOnClickListener(this);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            onClickListener.onClick(v, getLayoutPosition(), get(getLayoutPosition()));
         }
     }
 }

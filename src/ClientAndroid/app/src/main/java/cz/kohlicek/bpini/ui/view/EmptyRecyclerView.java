@@ -79,7 +79,6 @@ public class EmptyRecyclerView extends RecyclerView {
     public void setVisibility(int visibility) {
         this.visibility = visibility;
         checkIfEmpty();
-
     }
 }
 

@@ -58,6 +58,14 @@
     <string name="login_input_password">Heslo</string>
     <string name="login_loggingin">Přihlášování...</string>
 
+    <string name="login_validate_host">Zatejte adresu serveru</string>
+    <string name="login_validate_username">Zadejte uživatelské jméno</string>
+    <string name="login_validate_password">"Zadejte heslo"</string>
+    <string name="login_validate_auth">Uživatelské jméno nebo heslo je nesprávné</string>
+    <string name="login_validate_connection">Nepodařilo se připojit k serveru.</string>
+    <string name="login_validate_internet">Připojte se k internetu</string>
+
+
 
     <!-- AccountActivity-->
     <string name="account_title">Účet</string>
@@ -132,8 +140,12 @@
     <string name="timestamp_updated">změněno:</string>
 
 
-    <string name="warning_no_connection">Při synchronizaci této složky došlo k chybě. Zkuste to znovu později.</string>
-    <string name="warning_no_internet">Více výsledků uvidíte, když se připojíte k internetu.</string>
+
+    <string name="no_connection_message">"Žádné připojení"</string>
+    <string name="no_connection_repeat">Opakovat</string>
+
+    <string name="no_connection_connect">Při synchronizaci došlo k chybě. Zkuste to znovu později.</string>
+    <string name="no_connection_internet">Více výsledků uvidíte, když se připojíte k internetu.</string>
 
 
 </resources>

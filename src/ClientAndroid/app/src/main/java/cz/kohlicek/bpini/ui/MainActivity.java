@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
 
     private Account account;
+    private Menu navMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         account = Account.getLocalAccount(this);
+        navMenu = navigationView.getMenu();
 
         if (account == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else if (savedInstanceState == null) {
-            Menu navMenu = navigationView.getMenu();
-
             navMenu.setGroupVisible(R.id.group_admin, account.isRole(Account.ROLE_ADMIN));
             onNavigationItemSelected(navMenu.getItem(0));
         }
@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (!navMenu.getItem(0).isChecked()) {
+            onNavigationItemSelected(navMenu.getItem(0));
+
         } else {
             super.onBackPressed();
         }
@@ -113,8 +116,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     return false;
             }
 
-            if (fragment != null)
+            if (fragment != null) {
+                item.setChecked(true);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
         }
 
         return true;

@@ -42,22 +42,41 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
             TagViewHolder tagHolder = (TagViewHolder) holder;
 
             tagHolder.tagUid.setText(tag.getUid());
-            tagHolder.tagType.setText(tag.getType());
-            tagHolder.tagCreated.setText(tag.getCreatedFormat("dd.MM.yyyy HH:mm"));
-            tagHolder.tagUpdated.setText(tag.getUpdatedFormat("dd.MM.yyyy HH:mm"));
 
-            if(tag.getItem()==null) {
+
+            int type_id = context.getResources().getIdentifier("tag_type_" + tag.getType(), "string", context.getPackageName());
+            String type = context.getResources().getString(type_id);
+            tagHolder.tagType.setText(type);
+
+
+            int status_color;
+            switch (tag.getType()) {
+                case Tag.TYPE_UNKNOWN:
+                    status_color = android.R.color.holo_blue_dark;
+                    break;
+                case Tag.TYPE_MODE:
+                    status_color = android.R.color.holo_orange_dark;
+                    break;
+                default:
+                    status_color = android.R.color.black;
+            }
+            tagHolder.tagType.setTextColor(context.getColor(status_color));
+
+            if (tag.getItem() == null) {
                 tagHolder.textItem.setVisibility(View.GONE);
                 tagHolder.tagItem.setVisibility(View.GONE);
-            }else{
+            } else {
                 tagHolder.tagItem.setText(tag.getItem().getName());
             }
 
+
+            tagHolder.tagCreated.setText(tag.getCreatedFormat("dd.MM.yyyy HH:mm"));
+            tagHolder.tagUpdated.setText(tag.getUpdatedFormat("dd.MM.yyyy HH:mm"));
         }
     }
 
 
-    class TagViewHolder extends RecyclerView.ViewHolder {
+    class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.tag_uid)
         public TextView tagUid;
@@ -73,11 +92,19 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
         public TextView tagUpdated;
 
 
-
         public TagViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+            if(onClickListener!=null) {
+                itemView.setOnClickListener(this);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            onClickListener.onClick(v, getLayoutPosition(), get(getLayoutPosition()));
         }
     }
+
 }

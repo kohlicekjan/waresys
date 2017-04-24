@@ -6,6 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Tag extends BasicModel {
 
+    public static final String TYPE_UNKNOWN = "unknown";
+    public static final String TYPE_MODE = "mode";
+    public static final String TYPE_ITEM = "item";
+
     @SerializedName("uid")
     @Expose
     private String uid;

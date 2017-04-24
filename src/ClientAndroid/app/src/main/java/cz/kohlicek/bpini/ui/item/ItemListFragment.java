@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
+import cz.kohlicek.bpini.adapter.BaseRecyclerViewAdapter;
 import cz.kohlicek.bpini.adapter.EndlessRecyclerViewScrollListener;
 import cz.kohlicek.bpini.adapter.ItemAdapter;
 import cz.kohlicek.bpini.model.Item;
@@ -33,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {//ItemAdapter.ClickListener,
+public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, ItemAdapter.OnClickListener<Item> {
 
     @BindView(R.id.recycler_view)
     EmptyRecyclerView recyclerView;
@@ -46,8 +48,10 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     @BindView(R.id.stub_no_connection)
     ViewStub stub;
-    FloatingActionButton fab;
     Snackbar snackbar;
+
+    FloatingActionButton fab;
+
     private ItemAdapter adapter;
     private BPINIService bpiniService;
     private LinearLayoutManager linearLayoutManager;
@@ -65,16 +69,15 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         this.getActivity().setTitle(R.string.item_list_title);
 
-
-        fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab);
+        fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab_add);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(this);
 
         bpiniService = BPINIClient.getInstance(this.getContext());
         adapter = new ItemAdapter(this.getContext());
+        adapter.setOnClickListener(this);
+
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
-
-
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
@@ -83,10 +86,9 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                load(page, true);
+                load(totalItemsCount, true);
             }
         };
-
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -95,73 +97,68 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
         recyclerView.addOnScrollListener(scrollListener);
         recyclerView.setEmptyView(mEmptyView);
 
+        registerForContextMenu(recyclerView);
+
         mSnipSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
         mSnipSwipeRefreshLayout.setOnRefreshListener(this);
 
-
-        snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), "Žádné připojení", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Opakovat", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recyclerView.setVisibility(View.VISIBLE);
-                onRefresh();
-            }
-        });
-
-        load(1, true);
+        load(0, true);
 
         return view;
     }
 
-    public void onClick(View view) {
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (snackbar != null)
+            snackbar.dismiss();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case android.support.design.R.id.snackbar_action:
+                adapter.clear();
+                load(0, true);
+                break;
+            case R.id.fab_add:
+                Intent intent = new Intent(this.getContext(), ItemFormActivity.class);
+                //intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v, int position, Item data) {
         Intent intent = new Intent(this.getContext(), ItemFormActivity.class);
-        //intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra(ItemFormActivity.ITEM_ID, data.getId());
         startActivity(intent);
     }
 
-
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.bLogin:
-//                String username = etUsername.getText().toString();
-//                String password = etPassword.getText().toString();
-//
-//                User user = new User(username, password);
-//
-//                authenticate(user);
-//                break;
-//            case R.id.tvRegisterLink:
-//                Intent registerIntent = new Intent(Login.this, Register.class);
-//                startActivity(registerIntent);
-//                break;
-//        }
+    //    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        Toast.makeText(this.getContext(), adapter.selected.getName(), Toast.LENGTH_LONG).show();
+//        return super.onContextItemSelected(item);
 //    }
-
-//    @Override
-//    public void onClick(Item item) {
-//        Toast.makeText(ItemListFragment.this.getContext(), item.getName(), Toast.LENGTH_LONG).show();
-//    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        Toast.makeText(ItemListFragment.this.getContext(), "Vybrano", Toast.LENGTH_LONG).show();
-
-        return super.onContextItemSelected(item);
-    }
 
 
     @Override
     public void onRefresh() {
         adapter.clear();
-        load(1, false);
+        load(0, false);
         mSnipSwipeRefreshLayout.setRefreshing(false);
     }
 
 
-    private void load(int page, boolean loading) {
+    private void load(int skip, boolean loading) {
         adapter.setLoading(loading);
-        Call<List<Item>> call = bpiniService.getItems("-created", page);
+        if (loading) {
+            recyclerView.setVisibility(View.VISIBLE);
+            visibleNoConnection(false);
+        }
+
+        Call<List<Item>> call = bpiniService.getItems("-created", skip);
         call.enqueue(new Callback<List<Item>>() {
             @Override
             public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
@@ -169,22 +166,32 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
                     adapter.addAll(response.body());
 
                     recyclerView.setVisibility(View.VISIBLE);
-                    stub.setVisibility(View.GONE);
-                    snackbar.dismiss();
+                    visibleNoConnection(false);
                 } else {
-                    onFailure(null, null);
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<Item>> call, Throwable t) {
                 recyclerView.setVisibility(View.GONE);
-                stub.setVisibility(View.VISIBLE);
-                snackbar.show();
+                visibleNoConnection(true);
             }
         });
     }
 
+    private void visibleNoConnection(boolean visible) {
+        if (visible) {
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.no_connection_repeat, this);
+            snackbar.show();
+            stub.setVisibility(View.VISIBLE);
+        } else {
+            if (snackbar != null)
+                snackbar.dismiss();
+            stub.setVisibility(View.GONE);
+        }
+    }
 
 
 }

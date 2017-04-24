@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (!NetworkUtils.isNetworkConnected(this)) {
-            Toast.makeText(this, "Připojte se k internetu", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.login_validate_internet, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -111,14 +111,14 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(getBaseContext(), MainActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Uživatelské jméno nebo heslo je nesprávné", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.login_validate_auth, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(LoginActivity.this, "Nepodařilo se připojit k serveru.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.login_validate_connection, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -133,21 +133,21 @@ public class LoginActivity extends AppCompatActivity {
         String password = inputPassword.getText().toString();
 
         if (host.isEmpty() || (!Patterns.IP_ADDRESS.matcher(host).matches() && !Patterns.DOMAIN_NAME.matcher(host).matches())) {
-            layoutHost.setError("Zatejte adresu serveru");
+            layoutHost.setError(getString(R.string.login_validate_host));
             valid = false;
         } else {
             layoutHost.setErrorEnabled(false);
         }
 
         if (username.isEmpty()) {
-            layoutUsername.setError("Zadejte uživatelské jméno");
+            layoutUsername.setError(getString(R.string.login_validate_username));
             valid = false;
         } else {
             layoutUsername.setErrorEnabled(false);
         }
 
         if (password.isEmpty()) {
-            layoutPassword.setError("Zadejte heslo");
+            layoutPassword.setError(getString(R.string.login_validate_password));
             valid = false;
         } else {
             layoutPassword.setErrorEnabled(false);

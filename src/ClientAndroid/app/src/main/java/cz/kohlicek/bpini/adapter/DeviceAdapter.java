@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -51,16 +52,15 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             String status = context.getResources().getString(status_id);
             deviceHolder.deviceStatus.setText(status);
 
-
             int status_color;
             switch (device.getStatus()) {
-                case "unknown":
+                case Device.STATUS_UNKNOWN:
                     status_color = android.R.color.holo_blue_dark;
                     break;
-                case "active":
+                case Device.STATUS_ACTIVE:
                     status_color = R.color.colorAccent;
                     break;
-                case "error":
+                case Device.STATUS_ERROR:
                     status_color = android.R.color.holo_red_light;
                     break;
                 default:
@@ -78,7 +78,7 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
         }
     }
 
-    class DeviceViewHolder extends RecyclerView.ViewHolder { //implements View.OnClickListener
+    class DeviceViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
 
         @BindView(R.id.device_client_id)
         public TextView deviceClientId;
@@ -101,14 +101,25 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+            if(onCheckedChangeListener!=null) {
+                deviceAllowed.setOnCheckedChangeListener(this);
+            }
         }
 
-//        @Override
-//        public void onClick(View v) {
-//            Device device = data.get(getAdapterPosition());
-//            onClickDeviceListener.onClickDevice(device);
-//        }
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            onCheckedChangeListener.onCheckedChanged(buttonView, isChecked, getLayoutPosition(), get(getLayoutPosition()));
+        }
     }
 
+    private OnCheckedChangeListener onCheckedChangeListener;
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener l) {
+        this.onCheckedChangeListener = l;
+    }
+
+    public interface OnCheckedChangeListener {
+        void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position, Device data);
+    }
 
 }

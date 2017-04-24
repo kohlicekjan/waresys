@@ -7,6 +7,11 @@ import java.util.Map;
 
 public class Device extends BasicModel {
 
+    public static final String STATUS_UNKNOWN = "unknown";
+    public static final String STATUS_ACTIVE = "active";
+    public static final String STATUS_INACTIVE = "inactive";
+    public static final String STATUS_ERROR = "error";
+
     @SerializedName("device_id")
     @Expose
     private String deviceId;

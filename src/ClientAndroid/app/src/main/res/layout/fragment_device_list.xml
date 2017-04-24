@@ -4,27 +4,35 @@
     android:layout_height="match_parent"
     tools:context="cz.kohlicek.bpini.ui.device.DeviceListFragment">
 
+    <ViewStub
+        android:id="@+id/stub_no_connection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout="@layout/no_connection" />
+
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <cz.kohlicek.bpini.ui.view.EmptyRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey"
-        android:clipToPadding="false"
-        android:paddingBottom="?android:attr/listPreferredItemHeightLarge" />
-
-        <TextView
-            android:id="@+id/empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/item_list_empty" />
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey"
+            android:clipToPadding="false"
+            android:paddingBottom="?android:attr/listPreferredItemHeightLarge" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/device_list_empty" />
 
 </FrameLayout>
