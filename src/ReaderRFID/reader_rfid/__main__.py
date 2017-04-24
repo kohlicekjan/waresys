@@ -115,7 +115,7 @@ def main():
                 uid_hex = ''.join('{0:02x}'.format(uid[x]) for x in range(4))
                 logging.info("Read TAG UID: {0}".format(uid_hex))
 
-                infot = client.publish(MQTT_TOPIC_TAG.format(client._client_id), json.dumps({'uid': uid_hex}), qos=1, retain=False)
+                infot = client.publish(MQTT_TOPIC_TAG.format(client._client_id), json.dumps({'uid': uid_hex}))
                 infot.wait_for_publish()  
             else:
                 color = led_rgb.Color(color_hex='#ff0000')

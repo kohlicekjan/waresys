@@ -34,6 +34,9 @@ router.use(auth.authenticate);
 router.get('/tags', querymen.middleware(), function (req, res, next) {
     var query = req.querymen;
 
+    if (req.query.skip)
+        query.cursor.skip = Number(req.query.skip);
+
     Tag.find(query.query, query.select, query.cursor).populate('item').exec(function (err, tags) {
         if (err)
             return next(new restify.BadRequestError(err.message));

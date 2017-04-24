@@ -33,6 +33,9 @@ router.use(auth.authenticate);
 router.get('/items', querymen.middleware(), function (req, res, next) {
     var query = req.querymen;
 
+    if (req.query.skip)
+        query.cursor.skip = Number(req.query.skip);
+
     Item.find(query.query, query.select, query.cursor, function (err, items) {
         if (err)
             return next(new restify.BadRequestError(err.message));

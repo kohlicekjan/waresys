@@ -25,12 +25,12 @@ passport.use(new BasicStrategy(function (username, password, done) {
             return done(err);
 
         if (!user)
-            return done(null, false, { msg: 'Not found user' });
+            return done(null, false);
 
         if (user.validPassword(password))
             return done(null, user);
         else
-            return done(null, false, { msg: 'Wrong password' });
+            return done(null, false);
 
     });
 }));
@@ -44,7 +44,7 @@ module.exports.authenticate = function authenticate(req, res, next) {
         if (!user)
             return next(new restify.NotAuthorizedError('Username or password is incorrect'));
 
-        req.user = user;
+        req.user = user.toJSON();
         return next();
     })(req, res, next);
 }
@@ -64,7 +64,25 @@ module.exports.isRole = function (role) {
 router.use(module.exports.authenticate);
 
 
+/**
+ * @swagger
+ * /account:
+ *   get:
+ *     tags:
+ *       - account
+ *     description: Returns an account
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Account info
+ *       401:
+ *         description: Unauthorized
+ *     security:
+ *       - Bearer: []
+ */
 router.get('/account', function (req, res, next) {
+
     res.json({
         _id: req.user._id,
         username: req.user.username,
@@ -74,7 +92,33 @@ router.get('/account', function (req, res, next) {
 
 });
 
-router.put('/password', function (req, res, next) {
+/**
+ * @swagger
+ * /account/password:
+ *   put:
+ *     tags:
+ *       - account
+ *     description: Updates password
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: oldpassword
+ *         description: Old password
+ *         in: formData
+ *         type: string
+ *       - name: password
+ *         description: New password
+ *         in: formData
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated
+ *       400:
+ *         description: Bad request error
+ *     security:
+ *       - Bearer: []
+ */
+router.put('/account/password', function (req, res, next) {
     var user = req.user;
 
     if (!user.validPassword(req.body.oldPassword))

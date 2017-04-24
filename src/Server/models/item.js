@@ -2,8 +2,8 @@
 var Schema = mongoose.Schema;
 
 var itemSchema = new Schema({
-    name: { type: String, trim: true, minlength: 3, required: true },
-    description: { type: String, default: '', trim: true },
+    name: { type: String, trim: true, minlength: 3, maxlength: 20, required: true },
+    description: { type: String, trim: true },
     amount: { type: Number, default: 0, min: 0, required: true }
 });
 
@@ -15,6 +15,7 @@ itemSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 itemSchema.set('toJSON', {
     virtuals: true
 });
+
 
 module.exports = mongoose.model('Item', itemSchema);
 

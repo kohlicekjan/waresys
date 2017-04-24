@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var Item = require("./item");
 
 var tagSchema = new Schema({
-    uid: { type: String, lowercase: true, trim: true, required: true, unique: true },
+    uid: { type: String, lowercase: true, trim: true, minlength: 8, maxlength: 8, required: true, unique: true },
     type: { type: String, enum: ['unknown', 'mode', 'item'], default: 'unknown', required: true },
     item: { type: Schema.Types.ObjectId, ref: 'Item', index: true }
 });

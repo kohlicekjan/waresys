@@ -65,6 +65,7 @@ var authenticate = function (client, username, password, callback) {
         var update = {
             device_id: id,
             name: name,
+            status: 'unknown',
             ip_address: client.connection.stream.remoteAddress
         };
         var options = { new: true, upsert: true, setDefaultsOnInsert: true };

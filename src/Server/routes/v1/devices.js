@@ -32,6 +32,9 @@ router.use(auth.isRole('admin'));
 router.get('/devices', querymen.middleware(), function (req, res, next) {
     var query = req.querymen;
 
+    if (req.query.skip)
+        query.cursor.skip = Number(req.query.skip);
+
     Device.find(query.query, query.select, query.cursor, function (err, devices) {
         if (err)
             return next(new restify.BadRequestError(err.message));

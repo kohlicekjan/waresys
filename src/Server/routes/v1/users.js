@@ -47,6 +47,8 @@ router.get('/users', querymen.middleware(), function (req, res, next) {
     query.query.username = { $ne: 'admin' };
     query.query._id = { $ne: req.user._id };
 
+    if (req.query.skip)
+        query.cursor.skip = Number(req.query.skip);
 
     User.find(query.query, query.select, query.cursor, function (err, users) {
         if (err)
@@ -96,7 +98,7 @@ router.get('/users/:user_id', function (req, res, next) {
 
 
         req.log.info(req.user._id);
-        if (user._id.toString() == req.user._id.toString() || user.username == 'admin')
+        if (user._id.toString() == req.user._id || user.username == 'admin')
             return next(new restify.ForbiddenError('Do not have permission to access on this server'));
 
         res.json(user);
@@ -244,7 +246,7 @@ router.put('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new restify.NotFoundError('User not found'));
 
-        if (user._id.toString() == req.user._id.toString() || user.username == 'admin')
+        if (user._id.toString() == req.user._id || user.username == 'admin')
             return next(new restify.ForbiddenError('Do not have permission to access on this server'));
 
         user.username = req.body.username;
@@ -306,7 +308,7 @@ router.del('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new restify.NotFoundError('User not found'));
 
-        if (user._id.toString() == req.user._id.toString() || user.username == 'admin')
+        if (user._id.toString() == req.user._id || user.username == 'admin')
             return next(new restify.ForbiddenError('Do not have permission to access on this server'));
 
         user.remove(function (err) {
