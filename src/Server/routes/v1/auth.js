@@ -119,25 +119,32 @@ router.get('/account', function (req, res, next) {
  *       - Bearer: []
  */
 router.put('/account/password', function (req, res, next) {
-    var user = req.user;
 
-    if (!user.validPassword(req.body.oldPassword))
-        return next(new restify.BadRequestError('Wrong old password'));
-
-    user.password = req.body.password;
-
-    user.save(function (err, user) {
+    User.findById(req.user._id).select("+password").exec(function (err, user) {
         if (err)
             return next(new restify.BadRequestError(err.message));
 
         if (!user)
-            return next(new restify.InternalError("Error saving user"));
+            return next(new restify.NotFoundError('User not found'));
 
-        user = user.toObject();
-        delete user.password;
+        if (!user.validPassword(req.body.oldPassword))
+            return next(new restify.BadRequestError('Wrong old password'));
 
-        req.log.info('update user', user);
-        res.send(200);
+        user.password = req.body.password;
+
+        user.save(function (err, user) {
+            if (err)
+                return next(new restify.BadRequestError(err.message));
+
+            if (!user)
+                return next(new restify.InternalError("Error saving user"));
+
+            user = user.toObject();
+            delete user.password;
+
+            req.log.info('update user', user);
+            res.send(200);
+        });
     });
 });
 

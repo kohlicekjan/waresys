@@ -1,12 +1,23 @@
 <resources>
     <string name="app_name">BPINI</string>
 
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Zrušit</string>
+    <string name="dialog_yes">Ano</string>
+    <string name="dialog_no">Ne</string>
+
+
     <string name="user_role_admin">administrátor</string>
-    <string name="user_role_user">Uživatel</string>
+    <string name="user_role_user">uživatel</string>
 
     <string-array name="user_roles">
         <item>@string/user_role_user</item>
         <item>@string/user_role_admin</item>
+    </string-array>
+
+    <string-array name="user_roles_value">
+        <item>user</item>
+        <item>admin</item>
     </string-array>
 
 
@@ -18,6 +29,11 @@
         <item>@string/tag_type_unknown</item>
         <item>@string/tag_type_mode</item>
         <item>@string/tag_type_item</item>
+    </string-array>
+    <string-array name="tag_types_value">
+        <item>unknown</item>
+        <item>mode</item>
+        <item>item</item>
     </string-array>
 
 
@@ -41,14 +57,14 @@
     <string name="nav_tags">Tagy</string>
     <string name="nav_devices">Zařízení</string>
     <string name="nav_users">Uživatelé</string>
-    <string name="nav_reader">Čtečka</string>
+    <string name="nav_tag_reader">Čtečka</string>
     <string name="nav_account">Účet</string>
-    <string name="nav_settings">Nastavení</string>
 
     <string name="action_login">Přihlásit se</string>
     <string name="action_logout">Odhlásit se</string>
     <string name="action_change_password">Změnit heslo</string>
     <string name="action_save">Uložit</string>
+    <string name="action_close">Zavřít</string>
 
 
     <!-- LoginActivity-->
@@ -66,9 +82,13 @@
     <string name="login_validate_internet">Připojte se k internetu</string>
 
 
-
     <!-- AccountActivity-->
     <string name="account_title">Účet</string>
+
+    <string name="account_form_fullname">Jméno a příjmení</string>
+    <string name="account_form_username">Uživatelské jmnéno</string>
+    <string name="account_form_roles">Práva</string>
+
 
 
     <!-- PasswordActivity-->
@@ -88,32 +108,42 @@
     <string name="item_form_input_name">Název</string>
     <string name="item_form_input_description">Popis</string>
     <string name="item_form_input_amount">Množství</string>
-    <string name="item_form_text_created">Založení uživatele</string>
-    <string name="item_form_text_updated">Poslední změna</string>
-
 
     <!-- TagListFragmnet-->
     <string name="tag_list_title">Tagy</string>
     <string name="tag_list_empty">Žádné tagy</string>
+
+    <string name="card_tag_type">typ:</string>
+    <string name="card_tag_item">položka:</string>
 
     <!-- TagFromActivity-->
     <string name="tag_form_title_edit">Upravit tag</string>
     <string name="tag_form_input_uid">UID</string>
     <string name="tag_form_input_type">Typ</string>
     <string name="tag_form_input_item">Položka</string>
-    <string name="tag_form_text_created">Založení uživatele</string>
-    <string name="tag_form_text_updated">Poslední změna</string>
+
+
+    <!-- TagReaderActivity-->
+    <string name="tag_reader_title">BPINI čtečka</string>
 
     <!-- DeviceListFragmnet-->
     <string name="device_list_title">Zařízení</string>
     <string name="device_list_empty">Žádné zařízení</string>
 
+    <string name="card_device_version">verze:</string>
+    <string name="card_device_status">stav:</string>
+    <string name="card_device_serial_number">sériové číslo:</string>
+    <string name="card_device_ip_address">IP adresa:</string>
+
+
     <!-- UserListFragmnet-->
     <string name="user_list_title">Uživatelé</string>
     <string name="user_list_empty">Žádní uživatelé</string>
 
+    <string name="card_user_roles">práva:</string>
+
     <!-- UserFormActivity-->
-    <string name="user_form_title_edit">Upravit uživatel</string>
+    <string name="user_form_title_edit">Upravit uživatele</string>
     <string name="user_form_title_new">Nový uživatel</string>
 
     <string name="user_form_input_username">Uživatelské jméno</string>
@@ -121,23 +151,10 @@
     <string name="user_form_input_firstname">Jméno</string>
     <string name="user_form_input_lastname">Příjmení</string>
     <string name="user_form_input_roles">Práva</string>
-    <string name="user_form_text_created">Založení uživatele</string>
-    <string name="user_form_text_updated">Poslední změna</string>
-
-
-    <string name="card_item_roles">práva:</string>
-
-
-    <string name="card_device_version">verze:</string>
-    <string name="card_device_status">stav:</string>
-    <string name="card_device_serial_number">sériové číslo:</string>
-    <string name="card_device_ip_address">IP adresa:</string>
-
-    <string name="card_tag_type">typ:</string>
-    <string name="card_tag_item">položka:</string>
 
     <string name="timestamp_created">vytvořeno:</string>
     <string name="timestamp_updated">změněno:</string>
+
 
 
 
@@ -146,6 +163,14 @@
 
     <string name="no_connection_connect">Při synchronizaci došlo k chybě. Zkuste to znovu později.</string>
     <string name="no_connection_internet">Více výsledků uvidíte, když se připojíte k internetu.</string>
+
+
+    <string name="about"><![CDATA[
+        <b>verze %1$s</b><br/>
+        <p color="grey">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam quis quam. Curabitur ligula sapien, pulvinar a vestibulum quis, facilisis vel sapien. Vestibulum fermentum tortor id mi. Donec iaculis gravida nulla. Duis bibendum, lectus ut viverra rhoncus, dolor nunc faucibus libero, eget facilisis enim ipsum id lacus.</p>
+        <b>Autor:</b> Jan Kohlíček
+        ]]>
+    </string>
 
 
 </resources>

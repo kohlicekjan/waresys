@@ -2,6 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
+        android:id="@+id/group_account"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_menu_account"
+            android:title="@string/nav_account" />
+    </group>
+
+    <group
         android:id="@+id/group_user"
         android:checkableBehavior="single">
         <item
@@ -13,10 +22,11 @@
             android:icon="@drawable/ic_menu_nfc"
             android:title="@string/nav_tags" />
 
-        <!--<item-->
-        <!--android:id="@+id/nav_reader"-->
-        <!--android:icon="@drawable/ic_cast_black_24dp"-->
-        <!--android:title="@string/nav_reader" />-->
+        <item
+            android:id="@+id/nav_tag_reader"
+            android:icon="@drawable/ic_menu_nfc_reader"
+            android:title="@string/nav_tag_reader"
+            android:visible="false" />
     </group>
 
     <group
@@ -34,12 +44,13 @@
     </group>
 
     <group
-        android:id="@+id/grp3"
+        android:id="@+id/group_about"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_account"
-            android:icon="@drawable/ic_menu_account"
-            android:title="@string/nav_account" />
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_info"
+            android:title="O aplikaci" />
     </group>
+
 
 </menu>

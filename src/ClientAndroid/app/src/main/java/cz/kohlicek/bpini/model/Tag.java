@@ -22,6 +22,8 @@ public class Tag extends BasicModel {
     @Expose
     private Item item;
 
+    public Tag() {
+    }
 
     public String getUid() {
         return uid;
@@ -31,9 +33,15 @@ public class Tag extends BasicModel {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Item getItem() {
         return item;
     }
 
-
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }

@@ -18,6 +18,8 @@ import cz.kohlicek.bpini.model.Device;
 public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
 
 
+    private OnCheckedChangeListener onCheckedChangeListener;
+
     public DeviceAdapter(Context context) {
         super(context);
 
@@ -69,7 +71,18 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             deviceHolder.deviceStatus.setTextColor(context.getColor(status_color));
 
 
+            if (onCheckedChangeListener != null) {
+                deviceHolder.deviceAllowed.setOnCheckedChangeListener(null);
+            }
+
+            //chyba
+
             deviceHolder.deviceAllowed.setChecked(device.isAllowed());
+
+            if (onCheckedChangeListener != null) {
+                deviceHolder.deviceAllowed.setOnCheckedChangeListener(deviceHolder);
+            }
+
             deviceHolder.deviceVersion.setText(device.getVersion());
             deviceHolder.deviceIpAddress.setText(device.getIpAddress());
             deviceHolder.deviceSerialNumber.setText(device.getSerialNumber());
@@ -78,7 +91,15 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
         }
     }
 
-    class DeviceViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
+    public void setOnCheckedChangeListener(OnCheckedChangeListener l) {
+        this.onCheckedChangeListener = l;
+    }
+
+    public interface OnCheckedChangeListener {
+        void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position, Device data);
+    }
+
+    class DeviceViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
 
         @BindView(R.id.device_client_id)
         public TextView deviceClientId;
@@ -101,7 +122,7 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            if(onCheckedChangeListener!=null) {
+            if (onCheckedChangeListener != null) {
                 deviceAllowed.setOnCheckedChangeListener(this);
             }
         }
@@ -110,16 +131,6 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             onCheckedChangeListener.onCheckedChanged(buttonView, isChecked, getLayoutPosition(), get(getLayoutPosition()));
         }
-    }
-
-    private OnCheckedChangeListener onCheckedChangeListener;
-
-    public void setOnCheckedChangeListener(OnCheckedChangeListener l) {
-        this.onCheckedChangeListener = l;
-    }
-
-    public interface OnCheckedChangeListener {
-        void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position, Device data);
     }
 
 }

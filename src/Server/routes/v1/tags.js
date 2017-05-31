@@ -190,7 +190,11 @@ router.put('/tags/:tag_id', function (req, res, next) {
             return next(new restify.NotFoundError('Tag not found'));
 
         tag.type = req.body.type;
-        tag.item = req.body.item;
+        if (typeof req.body.item === 'string') {
+            tag.item = req.body.item;
+        } else {
+            tag.item = req.body.item._id;
+        }
 
         tag.save(function (err, tag) {
             if (err)

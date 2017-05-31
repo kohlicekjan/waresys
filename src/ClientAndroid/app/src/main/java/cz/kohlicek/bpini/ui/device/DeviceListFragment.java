@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -116,12 +117,18 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position, Device data) {
         data.setAllowed(isChecked);
-        
-        Call<Device> call = bpiniService.updateDevice(data.getId(),data);
+
+
+        Call<Device> call = bpiniService.updateDevice(data.getId(), data);
         call.enqueue(new Callback<Device>() {
             @Override
             public void onResponse(Call<Device> call, Response<Device> response) {
+                if (response.body().isAllowed()) {
+                    Toast.makeText(getContext(), "Zařízení povoleno", Toast.LENGTH_LONG).show();
 
+                } else {
+                    Toast.makeText(getContext(), "Zařízení zakázáno", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -156,7 +163,7 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
                     recyclerView.setVisibility(View.VISIBLE);
                     visibleNoConnection(false);
                 } else {
-
+                    //chyba
                 }
             }
 

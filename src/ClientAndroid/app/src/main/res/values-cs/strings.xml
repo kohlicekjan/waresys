@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_settings">Nastavení</string>
 
-    <string name="nav_items">Položky</string>
-    <string name="nav_tags">Tagy</string>
-    <string name="nav_devices">Zařízení</string>
-    <string name="nav_users">Uživatelé</string>
-    <string name="nav_reader">Čtečka</string>
-    <string name="nav_account">Účet</string>
-    <string name="nav_settings">Nastavení</string>
 
 
 </resources>

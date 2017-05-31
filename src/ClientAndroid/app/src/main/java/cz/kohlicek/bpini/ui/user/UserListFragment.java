@@ -1,6 +1,7 @@
 package cz.kohlicek.bpini.ui.user;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -122,7 +123,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v, int position, User data) {
         Intent intent = new Intent(this.getContext(), UserFormActivity.class);
         intent.putExtra(UserFormActivity.USER_ID, data.getId());
-        startActivity(intent);
+        startActivityForResult(intent, UserFormActivity.REQUEST_CODE);
     }
 
     @Override
@@ -130,6 +131,18 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
         adapter.clear();
         load(0, false);
         mSnipSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case UserFormActivity.REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    //String result = data.getStringExtra("result");
+                    onRefresh();
+                }
+                break;
+        }
     }
 
 

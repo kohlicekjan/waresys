@@ -104,6 +104,10 @@ public class Account {
         return roles.contains(role);
     }
 
+    public String getName() {
+        return fullname.length() > 0 ? fullname : username;
+    }
+
     public void saveLocalAccount(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String json = new Gson().toJson(this);

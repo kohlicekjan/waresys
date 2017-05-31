@@ -1,8 +1,11 @@
 package cz.kohlicek.bpini.model;
 
+import android.util.ArrayMap;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Device extends BasicModel {
@@ -52,6 +55,9 @@ public class Device extends BasicModel {
     @Expose
     private Map<String, String> metadata;
 
+    public Device() {
+        metadata = new HashMap<String, String>();
+    }
 
     public String getDeviceId() {
         return deviceId;

@@ -316,7 +316,7 @@ router.del('/users/:user_id', function (req, res, next) {
                 return next(new restify.InternalError("Error removing user"));
         });
 
-        req.log.info('delete user: %j', user);
+        req.log.info('delete user', user);
         res.send(204);
     });
 

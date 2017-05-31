@@ -48,7 +48,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/user_fullname"
             android:layout_marginTop="@dimen/card_space_vertical_margin"
-            android:text="@string/card_item_roles"
+            android:text="@string/card_user_roles"
             android:textSize="@dimen/card_sub_text" />
 
         <TextView

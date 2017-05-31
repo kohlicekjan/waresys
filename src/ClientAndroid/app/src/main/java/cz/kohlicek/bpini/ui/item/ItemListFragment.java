@@ -11,19 +11,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
-import cz.kohlicek.bpini.adapter.BaseRecyclerViewAdapter;
 import cz.kohlicek.bpini.adapter.EndlessRecyclerViewScrollListener;
 import cz.kohlicek.bpini.adapter.ItemAdapter;
 import cz.kohlicek.bpini.model.Item;

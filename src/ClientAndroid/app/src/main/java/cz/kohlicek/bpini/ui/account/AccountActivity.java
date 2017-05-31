@@ -3,15 +3,27 @@ package cz.kohlicek.bpini.ui.account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.model.Account;
 import cz.kohlicek.bpini.ui.LoginActivity;
 
 public class AccountActivity extends AppCompatActivity {
+
+    @BindView(R.id.account_fullname)
+    TextView accountFullname;
+    @BindView(R.id.account_username)
+    TextView accountUsername;
+    @BindView(R.id.account_roles)
+    TextView accountRoles;
+
+    private Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +33,22 @@ public class AccountActivity extends AppCompatActivity {
 
         setTitle(R.string.account_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        account = Account.getLocalAccount(this);
+
+        bindViewAccount();
+    }
+
+    private void bindViewAccount() {
+        accountFullname.setText(account.getFullname());
+        accountUsername.setText(account.getUsername());
+
+        String[] roles = account.getRoles().toArray(new String[0]);
+        for (int i = 0; i < roles.length; i++) {
+            int role_id = getResources().getIdentifier("user_role_" + roles[i], "string", getPackageName());
+            roles[i] = getResources().getString(role_id);
+        }
+        accountRoles.setText(TextUtils.join(", ", roles));
     }
 
     @Override

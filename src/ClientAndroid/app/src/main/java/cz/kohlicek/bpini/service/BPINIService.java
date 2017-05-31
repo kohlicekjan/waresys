@@ -10,9 +10,13 @@ import cz.kohlicek.bpini.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -22,8 +26,9 @@ public interface BPINIService {
     @GET("api/v1/account")
     Call<Account> getAccount();
 
-    @PUT("api/v1/password")
-    Call<Void> setPassword(String oldPassword, String password);
+    @FormUrlEncoded
+    @PUT("api/v1/account/password")
+    Call<Void> setPassword(@Field("oldPassword") String oldPassword, @Field("password") String password);
 
     //ITEM
     @GET("api/v1/items?limit=10")
@@ -48,6 +53,9 @@ public interface BPINIService {
 
     @GET("api/v1/tags/{id}")
     Call<Tag> getTag(@Path("id") String tagId);
+
+    @GET("api/v1/tags/uid/{uid}")
+    Call<Tag> getTagByUid(@Path("uid") String tagUid);
 
     @PUT("api/v1/tags/{id}")
     Call<Tag> updateTag(@Path("id") String tagId, @Body Tag tag);

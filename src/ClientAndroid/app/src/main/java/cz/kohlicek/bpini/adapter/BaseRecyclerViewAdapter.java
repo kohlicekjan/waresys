@@ -12,13 +12,11 @@ public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<Re
 
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_LOADING = 1;
-
+    public E selected;
     protected boolean loading = false;
     protected List<E> data;
     protected Context context;
     protected OnClickListener onClickListener;
-
-    public E selected;
 
     public BaseRecyclerViewAdapter(Context context) {
         this.data = new ArrayList<>();
@@ -92,13 +90,13 @@ public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<Re
         this.onClickListener = l;
     }
 
+    public interface OnClickListener<E> {
+        void onClick(View v, int position, E data);
+    }
+
     protected class LoadingViewHolder extends RecyclerView.ViewHolder {
         public LoadingViewHolder(View itemView) {
             super(itemView);
         }
-    }
-
-    public interface OnClickListener<E> {
-        void onClick(View v, int position, E data);
     }
 }

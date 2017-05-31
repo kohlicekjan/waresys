@@ -40,35 +40,27 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
             Tag tag = data.get(position);
 
             TagViewHolder tagHolder = (TagViewHolder) holder;
-
             tagHolder.tagUid.setText(tag.getUid());
 
-
             int type_id = context.getResources().getIdentifier("tag_type_" + tag.getType(), "string", context.getPackageName());
-            String type = context.getResources().getString(type_id);
-            tagHolder.tagType.setText(type);
+            tagHolder.tagType.setText(context.getResources().getString(type_id));
 
-
-            int status_color;
             switch (tag.getType()) {
                 case Tag.TYPE_UNKNOWN:
-                    status_color = android.R.color.holo_blue_dark;
+                    tagHolder.tagType.setTextColor(context.getColor(android.R.color.holo_blue_dark));
                     break;
                 case Tag.TYPE_MODE:
-                    status_color = android.R.color.holo_orange_dark;
+                    tagHolder.tagType.setTextColor(context.getColor(android.R.color.holo_orange_dark));
                     break;
                 default:
-                    status_color = android.R.color.black;
+                    tagHolder.tagType.setTextColor(context.getColor(android.R.color.black));
             }
-            tagHolder.tagType.setTextColor(context.getColor(status_color));
 
-            if (tag.getItem() == null) {
-                tagHolder.textItem.setVisibility(View.GONE);
-                tagHolder.tagItem.setVisibility(View.GONE);
-            } else {
+            if (tag.getItem() != null) {
+                tagHolder.textItem.setVisibility(View.VISIBLE);
+                tagHolder.tagItem.setVisibility(View.VISIBLE);
                 tagHolder.tagItem.setText(tag.getItem().getName());
             }
-
 
             tagHolder.tagCreated.setText(tag.getCreatedFormat("dd.MM.yyyy HH:mm"));
             tagHolder.tagUpdated.setText(tag.getUpdatedFormat("dd.MM.yyyy HH:mm"));
@@ -76,7 +68,7 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
     }
 
 
-    class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tag_uid)
         public TextView tagUid;
@@ -96,7 +88,7 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            if(onClickListener!=null) {
+            if (onClickListener != null) {
                 itemView.setOnClickListener(this);
             }
         }

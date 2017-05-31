@@ -37,10 +37,10 @@
             android:id="@+id/device_allowed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textSize="@dimen/card_sub_text"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:padding="10dp"
+            android:textSize="@dimen/card_sub_text" />
 
         <TextView
             android:id="@+id/text_version"

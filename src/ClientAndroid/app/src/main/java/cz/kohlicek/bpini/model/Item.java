@@ -21,6 +21,8 @@ public class Item extends BasicModel {
     @Expose
     private int amount;
 
+    public Item() {
+    }
 
     public String getName() {
         return name;
@@ -53,5 +55,8 @@ public class Item extends BasicModel {
         return format.format(getAmount());
     }
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }

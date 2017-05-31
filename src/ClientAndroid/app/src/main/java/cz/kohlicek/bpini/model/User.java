@@ -3,6 +3,7 @@ package cz.kohlicek.bpini.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User extends BasicModel {
@@ -32,6 +33,9 @@ public class User extends BasicModel {
     @Expose
     private List<String> roles;
 
+    public User() {
+        roles = new ArrayList<>();
+    }
 
     public String getUsername() {
         return username;

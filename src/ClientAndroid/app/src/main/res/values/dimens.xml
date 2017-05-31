@@ -5,8 +5,6 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">100dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="form_horizontal_padding">12dp</dimen>
-    <dimen name="text_input_layout_vertical_margin">12dp</dimen>
     <dimen name="card_horizontal_margin">6dp</dimen>
     <dimen name="card_vertical_margin">4dp</dimen>
     <dimen name="card_padding">16dp</dimen>
@@ -14,4 +12,9 @@
     <dimen name="card_space_vertical_margin">10dp</dimen>
     <dimen name="card_text">16sp</dimen>
     <dimen name="card_sub_text">12sp</dimen>
+    <dimen name="form_label_text">12sp</dimen>
+    <dimen name="form_value_text">16sp</dimen>
+    <dimen name="form_horizontal_padding">12dp</dimen>
+    <dimen name="form_row_vertical_margin">12dp</dimen>
+    <dimen name="spinner_height">40dp</dimen>
 </resources>

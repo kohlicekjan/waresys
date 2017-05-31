@@ -2,9 +2,7 @@ package cz.kohlicek.bpini.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,7 +11,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.model.Item;
-import cz.kohlicek.bpini.ui.view.EmptyRecyclerView;
 
 
 public class ItemAdapter extends BaseRecyclerViewAdapter<Item> {
@@ -56,7 +53,6 @@ public class ItemAdapter extends BaseRecyclerViewAdapter<Item> {
     }
 
 
-
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.item_name)
@@ -74,7 +70,7 @@ public class ItemAdapter extends BaseRecyclerViewAdapter<Item> {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            if(onClickListener!=null) {
+            if (onClickListener != null) {
                 itemView.setOnClickListener(this);
             }
         }
@@ -84,8 +80,6 @@ public class ItemAdapter extends BaseRecyclerViewAdapter<Item> {
             onClickListener.onClick(v, getLayoutPosition(), get(getLayoutPosition()));
         }
     }
-
-
 
 
 }
