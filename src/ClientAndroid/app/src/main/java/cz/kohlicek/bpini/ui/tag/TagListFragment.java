@@ -1,7 +1,11 @@
 package cz.kohlicek.bpini.ui.tag;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,9 +14,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,12 +32,14 @@ import cz.kohlicek.bpini.model.Tag;
 import cz.kohlicek.bpini.service.BPINIClient;
 import cz.kohlicek.bpini.service.BPINIService;
 import cz.kohlicek.bpini.ui.view.EmptyRecyclerView;
+import cz.kohlicek.bpini.util.DialogUtils;
+import cz.kohlicek.bpini.util.NetworkUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, BaseRecyclerViewAdapter.OnClickListener<Tag> {
+public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, BaseRecyclerViewAdapter.OnClickListener<Tag>, DialogInterface.OnClickListener {
 
     @BindView(R.id.recycler_view)
     EmptyRecyclerView recyclerView;
@@ -42,11 +50,11 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @BindView(R.id.empty_view)
     View mEmptyView;
 
-    @BindView(R.id.stub_no_connection)
-    ViewStub stub;
-    Snackbar snackbar;
+    @BindView(R.id.no_connection)
+    View noConnection;
 
-    FloatingActionButton fab;
+    private Snackbar snackbar;
+    private FloatingActionButton fab;
 
     private TagAdapter adapter;
     private BPINIService bpiniService;
@@ -118,7 +126,62 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onClick(View v, int position, Tag data) {
         Intent intent = new Intent(this.getContext(), TagFormActivity.class);
         intent.putExtra(TagFormActivity.TAG_ID, data.getId());
-        startActivity(intent);
+        startActivityForResult(intent, TagFormActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TagFormActivity.REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String result = data.getStringExtra(TagFormActivity.TAG_ID);
+                    onRefresh();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                Intent intent = new Intent(this.getContext(), TagFormActivity.class);
+                intent.putExtra(TagFormActivity.TAG_ID, adapter.getSelected().getId());
+                startActivityForResult(intent, TagFormActivity.REQUEST_CODE);
+                return true;
+            case 2:
+                AlertDialog dialog = DialogUtils.DialogWithCancel(getContext());
+                dialog.setMessage(getString(R.string.dialog_message_delete));
+                dialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.context_menu_delete), this);
+                dialog.show();
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (which == Dialog.BUTTON_POSITIVE) {
+            Call<Void> call = bpiniService.deleteTag(adapter.getSelected().getId());
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(getContext(), R.string.form_deleted, Toast.LENGTH_LONG).show();
+                        adapter.remove(adapter.getSelected());
+                    } else {
+                        BPINIClient.requestAnswerFailure(response.code(), getActivity());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(getContext(), R.string.no_connection_server, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 
@@ -131,10 +194,16 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
     private void load(int skip, boolean loading) {
+        if (!NetworkUtils.isNetworkConnected(this.getContext())) {
+            recyclerView.setVisibility(View.GONE);
+            visibleNoConnection(true, R.string.no_connection_internet);
+            return;
+        }
+
         adapter.setLoading(loading);
         if (loading) {
             recyclerView.setVisibility(View.VISIBLE);
-            visibleNoConnection(false);
+            visibleNoConnection(false, 0);
         }
 
         Call<List<Tag>> call = bpiniService.getTags("-created", skip);
@@ -145,32 +214,32 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     adapter.addAll(response.body());
 
                     recyclerView.setVisibility(View.VISIBLE);
-                    visibleNoConnection(false);
+                    visibleNoConnection(false, 0);
                 } else {
-
+                    BPINIClient.requestAnswerFailure(response.code(), getActivity());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Tag>> call, Throwable t) {
                 recyclerView.setVisibility(View.GONE);
-                visibleNoConnection(true);
+                visibleNoConnection(true, R.string.no_connection_server);
             }
         });
     }
 
-    private void visibleNoConnection(boolean visible) {
+    private void visibleNoConnection(boolean visible, int stringId) {
         if (visible) {
             snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_LONG);
             snackbar.setAction(R.string.no_connection_repeat, this);
             snackbar.show();
-            stub.setVisibility(View.VISIBLE);
+            ((TextView) noConnection.findViewById(R.id.text_no_connection)).setText(getString(stringId));
+            noConnection.setVisibility(View.VISIBLE);
         } else {
             if (snackbar != null)
                 snackbar.dismiss();
-            stub.setVisibility(View.GONE);
+            noConnection.setVisibility(View.GONE);
         }
     }
-
 
 }

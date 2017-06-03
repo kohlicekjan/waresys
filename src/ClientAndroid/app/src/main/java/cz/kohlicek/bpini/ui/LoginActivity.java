@@ -73,14 +73,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void login() {
+    private void login() {
 
         if (!validate()) {
             return;
         }
 
         if (!NetworkUtils.isNetworkConnected(this)) {
-            Toast.makeText(this, R.string.login_validate_internet, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_connection_internet, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -106,9 +106,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     account.setHost(host);
                     account.setPassword(password);
-                    account.saveLocalAccount(getBaseContext());
+                    account.saveLocalAccount(LoginActivity.this);
 
-                    startActivity(new Intent(getBaseContext(), MainActivity.class));
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this, R.string.login_validate_auth, Toast.LENGTH_SHORT).show();
@@ -118,14 +120,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(LoginActivity.this, R.string.login_validate_connection, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.no_connection_server, Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-
-    public boolean validate() {
+    private boolean validate() {
         boolean valid = true;
 
         String host = inputHost.getText().toString();

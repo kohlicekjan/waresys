@@ -72,23 +72,20 @@
     <string name="login_input_host">Host</string>
     <string name="login_input_username">Uživatelské jméno</string>
     <string name="login_input_password">Heslo</string>
-    <string name="login_loggingin">Přihlášování...</string>
+    <string name="login_loggingin">Přihlašování...</string>
 
-    <string name="login_validate_host">Zatejte adresu serveru</string>
+    <string name="login_validate_host">Zadejte adresu serveru</string>
     <string name="login_validate_username">Zadejte uživatelské jméno</string>
-    <string name="login_validate_password">"Zadejte heslo"</string>
+    <string name="login_validate_password">Zadejte heslo</string>
     <string name="login_validate_auth">Uživatelské jméno nebo heslo je nesprávné</string>
-    <string name="login_validate_connection">Nepodařilo se připojit k serveru.</string>
-    <string name="login_validate_internet">Připojte se k internetu</string>
 
 
     <!-- AccountActivity-->
     <string name="account_title">Účet</string>
 
     <string name="account_form_fullname">Jméno a příjmení</string>
-    <string name="account_form_username">Uživatelské jmnéno</string>
+    <string name="account_form_username">Uživatelské jméno</string>
     <string name="account_form_roles">Práva</string>
-
 
 
     <!-- PasswordActivity-->
@@ -96,6 +93,12 @@
     <string name="password_input_password_old">Staré heslo</string>
     <string name="password_input_password_new">Nové heslo</string>
     <string name="password_input_password_again">Potvrďte nové heslo</string>
+
+    <string name="password_validate_password_old">Zadejte svoje aktuální heslo</string>
+    <string name="password_validate_password_new">Zadejte nové heslo</string>
+    <string name="password_validate_password_again">Znova zadejte nové heslo, obě hesla musí být shodná</string>
+
+    <string name="password_successful">Heslo změněno. Znova se přihlašte.</string>
 
 
     <!-- ItemListFragmnet-->
@@ -108,6 +111,9 @@
     <string name="item_form_input_name">Název</string>
     <string name="item_form_input_description">Popis</string>
     <string name="item_form_input_amount">Množství</string>
+
+    <string name="item_form_validate_name">Zadejte název položky, alespoň 3 znaky dlouhý</string>
+    <string name="item_form_validate_amount">Zadejte množství</string>
 
     <!-- TagListFragmnet-->
     <string name="tag_list_title">Tagy</string>
@@ -129,6 +135,11 @@
     <!-- DeviceListFragmnet-->
     <string name="device_list_title">Zařízení</string>
     <string name="device_list_empty">Žádné zařízení</string>
+    <string name="device_list_allowed">Zařízení povoleno</string>
+    <string name="device_list_disabled">Zařízení zakázáno</string>
+
+    <string name="device_list_context_menu_disabled">Zakázat</string>
+    <string name="device_list_context_menu_allowed">Povolit</string>
 
     <string name="card_device_version">verze:</string>
     <string name="card_device_status">stav:</string>
@@ -142,6 +153,7 @@
 
     <string name="card_user_roles">práva:</string>
 
+
     <!-- UserFormActivity-->
     <string name="user_form_title_edit">Upravit uživatele</string>
     <string name="user_form_title_new">Nový uživatel</string>
@@ -152,22 +164,37 @@
     <string name="user_form_input_lastname">Příjmení</string>
     <string name="user_form_input_roles">Práva</string>
 
+    <string name="user_form_validate_username">Zadejte uživatelské jméno, alespoň 3 znaky dlouhé</string>
+    <string name="user_form_validate_password">Zadejte heslo</string>
+
+
+    <string name="dialog_message_delete">Záznam bude smazán.</string>
+
+    <string name="context_menu_edit">Upravit</string>
+    <string name="context_menu_delete">Smazat</string>
+
+
+    <string name="form_saving">Ukládání...</string>
+    <string name="form_saved">Uloženo</string>
+    <string name="form_deleted">Smazáno</string>
+
     <string name="timestamp_created">vytvořeno:</string>
     <string name="timestamp_updated">změněno:</string>
 
+    <string name="request_unauthorized">Chybné přihlašovací údaje. Přihlašte se znova.</string>
+    <string name="request_forbidden">Pro tuto akci nemáte práva.</string>
+    <string name="request_notfound">Záznam nebyl nalezen.</string>
+    <string name="request_error">Nastala nečekaná chyba.</string>
 
-
-
-    <string name="no_connection_message">"Žádné připojení"</string>
+    <string name="no_connection_message">Žádné připojení</string>
     <string name="no_connection_repeat">Opakovat</string>
-
-    <string name="no_connection_connect">Při synchronizaci došlo k chybě. Zkuste to znovu později.</string>
-    <string name="no_connection_internet">Více výsledků uvidíte, když se připojíte k internetu.</string>
+    <string name="no_connection_server">Nepodařilo se připojit k serveru.</string>
+    <string name="no_connection_internet">Připojte se k internetu.</string>
 
 
     <string name="about"><![CDATA[
-        <b>verze %1$s</b><br/>
-        <p color="grey">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam quis quam. Curabitur ligula sapien, pulvinar a vestibulum quis, facilisis vel sapien. Vestibulum fermentum tortor id mi. Donec iaculis gravida nulla. Duis bibendum, lectus ut viverra rhoncus, dolor nunc faucibus libero, eget facilisis enim ipsum id lacus.</p>
+        <b>verze %1$s</b>
+        <p>Tato aplikace slouží pro správu skladového hospodářství BPINI. Díky této aplikaci budete online sledovat položky, přírůstky a úbytky ve skladu, spravovat zařízení a také nastavovat tagy.</p>
         <b>Autor:</b> Jan Kohlíček
         ]]>
     </string>

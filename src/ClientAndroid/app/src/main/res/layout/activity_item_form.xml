@@ -33,7 +33,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/item_form_input_name"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:maxLength="200" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -49,7 +50,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/item_form_input_description"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"
+                    android:maxLength="2000" />
 
             </android.support.design.widget.TextInputLayout>
 

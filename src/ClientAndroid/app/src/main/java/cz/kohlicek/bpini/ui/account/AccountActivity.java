@@ -65,7 +65,9 @@ public class AccountActivity extends AppCompatActivity {
                 return true;
             case R.id.action_logout:
                 Account.clearLocalAccount(this);
-                startActivity(new Intent(this, LoginActivity.class));
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
                 return true;
             case R.id.action_change_password:

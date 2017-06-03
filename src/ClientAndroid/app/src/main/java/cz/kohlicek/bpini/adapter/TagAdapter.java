@@ -3,7 +3,9 @@ package cz.kohlicek.bpini.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -56,7 +58,10 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
                     tagHolder.tagType.setTextColor(context.getColor(android.R.color.black));
             }
 
-            if (tag.getItem() != null) {
+            if (tag.getItem() == null) {
+                tagHolder.textItem.setVisibility(View.GONE);
+                tagHolder.tagItem.setVisibility(View.GONE);
+            } else {
                 tagHolder.textItem.setVisibility(View.VISIBLE);
                 tagHolder.tagItem.setVisibility(View.VISIBLE);
                 tagHolder.tagItem.setText(tag.getItem().getName());
@@ -68,7 +73,7 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
     }
 
 
-    class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         @BindView(R.id.tag_uid)
         public TextView tagUid;
@@ -91,11 +96,21 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
             if (onClickListener != null) {
                 itemView.setOnClickListener(this);
             }
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
             onClickListener.onClick(v, getLayoutPosition(), get(getLayoutPosition()));
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            setSelected(get(getAdapterPosition()));
+
+            menu.setHeaderTitle(getSelected().getUid());
+            menu.add(Menu.NONE, 1, 1, R.string.context_menu_edit);
+            menu.add(Menu.NONE, 2, 2, R.string.context_menu_delete);
         }
     }
 

@@ -37,7 +37,7 @@ router.get('/tags', querymen.middleware(), function (req, res, next) {
     if (req.query.skip)
         query.cursor.skip = Number(req.query.skip);
 
-    Tag.find(query.query, query.select, query.cursor).populate('item').exec(function (err, tags) {
+    Tag.find(query.query, query.select, query.cursor, function (err, tags) {
         if (err)
             return next(new restify.BadRequestError(err.message));
 
@@ -76,7 +76,7 @@ router.get('/tags', querymen.middleware(), function (req, res, next) {
  */
 router.get('/tags/:tag_id', function (req, res, next) {
 
-    Tag.findOne({ '_id': req.params.tag_id }).populate('item').exec(function (err, tag) {
+    Tag.findById(req.params.tag_id, function (err, tag) {
         if (err)
             return next(new restify.BadRequestError(err.message));
 
@@ -115,7 +115,7 @@ router.get('/tags/:tag_id', function (req, res, next) {
  */
 router.get('/tags/uid/:tag_uid', function (req, res, next) {
 
-    Tag.findOne({ 'uid': req.params.tag_uid }).populate('item').exec(function (err, tag) {
+    Tag.findOne({ 'uid': req.params.tag_uid }, function (err, tag) {
         if (err)
             return next(new restify.BadRequestError(err.message));
 
@@ -190,11 +190,7 @@ router.put('/tags/:tag_id', function (req, res, next) {
             return next(new restify.NotFoundError('Tag not found'));
 
         tag.type = req.body.type;
-        if (typeof req.body.item === 'string') {
-            tag.item = req.body.item;
-        } else {
-            tag.item = req.body.item._id;
-        }
+        tag.item = req.body.item;
 
         tag.save(function (err, tag) {
             if (err)

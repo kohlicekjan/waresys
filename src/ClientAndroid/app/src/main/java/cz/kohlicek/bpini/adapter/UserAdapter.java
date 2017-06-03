@@ -4,7 +4,9 @@ package cz.kohlicek.bpini.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -59,7 +61,7 @@ public class UserAdapter extends BaseRecyclerViewAdapter<User> {
     }
 
 
-    class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         @BindView(R.id.user_username)
         public TextView userUsername;
@@ -83,11 +85,21 @@ public class UserAdapter extends BaseRecyclerViewAdapter<User> {
             if (onClickListener != null) {
                 itemView.setOnClickListener(this);
             }
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
             onClickListener.onClick(v, getLayoutPosition(), get(getLayoutPosition()));
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            setSelected(get(getAdapterPosition()));
+
+            menu.setHeaderTitle(getSelected().getName());
+            menu.add(Menu.NONE, 1, 1, R.string.context_menu_edit);
+            menu.add(Menu.NONE, 2, 2, R.string.context_menu_delete);
         }
     }
 }

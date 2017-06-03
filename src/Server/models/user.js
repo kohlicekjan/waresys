@@ -8,8 +8,8 @@ var SALT_LENGTH = 10;
 var userSchema = new Schema({
     username: { type: String, lowercase: true, trim: true, minlength: 3, maxlength: 20, required: true, unique: true },
     password: { type: String, default: '', required: true, select: false },
-    firstname: { type: String, default: '', trim: true, },
-    lastname: { type: String, default: '', trim: true },
+    firstname: { type: String, default: '', trim: true, maxlength: 30 },
+    lastname: { type: String, default: '', trim: true, maxlength: 30 },
     roles: { type: [{ type: String, enum: ['admin', 'user'] }], required: true }
 });
 

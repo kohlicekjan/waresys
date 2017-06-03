@@ -172,9 +172,6 @@ router.post('/users', function (req, res, next) {
         if (!user)
             return next(new restify.InternalError("Error saving user"));
 
-        user = user.toObject();
-        delete user.password;
-
         req.log.info('create user', user);
         res.json(201, user);
     });
@@ -250,8 +247,9 @@ router.put('/users/:user_id', function (req, res, next) {
             return next(new restify.ForbiddenError('Do not have permission to access on this server'));
 
         user.username = req.body.username;
-        if (req.body.password != undefined)
+        if (req.body.password !== null && req.body.password.length !== 0) {
             user.password = req.body.password;
+        }
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
         user.roles = req.body.roles;
@@ -262,9 +260,6 @@ router.put('/users/:user_id', function (req, res, next) {
 
             if (!user)
                 return next(new restify.InternalError("Error saving user"));
-
-            user = user.toObject();
-            delete user.password;
 
             req.log.info('update user', user);
             res.json(user);

@@ -3,7 +3,9 @@ package cz.kohlicek.bpini.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -47,39 +49,28 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             Device device = data.get(position);
 
             DeviceViewHolder deviceHolder = (DeviceViewHolder) holder;
-
             deviceHolder.deviceClientId.setText(device.getClientId());
 
             int status_id = context.getResources().getIdentifier("device_status_" + device.getStatus(), "string", context.getPackageName());
-            String status = context.getResources().getString(status_id);
-            deviceHolder.deviceStatus.setText(status);
+            deviceHolder.deviceStatus.setText(context.getResources().getString(status_id));
 
-            int status_color;
             switch (device.getStatus()) {
                 case Device.STATUS_UNKNOWN:
-                    status_color = android.R.color.holo_blue_dark;
+                    deviceHolder.deviceStatus.setTextColor(context.getColor(android.R.color.holo_blue_dark));
                     break;
                 case Device.STATUS_ACTIVE:
-                    status_color = R.color.colorAccent;
+                    deviceHolder.deviceStatus.setTextColor(context.getColor(R.color.colorAccent));
                     break;
                 case Device.STATUS_ERROR:
-                    status_color = android.R.color.holo_red_light;
+                    deviceHolder.deviceStatus.setTextColor(context.getColor(android.R.color.holo_red_light));
                     break;
                 default:
-                    status_color = android.R.color.black;
+                    deviceHolder.deviceStatus.setTextColor(context.getColor(android.R.color.black));
             }
-            deviceHolder.deviceStatus.setTextColor(context.getColor(status_color));
-
 
             if (onCheckedChangeListener != null) {
                 deviceHolder.deviceAllowed.setOnCheckedChangeListener(null);
-            }
-
-            //chyba
-
-            deviceHolder.deviceAllowed.setChecked(device.isAllowed());
-
-            if (onCheckedChangeListener != null) {
+                deviceHolder.deviceAllowed.setChecked(device.isAllowed());
                 deviceHolder.deviceAllowed.setOnCheckedChangeListener(deviceHolder);
             }
 
@@ -99,7 +90,7 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
         void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position, Device data);
     }
 
-    class DeviceViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
+    class DeviceViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener, View.OnCreateContextMenuListener {
 
         @BindView(R.id.device_client_id)
         public TextView deviceClientId;
@@ -125,11 +116,21 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             if (onCheckedChangeListener != null) {
                 deviceAllowed.setOnCheckedChangeListener(this);
             }
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             onCheckedChangeListener.onCheckedChanged(buttonView, isChecked, getLayoutPosition(), get(getLayoutPosition()));
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            setSelected(get(getAdapterPosition()));
+
+            menu.setHeaderTitle(getSelected().getClientId());
+            menu.add(Menu.NONE, 1, 1, getSelected().isAllowed() ? R.string.device_list_context_menu_disabled : R.string.device_list_context_menu_allowed);
+            menu.add(Menu.NONE, 2, 2, R.string.context_menu_delete);
         }
     }
 

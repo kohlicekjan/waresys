@@ -1,5 +1,6 @@
 package cz.kohlicek.bpini.ui.tag;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -116,14 +117,34 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
             case R.id.layout_tag:
                 intent = new Intent(this, TagFormActivity.class);
                 intent.putExtra(TagFormActivity.TAG_ID, tag.getId());
-                startActivity(intent);
+                startActivityForResult(intent, TagFormActivity.REQUEST_CODE);
                 break;
             case R.id.layout_item:
                 intent = new Intent(this, ItemFormActivity.class);
                 intent.putExtra(ItemFormActivity.ITEM_ID, tag.getItem().getId());
-                startActivity(intent);
+                startActivityForResult(intent, ItemFormActivity.REQUEST_CODE);
+                break;
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TagFormActivity.REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String result = data.getStringExtra(TagFormActivity.TAG_ID);
+                    load(tag.getUid());
+                }
+                break;
+            case ItemFormActivity.REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String result = data.getStringExtra(ItemFormActivity.ITEM_ID);
+                    load(tag.getUid());
+                }
+                break;
+        }
+    }
+
 
     @Override
     protected void onResume() {
@@ -171,7 +192,7 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void load(String tagUid){
+    private void load(String tagUid) {
         layoutItem.setVisibility(View.GONE);
         labelItem.setVisibility(View.GONE);
         layoutTag.setVisibility(View.GONE);
@@ -183,13 +204,19 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
         call.enqueue(new Callback<Tag>() {
             @Override
             public void onResponse(Call<Tag> call, Response<Tag> response) {
-                tag = response.body();
-                BindViewTag(tag);
+                if (response.isSuccessful()) {
+                    tag = response.body();
+                    BindViewTag(tag);
+                } else {
+                    loading.setVisibility(View.GONE);
+                    BPINIClient.requestAnswerFailure(response.code(), TagReaderActivity.this);
+                }
             }
 
             @Override
             public void onFailure(Call<Tag> call, Throwable t) {
-
+                loading.setVisibility(View.GONE);
+                Toast.makeText(TagReaderActivity.this, R.string.no_connection_server, Toast.LENGTH_SHORT).show();
             }
         });
     }

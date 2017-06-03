@@ -59,8 +59,6 @@ module.exports.isRole = function (role) {
     }
 }
 
-
-
 router.use(module.exports.authenticate);
 
 

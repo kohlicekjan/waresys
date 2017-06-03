@@ -4,13 +4,11 @@
     android:layout_height="match_parent"
     tools:context="cz.kohlicek.bpini.ui.item.ItemListFragment">
 
-    <ViewStub
-        android:id="@+id/stub_no_connection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout="@layout/no_connection" />
-
+    <include
+        android:id="@+id/no_connection"
+        layout="@layout/no_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

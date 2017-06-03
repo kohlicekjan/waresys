@@ -1,11 +1,14 @@
 package cz.kohlicek.bpini.ui.account;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -14,6 +17,8 @@ import cz.kohlicek.bpini.model.Account;
 import cz.kohlicek.bpini.service.BPINIClient;
 import cz.kohlicek.bpini.service.BPINIService;
 import cz.kohlicek.bpini.ui.LoginActivity;
+import cz.kohlicek.bpini.util.DialogUtils;
+import cz.kohlicek.bpini.util.NetworkUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,7 +33,16 @@ public class PasswordActivity extends AppCompatActivity {
     TextInputEditText inputPasswordAgain;
 
 
+    @BindView(R.id.layout_password_old)
+    TextInputLayout layoutPasswordOld;
+    @BindView(R.id.layout_password_new)
+    TextInputLayout layoutPasswordNew;
+    @BindView(R.id.layout_password_again)
+    TextInputLayout layoutPasswordAgain;
+
+
     private BPINIService bpiniService;
+    private Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +54,7 @@ public class PasswordActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bpiniService = BPINIClient.getInstance(this);
+        account = Account.getLocalAccount(this);
     }
 
 
@@ -66,6 +81,19 @@ public class PasswordActivity extends AppCompatActivity {
 
     private void save() {
 
+        if (!validate()) {
+            return;
+        }
+
+        if (!NetworkUtils.isNetworkConnected(this)) {
+            Toast.makeText(this, R.string.no_connection_internet, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        final ProgressDialog progressDialog = DialogUtils.showLoadingDialog(this);
+        progressDialog.setMessage(getString(R.string.form_saving));
+
+
         String passwordOld = inputPasswordOld.getText().toString();
         String passwordNew = inputPasswordNew.getText().toString();
         Call<Void> call = bpiniService.setPassword(passwordOld, passwordNew);
@@ -73,19 +101,57 @@ public class PasswordActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
+
                 if (response.isSuccessful()) {
+                    Toast.makeText(PasswordActivity.this, R.string.password_successful, Toast.LENGTH_LONG).show();
                     Account.clearLocalAccount(PasswordActivity.this);
-                    startActivity(new Intent(PasswordActivity.this, LoginActivity.class));
+
+                    Intent intent = new Intent(PasswordActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
                 } else {
-
+                    BPINIClient.requestAnswerFailure(response.code(), PasswordActivity.this);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Toast.makeText(PasswordActivity.this, R.string.no_connection_server, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean validate() {
+        boolean valid = true;
+
+        String passwordOld = inputPasswordOld.getText().toString();
+        String passwordNew = inputPasswordNew.getText().toString();
+        String passwordAgain = inputPasswordAgain.getText().toString();
+
+        if (passwordOld.isEmpty() || !passwordOld.equals(account.getPassword())) {
+            layoutPasswordOld.setError(getString(R.string.password_validate_password_old));
+            valid = false;
+        } else {
+            layoutPasswordOld.setErrorEnabled(false);
+        }
+
+        if (passwordNew.isEmpty()) {
+            layoutPasswordNew.setError(getString(R.string.password_validate_password_new));
+            valid = false;
+        } else {
+            layoutPasswordNew.setErrorEnabled(false);
+        }
+
+        if (passwordAgain.isEmpty() || !passwordAgain.equals(passwordNew)) {
+            layoutPasswordAgain.setError(getString(R.string.password_validate_password_again));
+            valid = false;
+        } else {
+            layoutPasswordAgain.setErrorEnabled(false);
+        }
+
+        return valid;
     }
 }

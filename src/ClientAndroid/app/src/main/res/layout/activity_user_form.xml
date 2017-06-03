@@ -36,7 +36,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_form_input_username"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="20" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -70,7 +71,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_form_input_firstname"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="30" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -86,7 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/user_form_input_lastname"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:maxLength="30" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -98,7 +101,7 @@
                 android:paddingLeft="4dp"
                 android:text="@string/user_form_input_roles"
                 android:textSize="@dimen/form_label_text"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/input_roles"
@@ -108,7 +111,7 @@
                 android:entries="@array/user_roles"
                 android:prompt="@string/user_form_input_roles"
                 android:spinnerMode="dialog"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 

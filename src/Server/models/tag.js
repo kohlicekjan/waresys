@@ -1,12 +1,14 @@
 ﻿var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var autopopulate = require("mongoose-autopopulate");
+
 
 var Item = require("./item");
 
 var tagSchema = new Schema({
     uid: { type: String, lowercase: true, trim: true, minlength: 8, maxlength: 8, required: true, unique: true },
     type: { type: String, enum: ['unknown', 'mode', 'item'], default: 'unknown', required: true },
-    item: { type: Schema.Types.ObjectId, ref: 'Item', index: true }
+    item: { type: Schema.Types.ObjectId, ref: 'Item', index: true, autopopulate: true }
 });
 
 tagSchema.set('strict', true);
@@ -46,6 +48,8 @@ tagSchema.pre('save', function (next) {
 tagSchema.set('toJSON', {
     virtuals: true
 });
+
+tagSchema.plugin(autopopulate);
 
 module.exports = mongoose.model('Tag', tagSchema);
 

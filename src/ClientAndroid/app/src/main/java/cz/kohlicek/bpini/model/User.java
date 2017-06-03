@@ -77,6 +77,10 @@ public class User extends BasicModel {
         this.fullname = fullname;
     }
 
+    public String getName() {
+        return fullname.length() > 0 ? fullname : username;
+    }
+
     public List<String> getRoles() {
         return roles;
     }

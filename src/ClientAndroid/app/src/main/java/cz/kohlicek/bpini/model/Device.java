@@ -1,7 +1,5 @@
 package cz.kohlicek.bpini.model;
 
-import android.util.ArrayMap;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

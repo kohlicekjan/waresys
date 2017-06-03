@@ -12,41 +12,20 @@ public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<Re
 
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_LOADING = 1;
-    public E selected;
     protected boolean loading = false;
     protected List<E> data;
     protected Context context;
     protected OnClickListener onClickListener;
+    private E selected;
 
     public BaseRecyclerViewAdapter(Context context) {
         this.data = new ArrayList<>();
         this.context = context;
-
     }
 
     public void addAll(List<E> data) {
         if (data.size() > 0) {
             this.data.addAll(data);
-
-            //MOZNA DAM PRYC
-            //HashSet<E> hashSet = new HashSet<E>();
-            //hashSet.addAll(this.data);
-
-//            Set set = new TreeSet<E>(new Comparator() {
-//                @Override
-//                public int compare(Object o1, Object o2) {
-//                    if(((BasicModel)o1).getId().equalsIgnoreCase(((BasicModel)o1).getId())){
-//                        return 0;
-//                    }
-//                    return 1;
-//                }
-//            });
-//            set.addAll(data);
-
-
-            //this.data.clear();
-            //this.data.addAll(hashSet);
-
         }
         this.loading = false;
         notifyDataSetChanged();
@@ -54,6 +33,24 @@ public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<Re
 
     public E get(int position) {
         return data.get(position);
+    }
+
+    public void remove(int position) {
+        data.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void remove(E object) {
+        data.remove(object);
+        notifyDataSetChanged();
+    }
+
+    public E getSelected() {
+        return selected;
+    }
+
+    public void setSelected(E selected) {
+        this.selected = selected;
     }
 
     @Override

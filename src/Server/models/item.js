@@ -2,8 +2,8 @@
 var Schema = mongoose.Schema;
 
 var itemSchema = new Schema({
-    name: { type: String, trim: true, minlength: 3, maxlength: 20, required: true },
-    description: { type: String, trim: true },
+    name: { type: String, trim: true, minlength: 3, maxlength: 200, required: true },
+    description: { type: String, trim: true, maxlength: 2000 },
     amount: { type: Number, default: 0, min: 0, required: true }
 });
 

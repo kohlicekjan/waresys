@@ -56,4 +56,11 @@ public class BasicModel {
         return sdf.format(updated);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BasicModel)
+            return this.getId().equals(((BasicModel) obj).getId());
+        else
+            return super.equals(obj);
+    }
 }
