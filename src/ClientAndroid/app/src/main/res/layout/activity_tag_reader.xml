@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
-            android:text="Přiložte tag"
+            android:text="@string/tag_reader_wait_tag"
             android:textAlignment="center"
             android:textSize="@dimen/form_label_text" />
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="Tag"
+            android:text="@string/tag_reader_label_tag"
             android:textAlignment="center"
             android:textSize="@dimen/form_label_text"
             android:visibility="gone" />
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="Položka"
+            android:text="@string/tag_reader_label_item"
             android:textAlignment="center"
             android:textSize="@dimen/form_label_text"
             android:visibility="gone" />

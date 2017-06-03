@@ -129,7 +129,7 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             setSelected(get(getAdapterPosition()));
 
             menu.setHeaderTitle(getSelected().getClientId());
-            menu.add(Menu.NONE, 1, 1, getSelected().isAllowed() ? R.string.device_list_context_menu_disabled : R.string.device_list_context_menu_allowed);
+            menu.add(Menu.NONE, 1, 1, getSelected().isAllowed() ? R.string.device_list_context_menu_disabled : R.string.device_list_context_menu_enabled);
             menu.add(Menu.NONE, 2, 2, R.string.context_menu_delete);
         }
     }

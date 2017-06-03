@@ -59,6 +59,7 @@
     <string name="nav_users">Uživatelé</string>
     <string name="nav_tag_reader">Čtečka</string>
     <string name="nav_account">Účet</string>
+    <string name="nav_about">O aplikaci</string>
 
     <string name="action_login">Přihlásit se</string>
     <string name="action_logout">Odhlásit se</string>
@@ -80,7 +81,6 @@
     <string name="login_validate_auth">Uživatelské jméno nebo heslo je nesprávné</string>
 
 
-
     <!-- AccountActivity-->
     <string name="account_title">Účet</string>
 
@@ -89,18 +89,17 @@
     <string name="account_form_roles">Práva</string>
 
 
-
     <!-- PasswordActivity-->
     <string name="password_title">Změnit heslo</string>
     <string name="password_input_password_old">Staré heslo</string>
     <string name="password_input_password_new">Nové heslo</string>
     <string name="password_input_password_again">Potvrďte nové heslo</string>
 
-    <string name="password_validate_password_old">Zadejte svoje aktuální heslo</string>
+    <string name="password_validate_password_old">Zadejte své aktuální heslo</string>
     <string name="password_validate_password_new">Zadejte nové heslo</string>
-    <string name="password_validate_password_again">Znova zadejte nové heslo, obě hesla musí být shodná</string>
+    <string name="password_validate_password_again">Znovu zadejte nové heslo, obě hesla musí být shodná</string>
 
-    <string name="password_successful">Heslo změněno. Znova se přihlašte.</string>
+    <string name="password_successful">Heslo změněno. Znovu se přihlašte.</string>
 
 
     <!-- ItemListFragmnet-->
@@ -133,6 +132,10 @@
 
     <!-- TagReaderActivity-->
     <string name="tag_reader_title">BPINI čtečka</string>
+    <string name="tag_reader_wait_tag">Přiložte tag</string>
+    <string name="tag_reader_label_item">Položka</string>
+    <string name="tag_reader_label_tag">Tag</string>
+
 
     <!-- DeviceListFragmnet-->
     <string name="device_list_title">Zařízení</string>
@@ -141,7 +144,7 @@
     <string name="device_list_disabled">Zařízení zakázáno</string>
 
     <string name="device_list_context_menu_disabled">Zakázat</string>
-    <string name="device_list_context_menu_allowed">Povolit</string>
+    <string name="device_list_context_menu_enabled">Povolit</string>
 
     <string name="card_device_version">verze:</string>
     <string name="card_device_status">stav:</string>
@@ -170,7 +173,6 @@
     <string name="user_form_validate_password">Zadejte heslo</string>
 
 
-
     <string name="dialog_message_delete">Záznam bude smazán.</string>
 
     <string name="context_menu_edit">Upravit</string>
@@ -184,10 +186,10 @@
     <string name="timestamp_created">vytvořeno:</string>
     <string name="timestamp_updated">změněno:</string>
 
-    <string name="request_unauthorized">Chybné přihlašovací údaje. Přihlašte se znova.</string>
+    <string name="request_unauthorized">Chybné přihlašovací údaje. Přihlašte se znovu.</string>
     <string name="request_forbidden">Pro tuto akci nemáte práva.</string>
     <string name="request_notfound">Záznam nebyl nalezen.</string>
-    <string name="request_error">Nastala nečekaná chyba.</string>
+    <string name="request_error">Nastala neočekávaná chyba.</string>
 
     <string name="no_connection_message">Žádné připojení</string>
     <string name="no_connection_repeat">Opakovat</string>
