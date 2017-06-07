@@ -1,7 +1,5 @@
-import signal
 import time
 from pirc522 import RFID
-import logging
 
 class RFID(RFID):
 

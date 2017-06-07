@@ -38,15 +38,11 @@
     <Compile Include="reader_rfid\__main__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="setup.py">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="reader_rfid\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Makefile" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <PropertyGroup>

@@ -3,25 +3,13 @@ import logging
 import json
 import time
 import sys
-import os
+#from threading import Thread
 
 import paho.mqtt.client as mqtt
-import RPi.GPIO as GPIO
 import rc522
 import led_rgb
 import utils
-import __init__ as reader_rfid
-
-HOST = '10.10.90.26'
-PORT = 1883
-LED_PINS = {'red': 36, 'green': 38 , 'blue': 40}
-
-MQTT_TOPIC_LED = '{0}/led'
-MQTT_TOPIC_TAG = '{0}/tag'
-MQTT_TOPIC_INFO = '{0}/info'
-
-LOG_FILE = os.getenv('LOGFILE', reader_rfid.APP_NAME + '.log')
-LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+from __init__ import __version__, APP_NAME, HOST, PORT, LED_PINS, MQTT_TOPIC, LOG_FILE, LOG_FORMAT
 
 
 def message_led(client, userdata, msg):
@@ -57,23 +45,30 @@ def on_connect(client, userdata, flags, rc):
         print("Connected to {0}:{1}".format(client._host, client._port))
         logging.info("Connected to {0}:{1}".format(client._host, client._port))
 
-        client.subscribe(MQTT_TOPIC_LED.format(client._client_id), 0)
-        client.message_callback_add(MQTT_TOPIC_LED.format(client._client_id), message_led)   
+        client.subscribe(MQTT_TOPIC['LED'].format(client._client_id), 0)
+        client.message_callback_add(MQTT_TOPIC['LED'].format(client._client_id), message_led)   
 
-        data = {'serial_number': utils.serial_number(), 'version': reader_rfid.__version__}
-        client.publish(MQTT_TOPIC_INFO.format(client._client_id), json.dumps(data))
+        data = {'serial_number': utils.serial_number(), 'version': __version__}
+        client.publish(MQTT_TOPIC['INFO'].format(client._client_id), json.dumps(data))
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(prog=reader_rfid.APP_NAME, description='Reader RFID is client BPINI')
-    parser.add_argument('-v', '--version', action='version', version="%(prog)s (version {0})".format(reader_rfid.__version__))
+    parser = argparse.ArgumentParser(prog=APP_NAME, description='Reader RFID is client BPINI')
+    parser.add_argument('-v', '--version', action='version', version="%(prog)s (version {0})".format(__version__))
 
     parser.add_argument('-d', '--debug', dest='debug', action='store_true', default=False, help='Debug mode')
-    parser.add_argument('-H', '--host',  default = HOST, help = "Host to connect [default: %(default)s]")
-    parser.add_argument('-p', '--port',  type = int, default = PORT, help = "Port to connect [default: %(default)d]")
+    parser.add_argument('-H', '--host', dest="host", default=HOST, help="MQTT host to connect to [default: %(default)d]")
+    parser.add_argument('-p', '--port', dest="port",  type=int, default=PORT, help="Port for remote MQTT host [default: %(default)d]")
        
     return parser.parse_args()
-            
+          
+
+#def send_info(client):
+#    while not client.is_stop:
+#        time.sleep(1.5)
+#        data = {'serial_number': utils.serial_number(), 'version': __version__}
+#        client.publish(MQTT_TOPIC['INFO'].format(client._client_id), json.dumps(data))
+
 
 def main(): 
     args = parse_args()
@@ -81,8 +76,8 @@ def main():
     log_level = args.debug if logging.DEBUG else logging.INFO
     logging.basicConfig(filename=LOG_FILE, level=log_level, format=LOG_FORMAT)
 
-    client_id = '{0}/{1}'.format('reader_rfid', utils.device_id())
-    ledrgb = led_rgb.LedRGB(LED_PINS['red'], LED_PINS['green'], LED_PINS['blue'])
+    client_id = '{0}/{1}'.format(APP_NAME, utils.device_id())
+    ledrgb = led_rgb.LedRGB(LED_PINS['RED'], LED_PINS['GREEN'], LED_PINS['BLUE'])
     rfid = rc522.RFID()
 
     print("---- BPINI - READER RFID ----")
@@ -96,18 +91,25 @@ def main():
     client.on_log = on_log    
     client.user_data_set({'ledrgb': ledrgb})
 
-    while(True):
+    while True:
         try:
+            time.sleep(2)
             client.connect(args.host, args.port, 60)
             client.loop_start() 
             break
         except Exception as e:
             print(e)
-            logging.warning(e)
-            time.sleep(2)
+            logging.warning(e)     
         except KeyboardInterrupt:
+            rfid.cleanup()
             sys.exit(0)
        
+
+    #client.is_stop=False
+    #t = Thread(target=send_info, args=(client,))
+    #t.start()
+
+
     while(True):
         try:
             uid = rfid.read_uid()
@@ -115,15 +117,15 @@ def main():
                 uid_hex = ''.join('{0:02x}'.format(uid[x]) for x in range(4))
                 logging.info("Read TAG UID: {0}".format(uid_hex))
 
-                infot = client.publish(MQTT_TOPIC_TAG.format(client._client_id), json.dumps({'uid': uid_hex}))
-                infot.wait_for_publish()  
-            else:
-                color = led_rgb.Color(color_hex='#ff0000')
-                ledrgb.blink(color)
+                infot = client.publish(MQTT_TOPIC['TAG'].format(client._client_id), json.dumps({'uid': uid_hex}))
+                infot.wait_for_publish()
 
         except KeyboardInterrupt:
+            #client.is_stop=True
+            #t.join()            
             client.loop_stop()
             client.disconnect()
+            rfid.cleanup()
             break
 
 if __name__ == "__main__":
