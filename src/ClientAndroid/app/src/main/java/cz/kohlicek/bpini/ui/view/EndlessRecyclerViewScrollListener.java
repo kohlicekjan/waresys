@@ -1,4 +1,4 @@
-package cz.kohlicek.bpini.adapter;
+package cz.kohlicek.bpini.ui.view;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

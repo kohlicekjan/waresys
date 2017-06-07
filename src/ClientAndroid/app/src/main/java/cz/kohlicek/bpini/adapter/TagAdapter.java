@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.model.Tag;
 
-public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
+public class TagAdapter extends BaseAdapter<Tag> {
 
     public TagAdapter(Context context) {
         super(context);
@@ -107,6 +107,7 @@ public class TagAdapter extends BaseRecyclerViewAdapter<Tag> {
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             setSelected(get(getAdapterPosition()));
+            setSelectedPosition(getAdapterPosition());
 
             menu.setHeaderTitle(getSelected().getUid());
             menu.add(Menu.NONE, 1, 1, R.string.context_menu_edit);

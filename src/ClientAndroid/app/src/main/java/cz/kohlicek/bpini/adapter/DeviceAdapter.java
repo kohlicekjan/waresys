@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.model.Device;
 
-public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
+public class DeviceAdapter extends BaseAdapter<Device> {
 
 
     private OnCheckedChangeListener onCheckedChangeListener;
@@ -55,9 +55,6 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
             deviceHolder.deviceStatus.setText(context.getResources().getString(status_id));
 
             switch (device.getStatus()) {
-                case Device.STATUS_UNKNOWN:
-                    deviceHolder.deviceStatus.setTextColor(context.getColor(android.R.color.holo_blue_dark));
-                    break;
                 case Device.STATUS_ACTIVE:
                     deviceHolder.deviceStatus.setTextColor(context.getColor(R.color.colorAccent));
                     break;
@@ -127,6 +124,7 @@ public class DeviceAdapter extends BaseRecyclerViewAdapter<Device> {
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             setSelected(get(getAdapterPosition()));
+            setSelectedPosition(getAdapterPosition());
 
             menu.setHeaderTitle(getSelected().getClientId());
             menu.add(Menu.NONE, 1, 1, getSelected().isAllowed() ? R.string.device_list_context_menu_disabled : R.string.device_list_context_menu_enabled);

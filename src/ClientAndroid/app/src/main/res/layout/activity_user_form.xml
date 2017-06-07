@@ -100,8 +100,7 @@
                 android:layout_marginTop="@dimen/form_row_vertical_margin"
                 android:paddingLeft="4dp"
                 android:text="@string/user_form_input_roles"
-                android:textSize="@dimen/form_label_text"
-                android:visibility="gone" />
+                android:textSize="@dimen/form_label_text" />
 
             <Spinner
                 android:id="@+id/input_roles"
@@ -110,8 +109,8 @@
                 android:layout_marginBottom="@dimen/form_row_vertical_margin"
                 android:entries="@array/user_roles"
                 android:prompt="@string/user_form_input_roles"
-                android:spinnerMode="dialog"
-                android:visibility="gone" />
+                android:textSize="@dimen/form_value_text"
+                android:spinnerMode="dialog" />
 
         </LinearLayout>
 

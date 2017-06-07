@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.adapter.DeviceAdapter;
-import cz.kohlicek.bpini.adapter.EndlessRecyclerViewScrollListener;
+import cz.kohlicek.bpini.ui.view.EndlessRecyclerViewScrollListener;
 import cz.kohlicek.bpini.model.Device;
 import cz.kohlicek.bpini.service.BPINIClient;
 import cz.kohlicek.bpini.service.BPINIService;
@@ -124,7 +124,7 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                onCheckedChanged(null, !adapter.getSelected().isAllowed(), 0, adapter.getSelected());
+                onCheckedChanged(null, !adapter.getSelected().isAllowed(), adapter.getSelectedPosition(), adapter.getSelected());
                 return true;
             case 2:
                 AlertDialog dialog = DialogUtils.DialogWithCancel(getContext());
@@ -163,7 +163,7 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
 
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position, Device data) {
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, final int position, final Device data) {
         data.setAllowed(isChecked);
 
         Call<Device> call = bpiniService.updateDevice(data.getId(), data);
@@ -176,7 +176,8 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
                     } else {
                         Toast.makeText(getContext(), R.string.device_list_disabled, Toast.LENGTH_LONG).show();
                     }
-                    adapter.notifyDataSetChanged();
+
+                    adapter.set(position, response.body());
                 } else {
                     BPINIClient.requestAnswerFailure(response.code(), getActivity());
                 }

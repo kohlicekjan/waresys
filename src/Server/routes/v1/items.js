@@ -249,7 +249,7 @@ router.del('/items/:item_id', function (req, res, next) {
             });
 
 
-            logger.info('delete item', item);
+            req.log.info('delete item', item);
             res.send(204);
         }
     });

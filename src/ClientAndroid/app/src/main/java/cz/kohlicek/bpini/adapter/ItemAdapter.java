@@ -15,7 +15,7 @@ import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.model.Item;
 
 
-public class ItemAdapter extends BaseRecyclerViewAdapter<Item> {
+public class ItemAdapter extends BaseAdapter<Item> {
 
     public ItemAdapter(Context context) {
         super(context);
@@ -86,6 +86,7 @@ public class ItemAdapter extends BaseRecyclerViewAdapter<Item> {
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             setSelected(get(getAdapterPosition()));
+            setSelectedPosition(getAdapterPosition());
 
             menu.setHeaderTitle(getSelected().getName());
             menu.add(Menu.NONE, 1, 1, R.string.context_menu_edit);

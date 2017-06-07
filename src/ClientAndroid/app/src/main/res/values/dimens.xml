@@ -13,7 +13,7 @@
     <dimen name="card_text">16sp</dimen>
     <dimen name="card_sub_text">12sp</dimen>
     <dimen name="form_label_text">12sp</dimen>
-    <dimen name="form_value_text">16sp</dimen>
+    <dimen name="form_value_text">18sp</dimen>
     <dimen name="form_horizontal_padding">12dp</dimen>
     <dimen name="form_row_vertical_margin">12dp</dimen>
     <dimen name="spinner_height">40dp</dimen>

@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
-import cz.kohlicek.bpini.adapter.EndlessRecyclerViewScrollListener;
+import cz.kohlicek.bpini.ui.view.EndlessRecyclerViewScrollListener;
 import cz.kohlicek.bpini.adapter.ItemAdapter;
 import cz.kohlicek.bpini.model.Item;
 import cz.kohlicek.bpini.service.BPINIClient;

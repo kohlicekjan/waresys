@@ -30,7 +30,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Makefile" />
     <Content Include="package.json" />
     <Content Include="public\swagger-ui\favicon-16x16.png" />
     <Content Include="public\swagger-ui\favicon-32x32.png" />

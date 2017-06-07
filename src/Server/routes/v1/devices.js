@@ -126,15 +126,15 @@ router.put('/devices/:device_id', function (req, res, next) {
 
     var opts = { new: true, runValidators: true };
 
-    Device.findByIdAndUpdate(req.params.device_id, device, opts, function (err, tag) {
+    Device.findByIdAndUpdate(req.params.device_id, device, opts, function (err, device) {
         if (err)
             return next(new restify.BadRequestError(err.message));
 
-        if (!tag)
+        if (!device)
             return next(new restify.NotFoundError('Device not found'));
 
-        req.log.info('update tag', tag);
-        res.json(tag);
+        req.log.info('update device', device);
+        res.json(device);
     });
 
 });

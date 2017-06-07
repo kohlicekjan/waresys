@@ -78,13 +78,13 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
         bpiniService = BPINIClient.getInstance(this);
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
-            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.tag_reader_nfc_no_support, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
-        snackbar = Snackbar.make(this.findViewById(R.id.root_view), "NFC is disabled.", Snackbar.LENGTH_LONG);
-        snackbar.setAction("Enabled", this);
+        snackbar = Snackbar.make(this.findViewById(R.id.root_view), R.string.tag_reader_nfc_disabled, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.tag_reader_nfc_enabled, this);
 
         layoutItem.setOnClickListener(this);
         layoutTag.setOnClickListener(this);

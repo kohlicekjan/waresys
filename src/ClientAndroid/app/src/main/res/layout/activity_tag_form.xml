@@ -68,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spinner_height"
                 android:layout_marginBottom="@dimen/form_row_vertical_margin"
+                android:textSize="@dimen/form_value_text"
                 android:prompt="@string/tag_form_input_item"
                 android:spinnerMode="dialog" />
 

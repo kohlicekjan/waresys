@@ -25,7 +25,6 @@
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="username"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="@dimen/card_text" />
 
@@ -38,7 +37,6 @@
             android:layout_below="@+id/user_username"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="fullname"
             android:textSize="@dimen/card_sub_text" />
 
         <TextView
@@ -60,9 +58,7 @@
             android:layout_toEndOf="@+id/text_roles"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="role"
             android:textSize="@dimen/card_sub_text" />
-
 
         <include
             android:id="@+id/layout_timestamp"
@@ -73,7 +69,5 @@
             android:layout_below="@+id/text_roles"
             android:layout_marginTop="@dimen/card_space_vertical_margin" />
 
-
     </RelativeLayout>
-
 </android.support.v7.widget.CardView>

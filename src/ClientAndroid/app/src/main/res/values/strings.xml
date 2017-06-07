@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BPINI</string>
 
@@ -135,6 +136,10 @@
     <string name="tag_reader_wait_tag">Attach the tag</string>
     <string name="tag_reader_label_item">Item</string>
     <string name="tag_reader_label_tag">Tag</string>
+
+    <string name="tag_reader_nfc_no_support">This device doesn\'t support NFC.</string>
+    <string name="tag_reader_nfc_disabled">NFC is disabled.</string>
+    <string name="tag_reader_nfc_enabled">Enabled</string>
 
     <!-- DeviceListFragmnet-->
     <string name="device_list_title">Devices</string>

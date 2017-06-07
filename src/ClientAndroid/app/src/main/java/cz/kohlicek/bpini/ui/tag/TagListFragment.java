@@ -25,8 +25,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
-import cz.kohlicek.bpini.adapter.BaseRecyclerViewAdapter;
-import cz.kohlicek.bpini.adapter.EndlessRecyclerViewScrollListener;
+import cz.kohlicek.bpini.adapter.BaseAdapter;
+import cz.kohlicek.bpini.ui.view.EndlessRecyclerViewScrollListener;
 import cz.kohlicek.bpini.adapter.TagAdapter;
 import cz.kohlicek.bpini.model.Tag;
 import cz.kohlicek.bpini.service.BPINIClient;
@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, BaseRecyclerViewAdapter.OnClickListener<Tag>, DialogInterface.OnClickListener {
+public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, BaseAdapter.OnClickListener<Tag>, DialogInterface.OnClickListener {
 
     @BindView(R.id.recycler_view)
     EmptyRecyclerView recyclerView;

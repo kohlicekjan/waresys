@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">BPINI</string>
 
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Zrušit</string>
@@ -136,6 +137,9 @@
     <string name="tag_reader_label_item">Položka</string>
     <string name="tag_reader_label_tag">Tag</string>
 
+    <string name="tag_reader_nfc_no_support">Toto zařízení nepodporuje NFC.</string>
+    <string name="tag_reader_nfc_disabled">NFC je vypnuto.</string>
+    <string name="tag_reader_nfc_enabled">Zapnout</string>
 
     <!-- DeviceListFragmnet-->
     <string name="device_list_title">Zařízení</string>

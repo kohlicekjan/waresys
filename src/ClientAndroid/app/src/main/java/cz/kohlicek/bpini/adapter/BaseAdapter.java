@@ -8,17 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class BaseAdapter<E> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int VIEW_TYPE_ITEM = 0;
     public static final int VIEW_TYPE_LOADING = 1;
+
     protected boolean loading = false;
     protected List<E> data;
     protected Context context;
     protected OnClickListener onClickListener;
     private E selected;
+    private int selectedPosition;
 
-    public BaseRecyclerViewAdapter(Context context) {
+    public BaseAdapter(Context context) {
         this.data = new ArrayList<>();
         this.context = context;
     }
@@ -33,6 +35,11 @@ public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<Re
 
     public E get(int position) {
         return data.get(position);
+    }
+
+    public void set(int index, E object) {
+        data.set(index, object);
+        notifyDataSetChanged();
     }
 
     public void remove(int position) {
@@ -51,6 +58,14 @@ public abstract class BaseRecyclerViewAdapter<E> extends RecyclerView.Adapter<Re
 
     public void setSelected(E selected) {
         this.selected = selected;
+    }
+
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
+
+    public void setSelectedPosition(int selectedPosition) {
+        this.selectedPosition = selectedPosition;
     }
 
     @Override
