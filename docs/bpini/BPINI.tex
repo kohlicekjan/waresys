@@ -27,6 +27,7 @@
 \usepackage{acronym}
 \usepackage{enumitem}
 \usepackage{subcaption} 
+\usepackage{float}
 
 \begin{document}
 
@@ -569,7 +570,7 @@ PUT & /api/v1/account/password/ & Aktualizuje heslo přihlášeného uživatele 
 %	Další přehled se týká položek skladu, jednotlivé položky půjdou vytvářet i upravovat.
 
 
-casova pasma
+%casova pasma
 
 	\section{Platforma}
 %		Původně měla být aplikace multiplatformní, však začalo postrádá smysl, když Windows Phone používá minimum lidí a iOS neumožňuje vývojářům přístup k NFC. Tím se vyselektoval Android, pro něj jsem zvolil nativní vývoj v programujícím jazyce Java.
@@ -587,11 +588,11 @@ casova pasma
 
 \chapter{Testování a zhodnocení výsledků}	
 
-Samsung Galaxy A3 2016
-Huawei P8 Lite
-Sony Xperia E5
+%Samsung Galaxy A3 2016
+%Huawei P8 Lite
+%Sony Xperia E5
 
-Android 6.0 (Marshmallow)
+%Android 6.0 (Marshmallow)
 
 
 \chapter{Možnosti rozšíření}
@@ -602,15 +603,15 @@ Android 6.0 (Marshmallow)
 \chapter{Závěr}
 %Cílem bakalářské práce bylo vytvoření 
 
-zmenit databazi skladu, podle druhu skladu, aktulane uplny zaklad
-vymyslel lepsi signalizaci stavu čtečky, mozna pridat led diodu ale to by zkomplikovalo predhlednost 
+%zmenit databazi skladu, podle druhu skladu, aktulane uplny zaklad
+%vymyslel lepsi signalizaci stavu čtečky, mozna pridat led diodu ale to by zkomplikovalo predhlednost 
 
-mobulni apliace
-vyhledavani polozek
+%mobulni apliace
+%vyhledavani polozek
 
-zarizeni sprava chyb
+%zarizeni sprava chyb
 
-oAUTH 2.0
+%oAUTH 2.0
 
 
 \chapter*{Přehled zkratek}
@@ -720,19 +721,18 @@ node server.js
 \item 1x Nepájivé pole
 \end{itemize}
 
-\newpage
 \subsection{Zapojení součástek}
 
 Součástky zapojte podle schématu (viz \ref{fig:reader_rfid_diagram_bb} a \ref{fig:reader_rfid_diagram_schem}).
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\textwidth]{../diagrams/reader_rfid_diagram_bb.png}	
 	\caption{Model čtečky RFID}
 	\label{fig:reader_rfid_diagram_bb}
 \end{figure}	
 	
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\textwidth]{../diagrams/reader_rfid_diagram_schem.png}	
 	\caption{Schéma čtečky RFID}
@@ -797,7 +797,7 @@ Po dokončení najdete aplikaci v menu mezi ostatními aplikacemi.
 	\section{Čtečka RFID}
 Čtečka svůj stav signalizuje pomocí LED diody, její stavy viz \ref{table:led_states}.
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabular}{ c | p{6cm} }
 \textbf{LED dioda} & \textbf{Popis} \\ \hline\hline
@@ -816,29 +816,39 @@ Tag načtený čtečkou se automaticky zaeviduje. Funkčnost tagu potom můžeme
 Je-li čtečka v režimu přidávání položek a načte-li tag reprezentující položku, přičte se k položce +1 množství.
 K přepínání režimů slouží speciální tag typu "režim".
 
-
+\newpage
 
 	\section{Mobilní aplikace}
 	
 \subsection{Přihlášení}	
 	
 Při prvním spuštění aplikace se zobrazí přihlašovací formulář viz \ref{fig:Screenshot_20170610-134211}.
-Zadejte adresu serveru, pak následuje uživatelské jméno a heslo. 
+Zadejte adresu serveru, pak následuje uživatelské jméno a heslo viz \ref{fig:Screenshot_20170612-002041}. 
 \\\\
 Výchozí přihlašovací údaje administrátora systému jsou:
 \begin{itemize}[noitemsep]
 \item [-] uživatelské jméno: admin
 \item [-] heslo: heslo
 \end{itemize}
-\ \\	
-\begin{figure}[h]
+
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170610-134211.png}	
-	\caption{Přihlašovací formulář}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170610-134211.png}	
+	\caption{Prázdný}
 	\label{fig:Screenshot_20170610-134211}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170612-002041.png}	
+	\caption{Vyplněný}
+	\label{fig:Screenshot_20170612-002041}
+  \end{subfigure}
+  \caption{Přihlašovací formulář}
 \end{figure}
 
-\newpage
 \subsection{Menu}
 Menu se zobrazí stisknutím hamburger menu nebo vysunutím z poza okraje viz \ref{fig:Screenshot_20170607-164924}.
 První položka menu otevírá detail přihlášeného uživatele.
@@ -854,19 +864,30 @@ Poslední je "O aplikaci", zobrazí verzi, popis a autora aplikace.
 	\label{fig:Screenshot_20170607-164924}
 \end{figure}
 
-
 \subsection{Položky}	
 
 Po spuštění aplikace se zobrazí seznam položek skladu viz \ref{fig:Screenshot_20170607-164919}.
 Položky můžete přidat pomocí zeleného plus v pravém dolním rohu a kliknutím na danou položku editovat.
 Položku lze smazat jen tehdy, když se její počet rovná nule.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170607-164919.png}	
-	\caption{Položky skladu}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170607-164919.png}	
+	\caption{Seznam položek}
 	\label{fig:Screenshot_20170607-164919}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170612-003030.png}	
+	\caption{Úprava položky}
+	\label{fig:Screenshot_20170612-003030}
+  \end{subfigure}
+  \caption{Položky}
 \end{figure}
+
 
 \subsection{Tagy}
 
@@ -876,20 +897,29 @@ Tagy nelze přidávat ručně, jen pomocí čtečky. Kliknutím na tag se zobraz
 \item [režim] - tag umožňuje čtečce RFID přepínat režimy přidat/odebrat položku
 \item [položka] - tag reprezentuje položku ve skladu 
 \end{description}
-\ \\
-
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170607-164958.png}	
-	\caption{Tagy}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170607-164958.png}	
+	\caption{Seznam tagů}
 	\label{fig:Screenshot_20170607-164958}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170607-165805.png}	
+	\caption{Úprava tagu}
+	\label{fig:Screenshot_20170607-165805}
+  \end{subfigure}
+  \caption{Tagy}
 \end{figure}
+
+
 \subsection{Čtečka}
 Čtečka čekající na přiložení tagu viz \ref{fig:Screenshot_20170607-165058}.
 Po přiložení tagu se načtou detailní informace viz \ref{fig:Screenshot_20170607-165117}, ale pokud není v systému zaevidován, pak je vytvořen tag typu "neznámý".
-
-
-\begin{figure}
+\begin{figure}[H]
 	\centering
   \begin{subfigure}[b]{0.3\textwidth}
     \centering
@@ -906,29 +936,39 @@ Po přiložení tagu se načtou detailní informace viz \ref{fig:Screenshot_2017
   \end{subfigure}
   \caption{Čtečka}
 \end{figure}
-
 \subsection{Administrace}
 
 Seznam zařízení se ukazuje jen administrátorům viz \ref{fig:Screenshot_20170607-165221}. Zařízení se evidují automaticky při jakémkoli pokusu o připojení k serveru. Aby se zařízení připojilo, je nutné, aby konkrétnímu zařízení byl povolen přístup. Ten se mění pomocí přepínače.
-
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170607-165221.png}	
 	\caption{Zařízení}
 	\label{fig:Screenshot_20170607-165221}
 \end{figure}
-\ \\
 Jen administrátor má přístup ke správě uživatelů viz \ref{fig:Screenshot_20170607-165248}.
 Dostat se na vytvoření nového uživatele je možné přes zelené plus v pravém dolním rohu a kliknutím na uživatele editovat.
 Uživatele s rolí "administrátor" může vytvářet a editovat jen výchozí administrátor.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170607-165248.png}	
-	\caption{Uživatelé}
-	\label{fig:Screenshot_20170607-165248}
-\end{figure}
 
+
+
+\begin{figure}[H]
+	\centering
+  \begin{subfigure}[b]{0.3\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170607-165248.png}	
+	\caption{Seznam uživatelů}
+	\label{fig:Screenshot_20170607-165248}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+	\includegraphics[width=\textwidth]{../images/client_android/Screenshot_20170612-003127.png}	
+	\caption{Úprava uživatele}
+	\label{fig:Screenshot_20170612-003127}
+  \end{subfigure}
+  \caption{Uživatelé}
+\end{figure}
 
 	
 	
