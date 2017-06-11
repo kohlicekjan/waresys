@@ -70,11 +70,6 @@
 	- komunikace
 		- MQTT protokol
 
-	?
-		přidat config 
-		vylepšit logováni
-		přeformátovat kód
-
 2. server
 	- Node.js
 
@@ -100,9 +95,6 @@
 		- winston - nejpoužívanější, hodně přispůsobení 
 		- bunyan - format v json (nelze formatovat), rotate file 
 			- používáho hodně modulů
-			- přešel jsem na něj
-
-
 
 	-Framework
 		- Express - nejpoužívajší, nejobecnější faramework
@@ -142,15 +134,7 @@
 			- item (_id, name, description, amount, created, updated)
 			- tag (_id, uid, type, item, created, updated)
 
-		- testy
-			- moduly
-			- integrační testy
-				- api
-					-item
-						-zalozeni (OK, chyba...)
-						-hledani (OK, CHYBA...)
-					-card
-					-auth
+
 
 		configurace
 			-config
@@ -159,16 +143,8 @@
 				- nejpoužívajší
 				- nevidím přínos
 
-	?		
-		testy
-		update tagu.type -> změnit i tag.item
-		update změnit tag.updated, item.updated
-		dokumetace na adrese /api = swagger
-		zkusit z npm projekt json-server 
 
 3. klient
-	- mobilní aplikace
-
 	- vývojová platforma
 		- Android 
 			- Java 
@@ -182,21 +158,5 @@
 		- Smazání položek
 		- Změna typu tagu
 
-
-
-zdroje:
-	http://stackoverflow.com/
-	
-	-MQTT
-	https://www.root.cz/clanky/protokol-mqtt-komunikacni-standard-pro-iot/
-
-	-API
-	https://scotch.io/tutorials/build-a-restful-api-using-node-and-express-4
-	https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
-	https://www.zdrojak.cz/clanky/javascript-na-serveru-rest-api/
-	https://www.zdrojak.cz/clanky/javascript-na-serveru-implementace-rest-api/
-	https://www.zdrojak.cz/clanky/rest-architektura-pro-webove-api/
-	http://www.restapitutorial.com/
-
-	http://mongoosejs.com/docs/
-	http://mongoosejs.com/docs/api.html#schema_string_SchemaString-minlength
+	- API
+		-Retrofit
