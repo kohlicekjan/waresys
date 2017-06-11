@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
+import cz.kohlicek.bpini.model.Account;
 import cz.kohlicek.bpini.model.User;
 import cz.kohlicek.bpini.service.BPINIClient;
 import cz.kohlicek.bpini.service.BPINIService;
@@ -60,6 +62,9 @@ public class UserFormActivity extends AppCompatActivity {
     @BindView(R.id.input_roles)
     Spinner inputRoles;
 
+    @BindView(R.id.user_roles)
+    TextView userRoles;
+
     @BindView(R.id.loading)
     View loading;
 
@@ -67,6 +72,7 @@ public class UserFormActivity extends AppCompatActivity {
     View form;
 
     private BPINIService bpiniService;
+    private Account account;
     private String userId;
     private User user;
     private List<String> roles;
@@ -80,17 +86,22 @@ public class UserFormActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bpiniService = BPINIClient.getInstance(this);
+        account = Account.getLocalAccount(this);
         roles = Arrays.asList(getResources().getStringArray(R.array.user_roles_value));
 
+        if(account.getUsername().equals("admin")){
+            inputRoles.setVisibility(View.VISIBLE);
+            userRoles.setVisibility(View.GONE);
+        }
 
         if (getIntent().hasExtra(USER_ID)) {
             setTitle(R.string.user_form_title_edit);
             userId = getIntent().getStringExtra(USER_ID);
-            loading.setVisibility(View.VISIBLE);
             load(userId);
         } else {
             setTitle(R.string.user_form_title_new);
             form.setVisibility(View.VISIBLE);
+            inputRoles.setSelection(roles.indexOf("user"));
         }
     }
 
@@ -195,6 +206,8 @@ public class UserFormActivity extends AppCompatActivity {
     }
 
     private void load(final String id) {
+        loading.setVisibility(View.VISIBLE);
+
         Call<User> call = bpiniService.getUser(id);
 
         call.enqueue(new Callback<User>() {

@@ -47,6 +47,9 @@ router.get('/users', querymen.middleware(), function (req, res, next) {
     query.query.username = { $ne: 'admin' };
     query.query._id = { $ne: req.user._id };
 
+    if (req.user.username != 'admin')
+        query.query.roles = { $ne: 'admin' };
+
     if (req.query.skip)
         query.cursor.skip = Number(req.query.skip);
 
@@ -96,8 +99,6 @@ router.get('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new restify.NotFoundError('User not found'));
 
-
-        req.log.info(req.user._id);
         if (user._id.toString() == req.user._id || user.username == 'admin')
             return next(new restify.ForbiddenError('Do not have permission to access on this server'));
 

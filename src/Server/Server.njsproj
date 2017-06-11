@@ -45,8 +45,6 @@
   <ItemGroup>
     <Compile Include="api.js" />
     <Compile Include="config\default.js" />
-    <Compile Include="config\development.js" />
-    <Compile Include="config\production.js" />
     <Compile Include="config\test.js" />
     <Compile Include="devices\basic.js" />
     <Compile Include="devices\index.js" />

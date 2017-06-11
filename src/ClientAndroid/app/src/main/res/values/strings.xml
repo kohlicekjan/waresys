@@ -71,7 +71,7 @@
 
     <!-- LoginActivity-->
     <string name="login_title">Log in</string>
-    <string name="login_input_host">Host</string>
+    <string name="login_input_host">Server</string>
     <string name="login_input_username">Username</string>
     <string name="login_input_password">Password</string>
     <string name="login_loggingin">Signing in...</string>

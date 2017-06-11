@@ -109,8 +109,20 @@
                 android:layout_marginBottom="@dimen/form_row_vertical_margin"
                 android:entries="@array/user_roles"
                 android:prompt="@string/user_form_input_roles"
+                android:spinnerMode="dialog"
                 android:textSize="@dimen/form_value_text"
-                android:spinnerMode="dialog" />
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/user_roles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/form_row_vertical_margin"
+                android:paddingLeft="4dp"
+                android:text="@string/user_role_user"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/form_value_text" />
+
 
         </LinearLayout>
 

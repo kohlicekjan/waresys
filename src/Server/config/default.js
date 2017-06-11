@@ -3,13 +3,13 @@
 module.exports = {
     name: 'BPINI',
     version: package.version,
-    host: '10.10.90.26',
+    host: '10.0.0.2',
     port: {
         http: 80,
         mqtt: 1883
     },
     logger: {
-        level: 'info',
+        level: 'trace',
         path: './logs/bpini.log'
     },
     mongodb: {

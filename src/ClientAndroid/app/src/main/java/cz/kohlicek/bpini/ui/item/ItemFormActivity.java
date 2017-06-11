@@ -72,8 +72,6 @@ public class ItemFormActivity extends AppCompatActivity {
         if (getIntent().hasExtra(ITEM_ID)) {
             setTitle(R.string.item_form_title_edit);
             itemId = getIntent().getStringExtra(ITEM_ID);
-            layoutEdit.setVisibility(View.VISIBLE);
-            loading.setVisibility(View.VISIBLE);
             load(itemId);
         } else {
             setTitle(R.string.item_form_title_new);
@@ -180,6 +178,9 @@ public class ItemFormActivity extends AppCompatActivity {
 
 
     private void load(final String id) {
+        layoutEdit.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.VISIBLE);
+
         Call<Item> call = bpiniService.getItem(id);
 
         call.enqueue(new Callback<Item>() {

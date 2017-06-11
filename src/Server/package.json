@@ -1,13 +1,16 @@
 {
   "name": "bpini-server",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "private": true,
-  "description": "Server BPINI: MQTT Broker, API REST",
+  "description": "BPINI server",
   "author": {
     "name": "Jan Kohlíček"
   },
   "license": "BSD",
-  "repository": "bitbucket:kohlicekjan/bpini",
+  "repository" : { 
+    "type" : "git",
+    "url" : "https://github.com/kohlicekjan/BPINI.git"
+  },
   "main": "server.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -40,7 +43,6 @@
     "npm": "4.2.x"
   },
   "scripts": {
-    "start": "set NODE_ENV=production&&node server.js",
     "test": "mocha"
   }
 }
