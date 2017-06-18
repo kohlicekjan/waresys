@@ -52,7 +52,8 @@ server.on('ready', function () {
 
     logger.info('%s MQTT v%s listening at %s:%s in %s', config.name, config.version, config.host, config.port.mqtt, process.env.NODE_ENV);
 
-    var api = require('./api');
+    if (config.api)
+        var api = require('./api');
 });
 
 var authenticate = function (client, username, password, callback) {

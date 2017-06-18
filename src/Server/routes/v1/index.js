@@ -8,7 +8,8 @@ var swaggerSpec = swaggerJSDoc({
     swaggerDefinition: {
         info: {
             title: config.name,
-            version: config.version
+            version: config.version,
+            description: ''
         },
         host: config.host + ':' + config.port.http,
         basePath: '/api/v1',
