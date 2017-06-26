@@ -5,10 +5,11 @@
 
 \title{Skladové hospodářství pomocí RFID a Raspberry Pi}
 
-\abstracttexten{The text of the abstract (in English). It contains the English translation of the thesis title and a short description of the thesis.}
+\thanktext{Děkuji panu Ing. Lukášovi Svobodovi nejen za odborné vedení mé bakalářské práce, ale také za užitečné připomínky a za čas strávený konzultacemi.}
 
-\abstracttextcz{Text abstraktu (česky). Obsahuje krátkou anotaci (cca 10 řádek) v češtině. Budete ji potřebovat i při vyplňování údajů o bakalářské práci ve STAGu. Český i anglický abstrakt by měly být na stejné stránce a měly by si obsahem co možná nejvíce odpovídat (samozřejmě není možný doslovný překlad!).
-}
+\abstracttexten{This thesis deals with possibilities of using a RFID for warehouse management. The part of the thesis is implementation of warehouse system using the RFID and the Raspberry Pi. The storage system consists of three parts of the server, the RFID reader and the mobile application. The server is built on Node.js and communication with other parts is ensured by the protocol MQTT and REST API. Information about warehouse is stored in database MongoDB. The RFID reader is used to add and remove warehouse items. A wiring diagram is available to build a reader, programming was done in Python. Mobile apps for Android are used to manage malt system, and NFC has been used to quickly retrieve warehouse item information.}
+
+\abstracttextcz{Práce se zabývá možnostmi využití RFID pro skladové hospodářství. Součástí práce je implementace skladového systému s užitím RFID a Raspberry Pi. Skladový systém se skládá ze tří částí: serveru, čtečky RFID a mobilní aplikace. Server je postavený na Node.js a komunikaci s dalšími částmi zajišťuje protokol MQTT a REST API. Informace o skladu jsou ukládány do NoSQL databáze MongoDB. Čtečka RFID slouží k přidávání a odebírání skladových položek. Pro sestrojení čtečky je k dispozici schéma zapojení a programování probíhalo v jazyce Python. Mobilní aplikace pro Android slouží ke správě skladového systému, NFC se využívá k rychlému načtení informací o položce skladu.}
 
 \usepackage[nottoc,notlot,notlof]{tocbibind}
 \usepackage[pdftex]{graphicx}
@@ -28,6 +29,7 @@
 \usepackage{enumitem}
 \usepackage{subcaption} 
 \usepackage{float}
+\usepackage{csquotes}
 
 \begin{document}
 
@@ -35,39 +37,21 @@
 \tableofcontents
 
 
+
 \chapter{Úvod}
+
+Nástupem čtvrté průmyslové revoluce neboli průmyslu 4.0 se očekává plná automatizace řídících systémů co nejvíce nezávislých na lidské obsluze.
+
+Na průmyslové úrovni má jít o nahrazení manuální lidské práce robotizací, současné \uv{manuální} zadávání dat a postupů má být nahrazeno automatickým předáváním informací mezi materiály, polotvary a jednotlivými stroji, sklady atd. prostřednictvím zapisovatelných RFID čipů umístěných na každém materiálu a produktu. Ve vnitropodnikovém prostředí má být lidská síla v přepravě komponent a materiálů v rámci výrobního procesu nahrazena automatizovanými dopravními prostředky od skladů jednotlivých materiálů až po sklad finálních výrobků.
+
+V oblasti mezifiremní přepravy a dopravy dojde k automatickému řízení logistiky opět na základě sdílení dat pomocí RFID čipů materiálů a produktů, k předávání potřebných dat bude docházet mezi databázovými systémy běžícími na různých internetem propojených serverech. Všechny tyto změny budou hlavně iniciovány touhou ušetřit náklady a ještě více zefektivnit a zrychlit výrobu.
+
+Cílem této práce je zjistit využití technologie RFID pro skladové hospodářství a vytvořit skladový systém s RFID a Raspberry Pi.
+Skladový systém se bude skládat ze serveru, klientské části s uživatelským rozhraním a samotného RFID zařízení.
+
+
+
 \iffalse
-Nástupem čtvrté průmyslové revoluce, označené v České republice jako Průmysl 4.0, se očekává plně automatizovaný proces a 
-sdílení informací v tzv. "chytrých továrnách".
-Průmysl 4.0 bude využívat informační a kybernetické technologie, datová centra, cloudová úložiště, autonomní roboty a
-další. Všechny produkty, zboží i stroje by měly obsahovat čipy, díky kterým je bude možné kontrolovat, obsluhovat, budou 
-komunikovat mezi sebou a přes internet i s majitelem či se zákazníkem. 
-\\\\
- Cílem této práce je vytvořit serverový systém, takový jeden z prvních kroků "chytrého skladu", který umožní vzdáleně 
-komunikovat s klientskou aplikací a samotnou čtečkou RFID. 
-Pro systém je nutné vybrat vhodný programovací jazyk a také optimální způsob komunikace mezi klientem a serverem, 
-či způsob uložení dat. K tomu mají dopomoci Raspberry Pi 2 a čtečka kódů RFID. 
-Součástí práce je vytvořit klientskou část s uživatelským rozhraním pro PC či mobilní zařízení, která umožní 
-vizualizaci dat skladového hospodářství. Tato práce také má testovat a analyzovat výhody či nevýhody vybraného řešení.
-\\\\
-Práce popisuje teoretické řešení skladového hospodářství s využitím čtečky RFID.  
-Také se zabývá zefektivněním a zautomatizováním skladového hospodářství. Popisuje různé druhy RFID, jejich výhody a nevýhody.  
-\\\\
-Dále práce popisuje řešení samotného vývoje skladového systému s využitím RFID.
-\\\\
-V poslední části se pak zabývám samotným testováním vytvořené aplikace a jejím možným rozšířením a vylepšením. 
-
-
-
-
-
-
-
-
-
-
-
-
 1) Seznamte se s Raspberry Pi 2 (RPi), čtečkou čárových (RFID) kódů, zapojením daných zařízení a diskutujte možnosti využití pro skladové hospodářství. Proveďte analýzu problému a zvolte vhodný programovací jazyk. 
 
 2) Vytvořte serverový program, který umožní vzdáleně komunikovat s klientskou aplikací a samotným RFID zařízením.
@@ -78,33 +62,17 @@ Vyberte vhodný způsob komunikace mezi klientem a serverem, způsob uložení d
 4) Vytvořený systém otestujte, zhodnoťte jeho praktickou použitelnost a diskutujte jeho možná vylepšení.
 \fi
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
 \chapter{Skladové hospodářství}
 Skladové hospodářství je nedílnou součástí logistického systému. Sklady mají za úkol přijímat zásoby, uchovávat a vydávat je a provádět potřebné skladové manipulace. Skladové hospodářství má v podnicích návaznost na téměř všechny ostatní úseky. Hlavním úkolem skladu je ekonomické sladění rozdílně dimenzovaných toků v podniku, a to tak, aby bylo dosaženo synergického efektu.\cite{vitek2007skladove}
 
-
 \section{Současný skladový systém}
 Pod tímto pojmem si můžeme představit systém pro evidenci skladu resp. skladovaných zásob (příjem  a  výdej  materiálu), systém pro účtování zásob a jejich objednávek nebo systém pro inventarizaci. Můžeme tedy říci, že skladový systém je systém pro správu ekonomických operací nad skladem.\cite{hron2014skladovy}
-
 
 \section{Skladový systém s RFID}
 
 \subsection{Rychlé načtení údajů}
 \texttt{RFID} čip má oproti etiketě s čárovým kódem dvě hlavní výhody - rychlost čtení a nepřímou viditelnost čtecího zařízení na čip. Současné standardy \texttt{UHF RFID} čipů umožňují načíst najednou až 1000 čipů za sekundu, tato hodnota se však s příchodem novějších a výkonnějších zařízení bude zvyšovat. \texttt{RFID} čtecí zařízení nepotřebuje mít přímou viditelnost na jednotlivé čipy, čtení i zápis probíhá bezdrátově a to do vzdálenosti cca 15 m u pasivních čipů a až 100 m u aktivních čipů.\cite{dolevcek2010identifikace}
-\\
+
 Například paletový přepravník tak může projet celým \texttt{RFID} čtecím portálem a v jeden čas dojde k současnému načtení všech čipů na paletě, tím se dosáhne zrychlení procesu příjmu, výdeje, přesunu a inventarizace produktu.\cite{dolevcek2010identifikace}
 
 \subsection{Odstranění chyb obsluhy}
@@ -119,35 +87,29 @@ V současnosti při samotném logistickém procesu obsluha načte \texttt{čáro
 \subsection{Odolnost RFID čipů}
 Etiketa s \texttt{čárovým kódem} podléhá teplotním a povětrnostním vlivům a následně dochází k poškození etikety. Je tomu hlavně proto, že je nutné etikety s \texttt{čárovým kódem} umisťovat tak, aby je bylo možné načíst čtecím zařízením a tudíž zvenku. \texttt{RFID} čip je umístěn uvnitř produktu nebo balení a tím je odolný jak proti teplotě, vodě i povětrnosti. V současné době na trhu již existují \texttt{RFID} čipy, které navíc mohou obsahovat čidla - například pro měření vlhkosti nebo teploty. \cite{dolevcek2010identifikace}
 
-
 \subsection{Optimalizace skladových zásob}
 Představme si tak obvyklou záležitost, jakou je příjem materiálu (zboží) a jeho naskladnění. Tato operace dnes probíhá v mnoha společnostech po jednotlivých kusech (logistických jednotkách), a tak se také informace dostávají do informačního systému (se zpožděním).
 Celá došlá zásilka je načtena \texttt{RFID} čtečkami během několika sekund a tato informace (násobně větší objem) se přenáší do informačního systému, který dosud nebyl na tento způsob zpracování informací připraven. Výsledkem tohoto naskladnění je okamžitá informace o stavu našeho skladu, a dramatické zrychlení jejího získání. Vybavíme-li stejnou technologií také výrobu ve společnosti, získáme tak stejné informace z jednotlivých částí výroby (stav výroby, průběžné zásoby na pracovišti). 
 Dramatické zrychlení sběru informací v rámci logistiky (výroby) umožňuje daleko lepší plánování zásob společnosti. Pokud máme plán výroby a stavy zásob, tak zásoby, které máme na skladě můžeme odpovědně řídit ne z hlediska \texttt{Q (množství)}, ale z hlediska 
 \texttt{T (času)}. Tím se zcela zásadním způsobem zjednodušuje systém predikce objednávek a otevírá se velký prostor pro optimalizaci skladových zásob - úspory na vázaném kapitálu.\cite{dolevcek2010identifikace}
 
-
-
 \section{Popis systému RFID-RMS}
-
-Systém \texttt{RFID-RMS} se používá pro poskytovatele logistických služeb ke zlepšení skladových operací pomocí sledování a optimalizace využitých zdrojů. \texttt{RFID-RMS} využívá mobilní technologie k přesnému určení lokalizace, sledování a řízení zdrojů v prostředí skladu. Architektura systému \texttt{RFID-RMS} se skládá ze dvou částí, které přispívají k rozhodovacímu procesu v oblasti řízení zdrojů. První část je \texttt{frontend}, obsahující dva moduly pro sběr dat, a to modul pevných logistických dat a modul proměnných logistických dat. Tyto dva moduly obsahují dva různé typy \texttt{RFID tagů} pro ulehčení přenosu a ukládání logistických dat. Druhá část je \texttt{backend}, který obsahuje modul sledování zdrojů, modul řízení zdrojů a datového úložiště. Primární funkcí této části je provádět řízení zdrojů, sledování zdrojů, hodnotit využití zdrojů, výběr nejvhodnější trasy, údržba a kontrola provozu.\cite{chow2006design}
+Systém \texttt{RFID-RMS} se používá pro poskytovatele logistických služeb ke zlepšení skladových operací pomocí sledování a optimalizace využitých zdrojů. \texttt{RFID-RMS} využívá mobilní technologie k přesnému určení lokalizace, sledování a řízení zdrojů v prostředí skladu. Architektura systému \texttt{RFID-RMS} se skládá ze dvou částí, které přispívají k rozhodovacímu procesu v oblasti řízení zdrojů. První část je \texttt{frontend}, obsahující dva moduly pro sběr dat, a to modul pevných logistických dat a modul proměnných logistických dat. Tyto dva moduly obsahují dva různé typy RFID tagů pro ulehčení přenosu a ukládání logistických dat. Druhá část je \texttt{backend}, který obsahuje modul sledování zdrojů, modul řízení zdrojů a datového úložiště. Primární funkcí této části je provádět řízení zdrojů, sledování zdrojů, hodnotit využití zdrojů, výběr nejvhodnější trasy, údržba a kontrola provozu.\cite{chow2006design}
 
 \subsection{Sběr dat}
+\texttt{Modul pevných logistických dat} používá nízkoúrovňové \texttt{radiové} signály pro výměnu dat mezi pasivními tagy a čtečkou. Pasivní tag se skládá z \texttt{integrovaného obvodu} pro uložení identity položek a dalších informací. Jak je znázorněno na obrázku \ref{fig:passive}, pasivní značka je připojena na položky, jako jsou palety, obaly atd. Čtečky tagů s pevnou pozicí antén jsou namontovány do konstrukce jako jsou dveře, vstupní brána nebo integrované do vysokozdvižných vozíků a ostatního vybavení. Obsahuje-li více antén, dokáží v rámci svého rozsahu najednou rozpoznat a číst stovky tagů. Dále budou přijaté signály dekódovány na data a dál poslány pomocí datového připojení k serveru, na kterém běží obchodní logika. Výměna dat mezi čtečkou a řízením zdrojů je zprostředkována prostřednictvím bezdrátové sítě \texttt{LAN}.\cite{chow2006design}
 
-\texttt{Modul pevných logistických dat} používá nízkoúrovňové \texttt{radiové} signály pro výměnu dat mezi pasivními \texttt{tagy} a čtečkou. Pasivní \texttt{tag} se skládá z \texttt{integrovaného obvodu} pro uložení identity položek a dalších informací. Jak je znázorněno na obrázku \ref{fig:passive}, pasivní značka je připojena na položky, jako jsou palety, obaly atd. Čtečky tagů s pevnou pozicí antén jsou namontovány do konstrukce jako jsou dveře, vstupní brána nebo integrované do vysokozdvižných vozíků a ostatního vybavení. Obsahuje-li více antén, dokáží v rámci svého rozsahu najednou rozpoznat a číst stovky \texttt{tagů}. Dále budou přijaté signály dekódovány na data a dál poslány pomocí datového připojení k serveru, na kterém běží obchodní logika. Výměna dat mezi čtečkou a řízením zdrojů je zprostředkována prostřednictvím bezdrátové sítě \texttt{LAN}.\cite{chow2006design}
-\newpage
-
-\begin{figure}[ht]
+\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\textwidth]{../images/passive.jpg}	
 		\caption{Modul proměnných logistických dat\cite{chow2006design}}
 		\label{fig:passive}
 \end{figure}
+\ \\
+K \texttt{modulu proměnných logistických dat} se vztahují ultra-širokopásmové technologie \texttt{(UWB)}, které definují přenos proměnných logistických dat mezi čtečkou a tagem, jak je znázorněno na obrázku \ref{fig:uwb}. Tento modul obsahuje kolekci aktivních tagů, čtyři čtečky \texttt{UWB} a \texttt{Hub procesor} pro sledování polohy zdrojů. \texttt{UWB} aktivní tagy se skládají z interní baterie a krátkého \texttt{impulsového} vysílače umožňujícího vysílat na mnohem delší vzdálenost. Tag vydá krátkodobý \texttt{pulzní} signál několikrát za sekundu. \texttt{UWB} čtečky přijímají signály a posílají je do Hub procesoru. S logickým nastavením \texttt{triangulace} rozdílného čtení \texttt{UWB} čteček lze vypočítat přesné (x, y, z) souřadnice aktivního tagu. Přitom je koordinace zdrojů ve skladu přesně vypočítaná. Takové koordinace zdrojů budou předány \texttt{sledovacímu modulu zdroje} pro následné zpracování.\cite{chow2006design}
 
-K \texttt{modulu proměnných logistických dat} se vztahují ultra-širokopásmové technologie \texttt{(UWB)}, které definují přenos proměnných logistických dat mezi čtečkou a tagem, jak je znázorněno na obrázku \ref{fig:uwb}. Tento modul obsahuje kolekci aktivních tagů, čtyři čtečky \texttt{UWB} a \texttt{Hub procesor} pro sledování polohy zdrojů. \texttt{UWB} aktivní tagy se skládají z interní baterie a krátkého \texttt{impulsového} vysílače umožňujícího vysílat na mnohem delší vzdálenost. \texttt{Tag} vydá krátkodobý \texttt{pulzní} signál několikrát za sekundu. \texttt{UWB} čtečky přijímají signály a posílají je do Hub procesoru. S logickým nastavením\texttt{triangulace} rozdílného čtení \texttt{UWB} čteček lze vypočítat přesné (x, y, z) souřadnice aktivního \texttt{tagu}. Přitom je koordinace zdrojů ve skladu přesně vypočítaná. Takové koordinace zdrojů budou předány \texttt{sledovacímu modulu zdroje} pro následné zpracování.\cite{chow2006design}
 
-
-\begin{figure}[ht]
+\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.6\textwidth]{../images/uwb.jpg}	
 		\caption{Modul proměnných logistických dat\cite{chow2006design}}
@@ -155,31 +117,35 @@ K \texttt{modulu proměnných logistických dat} se vztahují ultra-širokopásm
 \end{figure}
 
 
-
-
 \subsection{Sledování}
-\texttt{Modul sledování zdrojů} je server, který uloží všechny údaje aktivních \texttt{tagů} a poskytuje výkonné prostředí pro manipulaci s daty, filtruje a předává veškeré užitečné údaje řízení zdrojů pro formulování obchodní logiky a rozhodování. To je základem pro řízení zdrojů pro provádění činností včetně řízení zdrojů, plánování zdrojů, využívání a měření výkonnosti. Kromě výše uvedených funkcí, modul sledování je schopný převést data \texttt{UWB} na (x, y, z) souřadnice, které pak poskytují v reálném čase vizuální zobrazení přesného umístění zdroje na mapě skladu.\cite{chow2006design}
+\texttt{Modul sledování zdrojů} je server, který uloží všechny údaje aktivních tagů a poskytuje výkonné prostředí pro manipulaci s daty, filtruje a předává veškeré užitečné údaje řízení zdrojů pro formulování obchodní logiky a rozhodování. To je základem pro řízení zdrojů pro provádění činností včetně řízení zdrojů, plánování zdrojů, využívání a měření výkonnosti. Kromě výše uvedených funkcí, modul sledování je schopný převést data \texttt{UWB} na (x, y, z) souřadnice, které pak poskytují v reálném čase vizuální zobrazení přesného umístění zdroje na mapě skladu.\cite{chow2006design}
 
 \subsection{Řízení}
-\texttt{Modul řízení zdrojů} zpracovává data z aktivních \texttt{tagů} v reálném čase. Na základě těchto informací hledá optimální trasu a délku cesty k vyzvednutí zdrojů každým potenciálním manipulačním zařízením. V důsledku toho je vybráno zařízení nejvhodnější pro provedení úkolu.\cite{chow2006design}
+\texttt{Modul řízení zdrojů} zpracovává data z aktivních tagů v reálném čase. Na základě těchto informací hledá optimální trasu a délku cesty k vyzvednutí zdrojů každým potenciálním manipulačním zařízením. V důsledku toho je vybráno zařízení nejvhodnější pro provedení úkolu.\cite{chow2006design}
 	
-
-
 \chapter{Popis zařízení}
 	\section{Raspberry Pi}
-		\texttt{Raspberry Pi (RPi)} je řada malých jedno deskových počítačů, vyvíjená ve Velké Británii.\\		
-		Pro tento projekt se použije \texttt{Raspberry Pi 2 Model B}, číslovka v názvu určuje generaci a \texttt{model B} značí osazení \texttt{Ethernetovým portem} na rozdíl od \texttt{modelu A}.
-		\texttt{RPi} má procesor \texttt{Broadcom BCM2836 ARM Cortex-A7 Quad Core} \texttt{700 MHz} lze přetaktovat na \texttt{900 MHz}, \texttt{1GB RAM}, 4x \texttt{USB 2.0}, \texttt{HDMI}, \texttt{4-pólový jack} a již zmiňovaný \texttt{10/100 Ethernet}. Přenosová rychlost \texttt{ethernetu} je velmi omezená, protože je napojený na \texttt{USB řadič}.\\
-		V slotu \texttt{MicroSDHC} musí být \texttt{microSD karta}, protože zní se musí nabootovat operační systém.\\
-		Na desce jsou ještě umístěny 2 řady \texttt{pinů}, takzvané \texttt{GPIO} viz obrázek \ref{fig:gpio}.\\
-		PRi neobsahuje \texttt{RTC (Real Time Clock)}, získávání aktuálního času se řeší pomocí \texttt{NTP (Network Time Protocol)}.
+		\texttt{Raspberry Pi (RPi)} je řada malých jednodeskových počítačů, vyvíjená ve Velké Británii. Pro tento projekt se použije \texttt{Raspberry Pi 2 Model B} (viz obrázek \ref{fig:rpi2}), číslovka v názvu určuje generaci a \texttt{model B} je osazen \texttt{Ethernetovým portem} na rozdíl od \texttt{modelu A}. \texttt{RPi} má procesor \texttt{Broadcom BCM2836 ARM Cortex-A7 Quad Core} \texttt{700 MHz} s možností přetaktovat na \texttt{900 MHz}, \texttt{1GB RAM}, 4x \texttt{USB 2.0}, \texttt{HDMI}, \texttt{4-pólový jack} a již zmiňovaný \texttt{10/100 Ethernet}. Přenosová rychlost \texttt{ethernetu} je velmi omezená, protože je napojený na \texttt{USB řadič}. V slotu \texttt{MicroSDHC} musí být \texttt{microSD karta}, protože z ní bootuje operační systém. 
+		
+Na desce jsou ještě umístěny 2 řady \texttt{pinů}, takzvané \texttt{GPIO} (viz obrázek \ref{fig:gpio}).
+
+PRi neobsahuje \texttt{RTC (Real Time Clock)}, získávání aktuálního času se řeší pomocí \texttt{NTP (Network Time Protocol)}.
+	
+	
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.85\textwidth]{../images/rpi2.jpg}	
+		\caption{Raspberry Pi 2 Model B}
+		\label{fig:rpi2}
+	\end{figure}
+		
 	
 
 		\subsection{GPIO}
-			\texttt{GPIO (General Purpose Input/Output)} je \texttt{40 pinů} umístěných na desce ve dvouch řadách. Číslování pinů je dvojího typu \texttt{BCM} a \texttt{BOARD}, u \texttt{BCM} se počítají jen nastavitelné piny, když to u \texttt{BOARD} se počítají všechny.
-Mezi nenastavitelné piny patří napájení \texttt{5V} (\textcolor{red}{\textbf{červená}}), napájení \texttt{3V3} (\textcolor{orange}{\textbf{oranžová}}) a \texttt{zem} (\textbf{černá}) viz obrázek \ref{fig:gpio} .	
+			\texttt{GPIO (General Purpose Input/Output)} je \texttt{40 pinů} umístěných na desce ve dvouch řadách. Číslování pinů je dvojího typu \texttt{BCM} a \texttt{BOARD}, u \texttt{BCM} se počítají jen nastavitelné piny, kdežto u \texttt{BOARD} se počítají všechny.
+Mezi nenastavitelné piny patří napájení \texttt{5V} (\textcolor{red}{\textbf{červená}}), napájení \texttt{3V3} (\textcolor{orange}{\textbf{oranžová}}) a \texttt{zem} (\textbf{černá}) (viz obrázek \ref{fig:gpio}).	
 		
-		\begin{figure}[h]
+		\begin{figure}[H]
    		 	\centering
 			\includegraphics[width=1\textwidth]{../images/gpio.png}	
 			\caption{Schéma \texttt{GPIO}}
@@ -189,31 +155,31 @@ Mezi nenastavitelné piny patří napájení \texttt{5V} (\textcolor{red}{\textb
 		
 		\subsection{Operační systémy}
 			\subsubsection{Raspbian}
-				\texttt{Raspbian} je operační systém založený na linuxové distribuci \texttt{Debian} a optimalizován pro hardware \texttt{Raspberry Pi}. Systém je vydáván ve dvou verzích Pixel a Lite, verze Pixel obsahuje navíc \texttt{GUI} a balíčky pro vývoj, což se promítlo na celkové velikost 4GB oproti Lite verzi s 1,5 GB. Pro většinu hlavních programujících jazyků je k dispozici knihovna pro ovládání \texttt{GPIO}.
+				\texttt{Raspbian} je operační systém založený na linuxové distribuci \texttt{Debian} a optimalizován pro hardware \texttt{Raspberry Pi}. Systém je vydáván ve dvou verzích Pixel a Lite, verze Pixel obsahuje navíc \texttt{GUI} a balíčky pro vývoj, což se promítlo na celkové velikosti 4 GB oproti Lite verzi s 1,5 GB. Pro většinu hlavních programujících jazyků je k dispozici knihovna pro ovládání \texttt{GPIO}.
 			
 			\subsubsection{Windows 10 IoT Core}
-			Verze \texttt{Windows 10 IoT Core} je určena pro minipočítače typu \texttt{Raspberry Pi}. Systém je v raném vývoji a je na stránkách Microsoftu k dispozici zdarma.\\ Systém nemá uživatelské rozhraní. Spravuje se přes webové rozhraní nebo \texttt{Powershell} nebo na něm běží aplikace, která uživatelské rozhraní může mít. Spustit lze pouze \texttt{Universal Windows Platform (UWP)} aplikace, které je možné psát v \texttt{c\#}, \texttt{c/c++}, \texttt{Pythonu}, \texttt{Node.js} a \texttt{javascriptu}. Pro vývoj a nahrání \texttt{UWP} aplikace je zapotřebí mít \texttt{Visual Studio 2015}.
-
-\newpage			
-	\section{RFID}
+Verze \texttt{Windows 10 IoT Core} je určena pro minipočítače typu \texttt{Raspberry Pi}. Systém je v raném vývoji a je na stránkách Microsoftu k dispozici zdarma. Systém nemá uživatelské rozhraní. Spravuje se přes webové rozhraní, \texttt{Powershell} nebo na něm běží aplikace, která uživatelské rozhraní může mít. Spustit lze pouze \texttt{Universal Windows Platform (UWP)} aplikace, které je možné psát v \texttt{c\#}, \texttt{c/c++}, \texttt{Pythonu}, \texttt{Node.js} a \texttt{javascriptu}. Pro vývoj a nahrání \texttt{UWP} aplikace je zapotřebí mít \texttt{Visual Studio 2015}.
+			
+\section{RFID}
 \texttt{RFID} představuje technologii identifikace pomocí radiofrekvenčních vln. Jedná se v podstatě o generaci identifikátorů navržených (nejen) k identifikaci zboží, navazujících na systém \texttt{čárových kódů}. Identifikace a dohledatelnost je možná celosvětově, a to při dodržení standardu dat \texttt{EPC Global} a s využitím internetového rozhraní \texttt{EPC Global Network}. \texttt{EPC} o délce 96 bitů nabízí dostatečný číselný prostor 268 milionům výrobců produkujícím každý 16 milionů druhů výrobků (tříd), přičemž v každé třídě je prostor pro 68 miliard sériových čísel.\cite{dolevcek2010identifikace}
 
 \subsection{Základní princip}
-Technologie \texttt{RFID} pracuje na principu radaru. \texttt{Transpondéry (tagy)} mohou být jak aktivní, tak pasivní. Čtečka nejprve vysílá na svém nosném kmitočtu \texttt{elektromagnetickou vlnu}, která je přijata anténou pasivního \texttt{transpondéru}. \texttt{Indukované napětí} vyvolá elektrický proud, který je usměrněn a nabíjí \texttt{kondenzátor} v \texttt{transpondéru}. Uložená energie je použita pro napájení \texttt{logických} a \texttt{rádiových obvodů} transpondéru. Když napětí na \texttt{kondenzátoru} dosáhne minimální potřené úrovně, spustí se \texttt{logický automat} či \texttt{mikroprocesor} a \texttt{transpondér} začne odesílat odpověď čtečce. Vysílání \texttt{transpondéru} je realizováno zpravidla pomocí dvoustavové \texttt{ASK (Amplitude Shifting Key)} modulace, která je realizována změnou zakončovací impedance antény \texttt{transpondéru}. Odrazy, které vznikají změnou \texttt{impedance} antény, jsou detekovány čtečkou do \texttt{binární} podoby. Řízení komunikace a jednotlivých stavů komunikačního řetězce je definováno příslušnou \texttt{ISO normou}.\cite{dolevcek2010identifikace}
+Technologie \texttt{RFID} pracuje na principu radaru. Transpondéry (tagy) mohou být jak aktivní, tak pasivní. Čtečka nejprve vysílá na svém nosném kmitočtu \texttt{elektromagnetickou vlnu}, která je přijata anténou pasivního \texttt{transpondéru}. \texttt{Indukované napětí} vyvolá elektrický proud, který je usměrněn a nabíjí \texttt{kondenzátor} v \texttt{transpondéru}. Uložená energie je použita pro napájení \texttt{logických} a \texttt{rádiových obvodů} transpondéru. Když napětí na \texttt{kondenzátoru} dosáhne minimální potřebné úrovně, spustí se \texttt{logický automat} či \texttt{mikroprocesor} a \texttt{transpondér} začne odesílat odpověď čtečce. Vysílání \texttt{transpondéru} je realizováno zpravidla pomocí dvoustavové \texttt{ASK (Amplitude Shifting Key)} modulace, která je realizována změnou zakončovací impedance antény \texttt{transpondéru}. Odrazy, které vznikají změnou \texttt{impedance} antény, jsou detekovány čtečkou do \texttt{binární} podoby. Řízení komunikace a jednotlivých stavů komunikačního řetězce je definováno příslušnou \texttt{ISO normou}.\cite{dolevcek2010identifikace}
+
 
 \subsection{Forma tagu}
-\texttt{RFID tag} - paměťový \texttt{radiofrekvenční} čip nesoucí datovou informaci, který komunikuje bezkontaktně a bez přímé viditelnosti se snímačem - nejčastěji v podobě etikety nebo štítku. Provedení (tvar, rozměry, materiál) se mohou velmi lišit dle požadavků aplikace. \texttt{RFID tag} se skládá z vlastního čipu, antény, propojení a zapouzdření, případně baterie. Čip definuje kapacitu a typ \texttt{RFID tagu}, anténa stanovuje kvalitu příjmu a odesílání \texttt{radiofrekvenčního} signálu, zapouzdření ovlivňuje možnost použití v různých prostředích a životnost tagu.\cite{dolevcek2010identifikace}
+RFID tag - paměťový \texttt{radiofrekvenční} čip nesoucí datovou informaci, který komunikuje bezkontaktně a bez přímé viditelnosti se snímačem - nejčastěji v podobě etikety nebo štítku. Provedení (tvar, rozměry, materiál) se mohou velmi lišit dle požadavků aplikace. RFID tag se skládá z vlastního čipu, antény, propojení a zapouzdření, případně baterie. Čip definuje kapacitu a typ RFID tagu, anténa stanovuje kvalitu příjmu a odesílání \texttt{radiofrekvenčního} signálu, zapouzdření ovlivňuje možnost použití v různých prostředích a životnost tagu.\cite{dolevcek2010identifikace}
 
 \newpage
 \begin{description}
 \item [RFID Smart label]
-- čip je umístěn na po tisknutelné etiketě s možností dalších informací (text, \texttt{čárový kód}) viz obrázek \ref{fig:rfidsmartlabel}
+- čip je umístěn na potisknutelné etiketě s možností dalších informací (text, \texttt{čárový kód}) viz obrázek \ref{fig:rfidsmartlabel}
 \item [RFID wristband] - náramek na ruku obsahující \texttt{RFID} čip,  využití ve zdravotnictví k identifikaci osob.
 \item [RFID karta] - čip může být zapouzdřen do plastové karty nebo předmětu typu klíčenky – např. k využití v platebních a docházkových systémech.
 \item [RFID inlay] - zabudování čipu přímo do produktu, v případě kovového výrobku možnost oddělující vrstvy kvůli rušení.
 \end{description}
 
-\begin{figure}[ht]
+\begin{figure}[H]
    		 	\centering
 			\includegraphics[width=0.6\textwidth]{../images/rfid_smart_label.jpg}	
 			\caption{Pasivní HF RFID}
@@ -222,10 +188,10 @@ Technologie \texttt{RFID} pracuje na principu radaru. \texttt{Transpondéry (tag
 
 
 \subsection{Frekvenční pásma}
-Systémy \texttt{RFID} pracují s různými frekvencemi, která ovlivňuje rychlost čtení a zápisu, dosah signálu a prostor pokrytí atd.
+Systémy \texttt{RFID} pracují s různými frekvencemi, přičemž frekvence ovlivňuje rychlost čtení a zápisu, dosah signálu a prostor pokrytí atd.
 Více informací v tabulce \ref{table:rfid_frekvence}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \begin{tabular}{ c | c | p{5cm}}
  	\textbf{Frekvence} & \textbf{Dosah} & \textbf{Popis} \\ \hline\hline
@@ -252,180 +218,314 @@ Více informací v tabulce \ref{table:rfid_frekvence}
 \newpage
 
 \subsection{Zdroje napájení}
-Čipy (\texttt{tagy}) se dělí na aktivní a pasivní podle toho, zda je možné informace z nich nejen číst (pasivní), ale i do nich zapisovat (aktivní). Aktivní jednotky pak musí disponovat vlastním zdrojem energie; ten obstarává miniaturní baterie. Jejich paměť pro zápis může dosahovat až 1 MB.\cite{dolevcek2010identifikace}
+Čipy (tagy) se dělí na aktivní a pasivní podle toho, zda je možné informace z nich nejen číst (pasivní), ale i do nich zapisovat (aktivní). Aktivní jednotky pak musí disponovat vlastním zdrojem energie, ten obstarává miniaturní baterie.\cite{dolevcek2010identifikace}
 
 \subsubsection{Pasivní}
 Pasivní zdroje jsou nejrozšířenější, nemají vlastní baterii, napájeny jsou polem snímače. Ten periodicky vysílá pulsy prostřednictvím antény do prostoru, čip využije přijímaný signál k nabití svého napájecího \texttt{kondenzátoru} a vyšle odpověď. Pasivní tagy mají různou vzdálenost čtení od 0,5 m do 10 m, dlouhou životnost čipu a používají metodu \texttt{RTF (reader talk first)}. V současné době jsou nejvíce rozšířeny pasivní čipy a to zejména kvůli své nenáročnosti na obsluhu a odolnosti, velikost paměti 64-256 bitů.\cite{dolevcek2010identifikace}
+
+
 \subsubsection{Aktivní}
 Aktivní zdroje mají vlastní baterii, jsou schopny vyslat svoji identifikaci. Používají se méně často než pasivní systém \texttt{RFID}. Jsou složitější, obsahují navíc i zdroj napájení a jsou schopny samostatně vysílat své identifikace - používají se proto pro aktivní lokalizaci.
 Aktivní čipy vysílají samy své údaje do okolí \texttt{TTF (tag talks first)}, to umožňuje vlastní miniaturní baterie umístěná v čipu, která vydrží cca 1-5 let. Tyto čipy však kvůli baterii mají menší odolnost na teplotu a je nutné provádět výměnu baterie. Aktivní čipy mají vzdálenost čtení až 100 m, velikost paměti na čipu může dosahovat až 100 kb.\cite{dolevcek2010identifikace}
 
 
 \subsection{Čtečka}
-Snímače neboli čtečky \texttt{RFID} jsou zařízení, která dokáží zachytit vysílání aktivního nebo pasivního tagu. Čtečka nemusí pouze informace zachycovat, ale také může do \texttt{tagu} zapisovat. Čtečka používá pro vysílání a přijímání signálu anténu, která může být integrovaná nebo externí. Základním požadavkem na čtečku je schopnost zpracovat obrovské množství dat. Čtečky musí poznat již jednou přečtené \texttt{tagy} a odstranit odrazy signálů tagů od pevných překážek a musí zvládnout současně načíst velký počet \texttt{tagů}. S tím souvisí schopnost paralelně načítat \texttt{tagy} v relativně krátkém časovém intervalu.\cite{dolevcek2010identifikace}	
+Snímače neboli čtečky \texttt{RFID} jsou zařízení, která dokáží zachytit vysílání aktivního nebo pasivního tagu. Čtečka nemusí pouze informace zachycovat, ale také může do tagu zapisovat. Čtečka používá pro vysílání a přijímání signálu anténu, která může být integrovaná nebo externí. Základním požadavkem na čtečku je schopnost zpracovat obrovské množství dat. Čtečky musí poznat již jednou přečtené tagy a odstranit odrazy signálů tagů od pevných překážek a musí zvládnout současně načíst velký počet tagů. S tím souvisí schopnost paralelně načítat tagy v relativně krátkém časovém intervalu.\cite{dolevcek2010identifikace}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+\chapter{Technologie}
+		\section{Python}
+			\texttt{Python} je interpretovaný, interaktivní, objektově orientovaný programovací jazyk. Poskytuje vysokoúrovňové datové struktury, jako jsou seznam a asociativní \texttt{pole}, dynamické zadávání a dynamické vazby, moduly, \texttt{třídy}, výjimky, automatické řízení paměti atd. Má pozoruhodně jednoduchou a elegantní syntaxi a přesto je univerzálním programovacím jazykem. Byl navržen Guido van Rossum v roce 1990. Stejně jako mnoho jiných skriptovacích jazyků je to zdarma, a to i pro komerční účely, a může být provozováno prakticky na jakémkoliv moderním počítači. \texttt{Python} program je automaticky překládán interpretem do nezávislého bajtového kódu platformy, který je pak interpretován.\cite{sanner1999python}
+
+Python je modulární. Jádro je velmi malé a může být rozšířeno importováním rozšiřujících modulů. Distribuce Pythonu zahrnuje rozmanitou knihovnu standardních rozšíření (některé jsou napsány v jazyce \texttt{Python}, jiné v jazyce C nebo C ++) pro operace od manipulací s řetězci a regulárních výrazů atd. Tyto rozšiřující moduly jsou někdy označované jako \uv{balíčky} nebo komponenty.\cite{sanner1999python}
+			
+		
+		\section{Java}
+		Jazyk \texttt{Java} byl vytvořen vývojářským týmem firmy Sun Microsystems pod vedením Jamese Goslinga. Java je objektově orientovaný jazyk, jehož syntaxe je podobná \texttt{C} nebo \texttt{C++}. \texttt{Java} je interpretovaný jazyk - to znamená, že program se nepřekládá přímo do strojového kódu, ale do takzvaného bajtkódu, který je následně interpretován virtuálním strojem \texttt{Java}. To zabezpečuje, že Java je na platformě nezávislý jazyk. O správu paměti se stará automatický \texttt{Garbage Collector}, jenž zabezpečuje, aby objekty, které se už nepoužívají, byly odstraněny. Problém přestavuje skutečnost, že nevíme, kdy bude spuštěn.\cite{lacko2017vyvoj}
+	
+		\section{Node.js}
+		\texttt{Node.js} je \texttt{JavaScript} v serverovém prostředí. Je založen na implementaci \texttt{V8 enginu} od \texttt{Googlu}. \texttt{V8} a \texttt{Node.js} jsou většinou implementovány v \texttt{C} a \texttt{C ++} se zaměřením na výkon a nízkou spotřebu paměti. Ale zatímco \texttt{V8} podporuje hlavně \texttt{JavaScript} v prohlížeči, \texttt{Node.js} je zaměřen na podporu dlouhodobých serverových procesů.
+Na rozdíl od většiny ostatních moderních prostředí, proces Node.js se nespoléhá na multithreading, který podporuje souběžné provádění logiky. Je založen na asynchronním modelu události \texttt{I/O}. Přemýšlejte o procesu serveru \texttt{Node.js} jako o jednovláknovém démonu, který vloží do \texttt{JavaScriptu} podporu přizpůsobení. To se liší od většiny událostních systémů pro jiné programovací jazyky, které přicházejí ve formě knihoven. Node.js podporuje model události na jazykové úrovni. JavaScript je vhodný pro tento přístup, protože podporuje zpětná volání událostí. Například, když prohlížeč úplně načte dokument, uživatel klepne na tlačítko nebo je splněn \texttt{AJAX} požadavek, událost vyvolá zpětné volání. Funkčnost přirozeného jazyka \texttt{JavaScript} usnadňuje vytváření anonymních funkcí, které si můžete zaregistrovat jako obslužné události.\cite{tilkov2010node}
+	
+		\section{JSON}
+			\texttt{JSON} je navržen tak, aby byl jazykově nezávislý, čitelný pro lidi a pro počítače snadno zpracovatelný. \texttt{JSON} je přímo podporován v jazyce JavaScript a je nejvhodnější pro aplikace v \texttt{JavaScriptu}. Tím je zajištěno značné zvýšení výkonu o proti \texttt{XML}, které vyžaduje další knihovny, aby načetly data z objektu \texttt{DOM (Document Object Model)}. Odhaduje se, že \texttt{JSON} v moderních prohlížečích zpracovává až stokrát rychleji než \texttt{XML}. Argumenty proti \texttt{JSONu} zahrnují nedostatek podpory jmenného prostoru, nedostatek ověřování vstupů a nedostatky rozšiřitelnosti. Ověření vstupů je odpovědností jednotlivých aplikací a nedostatek rozšíření je řešen flexibilitou konstrukcí \texttt{JSON}. Syntaxe \texttt{JSONu} je člověku čitelná.\cite{nurseitov2009comparison}		
+\\\\	
+Ukázka JSON formátu k zakódování jména a příjmení:
+\begin{verbatim}
+{firstname: 'Jan', lastname: 'Kohlíček'}
+\end{verbatim}
+
+		\section{MQTT}
+\texttt{MQTT} je jednoduchý a nenáročný protokol pro předávání zpráv mezi klienty prostřednictvím centrálního bodu – \texttt{brokeru}. Díky této nenáročnosti a jednoduchosti je snadno implementovatelný. Navržen byl v \texttt{IBM}, dnes za ním stojí Eclipse foundation.\cite{maly2016mqtt}
+
+U protokolu \texttt{MQTT} probíhá přenos pomocí \texttt{TCP} a používá návrhový vzor publisher – subscriber. Tedy existuje jeden centrální bod (\texttt{MQTT broker}), který se stará o výměnu zpráv. Zprávy jsou tříděny do tzv. témat (topic) a zařízení buď publikuje v daném tématu (publish), to znamená, že posílá data brokeru, který je ukládá a distribuuje dalším zařízením, nebo je přihlášeno k odběru tématu či témat (subscribe), a broker pak všechny zprávy s daným tématem posílá do zařízení. Jedno zařízení samozřejmě může najednou být v některých tématech publisher, v jiných subscriber.\cite{maly2016mqtt}
+
+Samotný obsah zpráv není nijak daný ani vyžadovaný, \texttt{MQTT} je \texttt{payload agnostic}. Obsah zprávy jsou nějaká binární data, která jsou přenesena. Nejčastěji se používá \texttt{JSON}, \texttt{BSON}, textové zprávy. Velikost zprávy je v aktuální verzi protokolu omezena na necelých \texttt{256 MB}.\cite{maly2016mqtt}
+\\\\		
+\texttt{MQTT} minimalizuje množství servisních dat. Zavádí tři úrovně \texttt{QoS}:
+\begin{description}
+\item [\texttt{QoS 0}] - Nejnižší úroveň znamená, že zpráva je odeslána bez potvrzení a není zaručeno její doručení (\texttt{At most once})
+\item [\texttt{QoS 1}] - Prostřední úroveň říká, že zpráva je doručena alespoň jednou (\texttt{At least once})
+\item [\texttt{QoS 2}] - Nejvyšší úroveň znamená, že každá zpráva je doručena právě jednou (\texttt{Exactly once})
+\end{description}
+\ \\
+Pro zajištění zabezpečení může \texttt{MQTT} broker vyžadovat ověřování pomocí uživatelského jména a hesla. Šifrování komunikace může být řešeno pomocí \texttt{SSL}. 
+Standardní port pro \texttt{MQTT} je \texttt{1883}, pro komunikaci \texttt{MQTT} přes \texttt{SSL} je výchozím portem \texttt{8883}.\cite{karagiannis2015survey}
+	
+		\section{REST API}	
+		
+		\texttt{REST} není skutečným protokolem, ale architekturou pro \texttt{API}. Poprvé tuto architekturu představil Roy Fielding v roce 2000, a od té doby je široce používána.\cite{karagiannis2015survey}
+		
+		 \texttt{REST} v protokolu \texttt{HTTP} používá metody \texttt{GET}, \texttt{POST}, \texttt{PUT} a \texttt{DELETE} poskytující systém pro zasílání zpráv orientovaný na zdroje, kde lze všechny akce provádět jednoduše pomocí asynchronních příkazů \texttt{HTTP} požadavek/odpověď. Používá vestavěnou hlavičku protokolu \texttt{HTTP}, která označuje formát dat v obsahu. Typ obsahu může být \texttt{XML} nebo \texttt{JSON} a závisí na serveru \texttt{HTTP} a jeho konfiguraci. \texttt{REST} je již důležitou součástí \texttt{IoT}, protože je podporována všemi komerčními cloudovými platformami \texttt{M2M}. Navíc může být snadno implementována v mobilních aplikacích, protože vyžaduje pouze knihovnu \texttt{HTTP}, která je dostupná pro všechny distribuce operačních systémů. Funkce \texttt{HTTP} mohou být plně využity v architektuře \texttt{REST} včetně cachování, autentizace a požadování typu obsahu.\cite{karagiannis2015survey}
+		 
+		 \texttt{RESTful} služby využívají bezpečný a spolehlivý protokol \texttt{HTTP}, který může využívat protokol \texttt{TLS/SSL} pro zabezpečení. Dnes však většina komerčních M2M platforem nepodporuje požadavky HTTPS. Namísto toho poskytují jedinečné ověřovací klíče, které musí být v záhlaví každé žádosti, aby bylo dosaženo jisté úrovně zabezpečení.\cite{karagiannis2015survey} 
+		 
+		 I když je \texttt{REST} již v komerčních platformách M2M široce využíván, je nepravděpodobné, že se stane dominantním protokolem kvůli tomu, že nebude snadno implementovatelný. Používá protokol HTTP, což znamená, že není kompatibilní s omezenými komunikačními zařízeními. Toto ponechává jeho použití pro konečné aplikace.\cite{karagiannis2015survey} 
+		 
+		 Vzhledem k současné tendenci používání \texttt{REST} na mobilních aplikacích, ovlivňuje dodatečná režie spojená s protokolem požadavek/odpověď výdrž baterie. Režie se stane zbytečnou při nepřetržitém volání a dlouhém dotazování na hodnoty, zejména v případě, že nejsou k dispozici nové aktualizace.\cite{karagiannis2015survey}
+
+
+		\section{MongoDB}
+		
+\texttt{MongoDB} je dokumentově orientovaná databáze. Dokument je v \texttt{MongoDB} základní datovou jednotkou, srovnatelnou s řádkem v relačních databázích. Jedná se o semistrukturované dokumenty vybavené indexy. Dokumenty jsou seskupovány do kolekcí, které se podobají tabulkám relačních databází, ale nemají pevně dané schéma. Protože kolekce neomezují schéma, mohou být seskupovány libovolné dokumenty v jedné kolekci. Dokumenty v kolekci by ale měly být podobné, aby bylo možné efektivní indexování. Kolekce se seskupují do databází, které jsou uloženy jako soubory v operačním systému. Jedna instance \texttt{MongoDB} může spravovat několik databází, které jsou zcela nezávislé.\cite{houvzvivcka2012aplikace}
+
+Dokumenty jsou ukládány ve formátu \texttt{BSON}. \texttt{BSON} je binární reprezentace \texttt{JSON} formátu. \texttt{BSON} formát je bohatší než \texttt{JSON} formát a podporuje další datové typy, jako regulární výrazy, binární data nebo datum. Každý dokument má unikátní identifikátor, který je zadán uživatelem při vytváření dokumentu nebo je vytvořen \texttt{MongoDB}.\cite{houvzvivcka2012aplikace}
+\\\\
+Vývoj \texttt{MongoDB} je zaměřen na čtyři hlavní oblasti:
+\begin{description}
+\item [Flexibilita]
+- \texttt{MongoDB} ukládá data jako dokumenty ve formátu \texttt{JSON}, který poskytuje datový model, jež se snadno mapuje na datové typy programovacích jazyků. Jelikož se jedná o datový model bez schématu, je jeho použití daleko snadnější než u relačních databází.\cite{houvzvivcka2012aplikace}
+
+\item [Funkcionalita] - \texttt{MongoDB} poskytuje mnoho z funkcionalit relačních databází, jako jsou sekundární indexy, třídění, agregace apod.\cite{houvzvivcka2012aplikace}
+\item [Rychlost] - Automatické dělení do fragmentů a ukládání souvisejících dat pohromadě umožňuje snadné horizontální škálování databáze a tím zvyšování výkonu bez nutnosti přerušení provozu.\cite{houvzvivcka2012aplikace}
+\item [Snadné použití] -\texttt{MongoDB} je vyvíjena pro snadnou instalaci, konfiguraci, údržbu a provoz. Obsahuje jen málo konfiguračních parametrů a kdekoli je to možné, jsou nastavení prováděna automaticky.\cite{houvzvivcka2012aplikace}
+\end{description}	
+
+
+	
+	
+	
+	
+	
 	
 	
 	
 	
 \chapter{Návrh řešení}
 
-%Návrh se skládá ze tří částí serveru, čtečky RFID a klienta.
+Skladový sytém se skládá ze tří propojených částí. 
+První z nich je server zajišťující komunikaci mezi ostatními částmi a databází.  
+Další částí je čtečka \texttt{RFID}, jejímž úkolem je umožnit skladníkům přidat a odebrat položky ze skladu.  
+Poslední částí je klient umožňující uživatelům správu skladu.
 
-%Čtečka RFID načte z tagu UID a odešle ho na server.
-%	Server podle \texttt{UID} přidá/odebere zboží z databáze, 
-%	Správu skladu bude možné provádět přes klienta, v tomto případě mobilní aplikaci.
-%	Též by mohla také sloužit jako přenositelná čtečka, protože většina mobilů má \texttt{NFC}, což je nástupce \texttt{RFID}.
-
-
-
-
-		\section{Komunikace}
+		\section{Server} 
+			Ze dvou možností jsem zvolil architekturu \texttt{client-server}. Hlavní výhodu vidím v tom, že na rozdíl od \texttt{peer-to-peer}, je veškerá logika soustředěná na jednom místě. Také při výskytu chyby stačí aktualizovat jen server, než aktualizovat velké množství zařízení.
+			Dalším přínosem je možnost server přesunout na \texttt{cloud}.
+			\\\\
+			Server bude postavený na serverovém frameworku \texttt{Node.js}, jehož hlavní výhodou je jednoduchá práce s daty ve formátu \texttt{JSON}, také dokáže rychle zpracovat ohromné množství požadavků.
+	Formát \texttt{JSON} se hodí pro tvorbu \texttt{REST API} nebo komunikaci s \texttt{NoSQL} databází. 
+	Komunita kolem \texttt{Node.js} vytváří spoustu užitečných modulů, které jsou k dispozici na \url{npmjs.org}. Tento framework má již rozsáhlou podporu mezi komerčními \texttt{cloudovými platformami}.
+				
 		
-		
-\begin{figure}[ht]
+		\begin{figure}[H]
    		 	\centering
 			\includegraphics[width=1\textwidth]{../diagrams/network.png}	
-			\caption{}
+			\caption{Návrh komunikace}
     		\label{fig:network}
 		\end{figure}
 		
-		
-		
-		\subsection{MQTT}
-		
+		\subsection{Komunikace s čtečkou RFID}
+			Protokol \texttt{MQTT} je komunikačním standardem pro \texttt{IoT}. Jeho nenáročnost se projevuje v několika směrech. Jedním z nich je prodloužená výdrž baterie, což se využije tehdy, pokud bychom chtěli napájet čtečku \texttt{RFID} z baterie. Tím druhým je, že při zavádění velkého množství skladových položek se nepřetíží počítačová síť. 
+			Protokol \texttt{MQTT} je podporován výrobci různých zařízení, která by mohla být přínosem pro skladový systém. Takto bude skladový systém připraven na případné rozšíření.
+			Všechny tyto důvody vedly k tomu, že jsem si tento protokol vybral pro komunikaci se čtečkou \texttt{RFID}.
+			
 
-	
 
+		\subsection{Komunikace s klientem}
+			Nejlepší volbou je otevřené \texttt{REST API}, jehož široká podpora umožní vznik různým aplikacím.
+ 			Také v budoucnu se \texttt{API} stane přínosem při importu a exportu dat skladového sytému.
+			Nelze vyloučit ani přístup jiných systémů, které budou potřebovat k provozu skladový sytém.
+
+
+
+
+
+		\section{Čtečka RFID}
+			Pro \texttt{Raspberry Pi} jsem zvolil operační systém \texttt{Raspbian Jessie Lite}, protože je přímo vyvíjen výrobcem. Tím je zajištěna nejlepší kompatibilita a stabilita. 
+			Systém má širokou komunitu, při vyskytnutí problému bude s velkou pravděpodobností již existovat řešení.\\
+			Aplikace je vyvíjena v programovacím jazyku \texttt{Python}, protože je součástí systému spolu s balíčkem \texttt{RPi.GPIO}. Tento balík obsahuje třídy pro řízení \texttt{GPIO}.
+
+
+		\subsection{Přidat a odebrat položku}
+			Přidávání a odebírání položek skladu lze vyřešit dvěma způsoby:	
+			
+				\begin{itemize}								
+							
+				\item [-] Prvním řešením je využít dvě čtečky \texttt{RFID-RC522}. Jedna čtečka by sloužila pro přidávání a druhá pro odebírání položek skladu.
+				Společně s \texttt{UID} tagu by se posílal i typ akce na server. Nevýhodou tohoto řešení je zvýšení ceny celkového zařízení a zbytečná logika na zařízení.
+				Pozitivum lze vidět v paralelním přidávání a odebírání položek.
+				
+							
+				\item [-] Druhým řešením je mít jen jednu čtečku \texttt{RFID-RC522} a přepínat mezi režimy přidat a odebrat. 
+				To otevírá několik otázek: Kde ukládat aktuální režim? Jak přepínat režim? Jak dát najevo aktuální režim?				
+				
+		
+				\begin{description}				
+				
+				\item [Úložiště režimu] - První, co se nabízí, je ukládat režim na zařízení a serveru posílat \texttt{UID} tagu s aktuálním režimem.
+				Mínusem je zbytečně přidaná logika na zařízení, které se v případě nutnosti bude obtížně aktualizovat.
+				Dalším úložištěm režimu se logicky jeví server, což by přineslo možnost vzdáleně režim měnit. 
+				Nevýhodou by se stala nutnost posílat aktuální režim zařízení.
+				
+				\item [Přepnutí režimu] - Přepínání by bylo možné pomocí tlačítka na zařízení, ale nevýhodou tohoto řešení je hygiena a výdrž mechanických částí. 			 
+				Druhou možností je vyhradit si tag, který by sloužil k přepínání režimu. V neprospěch tohoto řešení je nutnost mít pro každého skladníka tag pro přepínání. 
+				Poslední způsob je přepínat vzdáleně pomocí klienta, což přináší více negativ než pozitiv, hlavně z těchto důvodů: nutnost mít klienta pro každého skladníka, časová náročnost na přepnutí a možné konflikty spojené se vzájemným přepínáním režimu.
+				
+				\item [Zobrazení režimu] - Aktuální režim jde zobrazit třemi způsoby: \texttt{LED diodou}, bzučákem, nebo \texttt{LCD} displejem s rozlišením 16x2 znaků. Jejich samostatné použití je velmi nedostatečné a pro skladníka nepřívětivé. 
+
+
+				Ideální by byla kombinace všech těchto komponentů. Zde je příklad jejich využití: Skladník má tag, který přiloží ke čtečce, ozve se pípnutí (bzučák), což ho upozorní, že tag byl načten. Dioda upozorní zablikáním na příchod odpovědi ze serveru, která se zobrazí na displeji. Na displeji se na prvním řádku objeví druh režimu a na druhém informace o odpovědi serveru.
+				
+				\end{description}				
+				
+				\end{itemize}
+				\ \\
+				Došel jsem k závěru, že pro přidání a odebrání skladových položek bude využita jen jedna čtečka \texttt{RFID-RC522} s přepínáním mezi režimy.
+				Jelikož nemám k dispozici displej ani bzučák, bude zobrazení režimu obstarávat jen \texttt{RGB LED dioda}. Čtečka načte \texttt{UID} tagu a odešle ho na server. Tam se zjistí typ tagu a podle toho se rozhodne, jaká bude akce. Podle typu akce se objeví barevná signalizace. 
+				\ \\
+				Akce podle typu tagu:
+				\begin{description}
+					\item [položka] - Tag reprezentuje položku ve skladu. K vybrané položce se podle aktuálního režimu přičte nebo odečte kus. Při úspěšné akci se pošle příkaz k zablikání zelenou barvou.
+									
+					\item [režim] - Tag změní režim z přidávat na odebírat a naopak. Reakce bude podle změny: pro přidávání příkaz konstantní svícení zelenou a odebírání červenou.
+					\item [neznámý] - Tento typ tagu nemá žádnou funkci. Odpověď serveru bude příkaz pro modré zablikání.
+				\end{description}
+				\ \\
+				Při jakékoliv chybě se odešle příkaz pro zablikání červenou barvou.
+
+				
+	\section{Klient}
+		Pro klienta správy skladu je důležité mít kompletní přehled. Týká se to hlavně obsluhy daného skladu, která zajišťuje příjem, výdej a přesun zboží.
+		K usnadnění činnosti skladníka bude sloužit tato aplikace. V aplikaci samozřejmě nesmí chybět přidávání a upravování položek skladu.
+		Mazaní položky bude možné jen v případě, pokud její počet kusů bude roven nule. Je to opatření proti schodku na skladě a i předcházení nepřesnostem při inventarizaci.
+		Tag se do systému zaeviduje pouze načtením čtečky. Manuální zadání tagu nebude možné. Úprava tagu se bude týkat jen jeho typu. V případě typu položka je nutné přiřadit i konkrétní skladovou položku.
+		
+		Administrátor bude mít navíc k dispozici správu uživatelů a zařízení.
+		Nové uživatele bude moci přidat jen administrátor. Registrace uživatelů nebude možná, protože skladový systém je určený jen skladníkům.
+		Podrobný přehled všech možných akcí pro konkrétní roli viz diagram \ref{fig:mobile_app_use_case}. 
+		
+\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{../diagrams/mobile_app_use_case.png}	
+		\caption{Diagram užití mobilní aplikace}
+		\label{fig:mobile_app_use_case}
+	\end{figure}
 		
 		
 		
-	
-		\subsection{REST API}
+		\subsection{Platforma}
+			Vybrat platformu je důležité pro uživatelskou přívětivost a použitelnost celého systému. K dispozici jsou tyto tři typy: 		
+			
+			\begin{description}	
+				\item [Mobilní aplikace] - mobilní zařízení přináší možnost mít správu skladu neustále u sebe.
+				Skoro každé zařízení dnes má \texttt{NFC}. Jelikož je \texttt{NFC} nástupcem \texttt{RFID}, existuje díky tomu zpětná kompatibilita,
+			což poskytuje schopnost načíst \texttt{UID} tagu. Přiložením mobilu k tagu by skladník měl okamžitě veškeré informace o tagu případně i o položce skladu.
+				
+				\item [Desktopová aplikace] - se hodí pro zobrazení velkého množství dat. Bohužel správa tagů by byla velmi obtížná a komplikovaná, protože vyhledání konkretního tagu lze jen podle \texttt{UID}. 	
+				\item [Webová aplikace] - obrovskou výhodou je možnost spustit aplikaci na jakémkoliv zařízení, které má webový prohlížeč. Nevýhody jsou stejné jako u desktopové aplikace.								
+			\end{description}
+			\ \\
+			Do prostředí skladu bude pro jeho správu ideální volba mobilní aplikace. \texttt{NFC} a přenositelnost jsou důležité aspekty.
+			Jelikož ve skladu probíhá spousta změn, nebudou využity možnosti notifikací, aby skladník nebyl přehlcen informacemi. Z mobilních platforem jsem zvolil \texttt{Android}, protože umožňuje vývojářům plný přístup \texttt{NFC}. 						
+			Zbývající platformy jako je \texttt{Windows Phone} nebo \texttt{iOS} nejsou vhodné. 
+			 \texttt{Windows Phone} je oficiálně nepoužívaná platforma, jelikož její prodej se zastavil. \texttt{iOS} je velmi omezený systém, na kterém lze \texttt{NFC} využít jen k placení a párování s \texttt{Bluetooth} sluchátky. Pro skladový systém je nevhodný. 
+ 
+ 			Vývoj bude cílen na \texttt{Androidu 6.0 Marshmallow}, protože je podle statistik nejrozšířenější verzí systému \texttt{Android}. Ke dni 5.6.2017 je na trhu zastoupen 31,2\%.  
+			Aplikace bude nativní, jelikož bude určená jen pro \texttt{Android}, hybridní nemá význam. Nativní vývoj probíhá v jazyku \texttt{Java}. 
 		
-	
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\textwidth]{../images/android_versions.png}	
+			\caption{Zastoupení jednotlivých verzí systému Android ke dni 5.6.2017\\
+				\centerline{\scriptsize{(zdroj: \url{https://developer.android.com/about/dashboards/index.html})}}}
+			\label{fig:android_versions}
+		\end{figure}		
 		
-	
+				
+		
+		
+		
 	\section{Databáze}
+		Jako databázi jsem vybral \texttt{MongoDB}, protože díky vzdálenému přístupu umožňuje být umístěna jinde než server.
+		Dalším přínosem je dokumentová orientace, což dovoluje vkládat data různého formátu. Tento typ databází má velmi rychlý zápis, který
+		se využije u \texttt{MQTT} brokeru, jež do databáze ukládá příchozí zprávy. \texttt{JSON} format dat velmi urychlí vývoj \texttt{REST API}.  
+		Databáze \texttt{MongoDB} patří mezi nejpoužívanější databáze a její komunita bude mít řešení na jakýkoliv problém.
+	\\\\
+		Návrh databáze bude obsahovat jen nejnutnější údaje, aby se dala prezentovat funkčnost skladového systému.
+		Z návrhu lze vidět, že položka má jen název, popisek a množství. Ostatní údaje jsou aktuálně nedůležité. 
+		Tag obsahuje \texttt{UID} fyzického tagu, tak i \texttt{\_id} generované databází, protože \texttt{UID} nemá standardizovaný formát.
+		Návrh zařízení je velmi obecný, aby do budoucna vyhovoval každému zařízení. 
+		Důležitý atribut \texttt{metadata} může obsahovat jakýkoliv objekt, který dané zařízení bude potřebovat.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.85\textwidth]{../diagrams/warehouse_db_diagram.png}	
+		\caption{Návrh databáze}
+		\label{fig:data}
+	\end{figure}
 	
-	%Databáze bude sloužit k ukládání informací o skladových položkách, RFID tagech, IoT zařízeních a uživatelích.\\
-	%Hlavní požadavek na databázi bylo, aby umožňovala vzdálený přístup.
 	
-		\subsection{MongoDB}
-		Pro uložení dat byla zvolena NoSQL databáze MongoDB.
-		
-MongoDB je dokumentově orientovaná databáze. Dokument je v MongoDB základní datovou jednotkou, srovnatelnou s řádkem v relačních databázích. Jedná se o semistrukturované dokumenty vybavené indexy. Dokumenty jsou seskupovány do kolekcí (collections), které se podobají tabulkám relačních databází, ale nemají pevně dané schéma. Protože kolekce neomezují schéma, mohou být seskupovány libovolné dokumenty v jedné kolekci. Dokumenty v kolekci by ale měly být podobné, aby bylo možné efektivní indexování. Kolekce se seskupují do databází, které jsou uloženy jako soubory v operačním systému. Jedna instance MongoDB může spravovat několik databází, které jsou zcela nezávislé.\cite{houvzvivcka2012aplikace}
-
-Dokumenty jsou ukládány ve formátu BSON. BSON je binární reprezentace JSON formátu. BSON formát je bohatší než JSON formát a podporuje další datové typy, jako regulární výrazy, binární data nebo datum. Každý dokument má unikátní identifikátor, který je zadán uživatelem při vytváření dokumentu nebo je vytvořen MongoDB.\cite{houvzvivcka2012aplikace}\\
-\\
-Databáze byla vybrána hlavně z těchto důvodů:
-\begin{description}
-\item [Flexibilita]
-- MongoDB ukládá data jako dokumenty ve formátu JSON, který poskytuje datový model, který se snadno mapuje na datové typy programovacích jazyků. Jelikož se jedná o datový model bez schématu, je jeho použití daleko snadnější než u relačních databází.\cite{houvzvivcka2012aplikace}
-
-\item [Funkcionalita] - MongoDB poskytuje mnoho z funkcionalit relačních databází, jako jsou sekundární indexy, třídění, agregace apod.\cite{houvzvivcka2012aplikace}
-\item [Rychlost] - Automatické dělení do fragmentů a ukládání souvisejících dat pohromadě umožňuje snadné horizontální škálování databáze a tím zvyšování výkonu bez nutnosti přerušení provozu.\cite{houvzvivcka2012aplikace}
-\item [Snadné použití] - MongoDB je vyvíjena pro snadnou instalaci, konfiguraci, údržbu a provoz. Obsahuje jen málo konfiguračních parametrů a kdekoli je to možné, jsou nastavení prováděna automaticky.\cite{houvzvivcka2012aplikace}
-\end{description}
-
-Příliš velká flexibilita má také nevýhodu v tom, že abych dosáhl požadované struktury dat, musel jsem použít modul Mongoose viz \ref{subsec:mongoose}
-
-
-
-		
-		\subsection{Schéma}
 	
-
-	
-	\subsubsection*{Dokument položka}
-	
-\begin{verbatim}
-item: {
-  name: <String>,
-  description: <String>,
-  amount: <integer>,
-  created: <Timestamp>,
-  updated: <Timestamp>
-}
-\end{verbatim} 
-
-\subsubsection*{Dokument tag}
-
-\begin{verbatim}
-tag :{
-  _id: <ObjectId>,
-  uid: <String>,
-  type: <String>,
-  item: <ObjectId>,
-  created: <Timestamp>,
-  updated: <Timestamp>
-}
-\end{verbatim} 
-
-
-\subsubsection*{Dokument zařízení}
-
-
-\begin{verbatim}
-device :{
-  _id: <ObjectId>,
-  device_id: <String>,
-  name: <String>,
-  version: <String>,
-  description: <String>,
-  status: <String>,
-  allowed: <Boolean>,
-  serial_number: <String>,
-  ip_address: <String>,
-  metadata: {},
-  created: <Timestamp>,
-  updated: <Timestamp>
-}
-\end{verbatim}
-	
-\subsubsection*{Dokument uživatel}
-
-\begin{verbatim}
-user :{
-  _id: <ObjectId>,
-  username: <String>,
-  password: <String>,
-  firstname: <String>,
-  fullname: <String>,
-  lastname: <String>,
-  roles: [<String>],
-  created: <Timestamp>,
-  updated: <Timestamp>
-}
-\end{verbatim}
-
-	
-
+%\chapter{Implementace skladového systému}	
 	
 \chapter{Server}
+	
+	Server je kombinací \texttt{MQTT} brokeru a HTTP serveru.
+    Byl napsán v \texttt{Node.js} ve verzi 7.8.
+  Pro správu balíčku se používá \texttt{NPM}. Jeho konfiguraci naleznete v souboru \texttt{package.json}, který se nachází v kořenovém adresáři tohoto projektu. Tento soubor obsahuje všechny potřebné moduly a informace o projektu.
+	
 
-	\section{Platforma}
-		
-		
 	\section{Komunikace}
 		\subsection{MQTT}
-		
-		%TYP_ZARIZENI/ID
-		
-		
-		%cliet id musi byt soucasti kazdého TOPIC jinak je zprava zahozena.	
-		
-		
-		%topic nazevtypuzarizeni\/id\_zarizeni\/info
+			\texttt{MQTT} broker/server řeší modul \texttt{Mosca}. Je to jediný modul k dispozici pro \texttt{Node.js}. Modul \texttt{Mosca} potřebuje úložiště pro zprávy, podporovány jsou \texttt{MongoDB}, \texttt{Redis}, \texttt{Mosquitto}. Vybral jsem možnost \texttt{MongoDB}, protože je tato databáze již používaná k ukládání dat. Modul mi dává velké pole působnosti. Všechny části jako je autorizace, publikace a subscribe lze zcela přepsat, což u jiných brokerů nelze.
+			
+			Standardně si klient generuje náhodné \texttt{client\_id} a jelikož z uživatelského hlediska jsou takováto ID nepřívětivá, tak server umožní připojení jen klientům, kteří splňují tento formát. Každý klient, který se chce připojit k brokeru, musí jako \texttt{client\_id} splňovat tento formát \texttt{[app\_name]/[device\_id]}. ID klienta musí být jedinečné, aby se předešlo konfliktu při připojování k \texttt{MQTT} brokeru. 
+				Název aplikace v \texttt{client\_id} umožňuje, aby se mohly připojit různé aplikace z jednoho zařízení. 
 
+			Zařízení se po připojení automaticky zaeviduje do databáze, přitom dojde k rozdělení \texttt{client\_id} na název aplikace a \texttt{ID} zařízení, které se uloží spolu s \texttt{IP} adresou. 
+			Připojené zařízení informuje server o své verzi softwaru a sériovém čísle, tyto informace pomůžou správci v rozhodnutí, které zařízení aktualizovat a nalezení konkrétního zařízení. 
+			
+			
+		
+			\subsubsection{Autorizace}
+		Standardně se přístup k \texttt{MQTT} brokeru řeší přihlašujícími údaji. 
+		Buď se pro všechna zařízení určí společné přihlašovací údaje, které si každé zařízení bude pamatovat, nebo každému zařízení přidělí vlastní přihlašovací údaje, což zkomplikuje správu zařízení.		
+ 		V případě hacknutí se u první možnosti musí měnit hesla na všech zařízeních, u druhé jen na hacknutém zařízení.
+ 		
+ 		Z tohoto důvodu jsem zvolil jiný způsob řešení.
+		Zařízení se při připojení automaticky zaregistruje do databáze. Pokud již v databázi existuje, tak se zkontroluje povolení k přístupu, které přiděluje administrátor.
+		V případě, že povolení nemá, je odpojen. Toto je elegantní řešení, které umožní administrátorům mít přehled o všech připojeních k \texttt{MQTT} serveru.			
+		Bezpečností riziko může vzniknout ukradením \texttt{client\_id}. Tento problém lze řešit zakázáním přístupu v případě změny \texttt{IP} adresy.
+		
+		
 		
 		
 	
 		\subsection{REST API}
+		HTTP server obstarává modul \texttt{Restify} framework, který slouží k tvorbě \texttt{REST API}. Díky přizpůsobení frameworku pro \texttt{API} neobsahuje šablonovací ani renderovací systém, což je znát na rychlosti zpracování požadavku.
+		Také obsahuje užitečnou funkci \texttt{throttle}, při překročení 50 dotazů za sekundu dojde k zablokování zdroje žádostí.		
 		
-		%verze api, dokumentace /api/docs/
-		
-
-\begin{table}[ht]
+		\texttt{REST API} je umístěno na adrese \texttt{/api/v1/}, verzování standardně v \texttt{URL}. Data jsou k dispozici jen ve formátu \texttt{JSON}. 
+\\\\
+Popis všech dostupných \texttt{URL} adres v \texttt{API}:
+\begin{table}[H]
 \centering
 \begin{tabular}{ c | c | p{6cm}}
 \textbf{Metoda} & \textbf{URL} & \textbf{Popis} \\ \hline\hline
@@ -454,164 +554,435 @@ PUT & /api/v1/users/\{id\} & Aktualizuje jednoho uživatele \\ \hline
 DELETE & /api/v1/users/\{id\} & Odstraní jednoho uživatele \\ \hline
 
 GET & /api/v1/account/ & Vrátí přihlášeného uživatele  \\ \hline
-PUT & /api/v1/account/password/ & Aktualizuje heslo přihlášeného uživatele \\ \hline    
+PUT & /api/v1/account/password/ & Změní heslo přihlášeného uživatele \\ \hline    
 \end{tabular}
-\caption{API}
+\caption{REST API v1}
 \label{table:api}
 \end{table}
 
 			\subsubsection{Stavové kódy HTTP}
-			HTTP umožňuje použít celou škálu kódů s jasnou sémantikou, v REST API využijeme jen několik z nich.
+			\texttt{HTTP} umožňuje použít celou škálu kódů s jasnou sémantikou. V \texttt{REST API} využijeme jen několik z nich:
 \begin{description}
-\item [200 OK] - 
-\item [201 Created] - 
-\item [204 No Content] - 
-\item [400 Bad Request] -
-\item [401 Unauthorized] - 
-\item [403 Forbidden] - 
-\item [404 Not Found] - 
-\item [500 Internal Server Error] - 
+\item [200 OK] - Zpracování požadavku proběhlo bez problému.
+\item [201 Created] - Zpracování požadavku proběhlo bez problému. Záznam byl vytvořen. 
+\item [204 No Content] - Zpracování požadavku proběhlo bez problému. Záznam byl smazán.
+\item [400 Bad Request] - Požadavek nebyl zpracován. Důvodem může být serverem neznámý požadavek nebo špatná vstupní data.
+\item [401 Unauthorized] - Požadavek nebyl zpracován. Žadatel nebyl autorizován.
+\item [403 Forbidden] - Požadavek nebyl zpracován. Žadatel nemá potřebná práva.
+\item [404 Not Found] - Požadovaný záznam nebyl nalezen.
+\item [500 Internal Server Error] - Požadavek nebyl zpracován. Nastala nečekaná chyba.
 \end{description}
 
+	\subsubsection{Autentizace}
+		Autentizace je proces ověření pravosti přihlašovacích údajů, tento proces řeší modul \texttt{Passport}, jehož jediným účelem je ověřování požadavků, a který to dělá přes rozšiřitelnou sadu zásuvných modulů, známých jako \texttt{strategie}. 
+		Existují \texttt{strategie} pro \texttt{autentizaci} pomocí \texttt{OAuth}, \texttt{Facebook}, \texttt{Twitter}, \texttt{OpenID} a spoustu dalších.		
+		Vybral jsem strategii \texttt{HTTP Basic} hlavně kvůli rychlé implementaci a jisté podpoře klienta.
+		Použité \texttt{HTTP Basic auth} funguje velmi jednoduše: jméno a heslo je posláno jako textový řetězec, který se skládá ze jména, dvojtečka a heslo, pak se celé zakóduje \texttt{Base64}, poté vložíme do \texttt{HTTP} hlavičky.
+Příklad přidané autentizace do hlavičky \texttt{HTTP}:
+\begin{verbatim}
+		Authorization:Basic a29obDpoZXNsbzM=
+\end{verbatim}
+Aby byla zajištěna bezpečnost, počítá se s šifrovanou komunikací, jinak lze heslo lehce odposlechnout.
 
-	\section{Autorizace}
-		
-		\subsection{MQTT}	
-		%pridat obrazek
-		%Zařísení je při pokusu o připojení zaregistrováno do databáze, pokud již v databázi existuje tak se zkontroluje jestli má povolení, které musí dát administrátor.
-		
-		
-			
-		\subsection{API}
-			\subsubsection{Basic Auth}
-			%Tato metoda je velmi přímá. V hlavičce každého požadavku se odešlou přihlašovací údaje (jméno a heslo) v base64 kódování. Protože jsou citlivé údaje pouze zakódovány a ne zašifrovány, je nutné použít SSL/TLS, při kterém se komunikace zabezpečí
-			
-			\subsubsection{JSON Web Token}
-			\subsubsection{OAuth 2.0}
-			
+	\subsubsection{Autorizace}
+	Autorizace je proces ověření potřebných oprávnění pro přístup uživatele k datům. Oprávnění je možné získat s přidělenou rolí.
 	
-		
-	\section{Použité knihovny}
-		\subsection{Mosca}
-		\subsection{Restify}
-		\subsection{Mongoose}
-		\label{subsec:mongoose}		
-		
-		
-		\subsection{Bunyan}
-		\subsection{Swagger}
-		\subsection{Passport}
-		\subsection{Swagger}
-		
+	Každý uživatel musí mít alespoň jednu roli. Možné role jsou \texttt{admin} a \texttt{user}. 
+	Uživatel s rolí \texttt{user} má přístup jen ke správě skladových položek a správě tagů. 
+	Zato administrátor má navíc k dispozici správu zařízení a správu uživatelů s rolí \texttt{user}.
+	
+	Od spuštění serveru existuje účet s uživatelským jménem \uv{admin}.
+	Tento účet se vyváří automaticky a nelze smazat. Dalším specifikem účtu jsou rozšířená práva pro správu uživatele s rolí \texttt{admin}.
+	
+	
+	\subsubsection{Dokumentace}
+	Dokumentace je řešena frameworkem \texttt{Swagger} nejrozšířenějším nástrojem pro vývojáře \texttt{API}, který umožňuje vývoj napříč životním cyklem \texttt{API} od návrhu či dokumentace až po testování či zavádění.	
+	Modul \texttt{swagger-jsdoc} umožňuje z komentářů vygenerovat \texttt{Swagger specifikaci} ve formátu \texttt{JSON}, která se předá  \texttt{Swagger UI}. 
+	Zvolil jsem generování z komentářů, abych měl popis a implementaci na jednom místě a zabránilo se nekonzistenci.
+	\texttt{Swagger UI} je webová stránka, která se automaticky generuje ze \texttt{Swagger specifikace}. Umožní komukoliv si prohlédnout a vyzkoušet \texttt{API} rozhraní, aniž by byla použita logika implementace.
+	\\\\
+	Dokumentace je dostupná na adrese \texttt{/api/docs/}
+
+
+
+	\section{Databáze}
+	Pro jednodušší přístup k dokumentům v \texttt{MongoDB} databázi se použije modulu \texttt{Mongoose}. Nabízí podobnou funkcionalitu jako různé \texttt{ORM} frameworky.
+	\texttt{Mongoose} nabízí nástroje pro \texttt{CRUD} operace (vytváření, čtení, editaci a mazání) nebo třeba umožňuje provádět validaci před vložením dokumentu do kolekce. V \texttt{Mongoose} všechno začíná u schématu. Každé schéma mapuje kolekci \texttt{MongoDB} a definuje strukturu dokumentů v rámci této kolekce. Každý klíč ve schématu definuje vlastnost v dokumentech, kterému se musí přiřadit odpovídající datový typ. Dále lze klíči nastavit max/min hodnota, max/min délka řetězce, \texttt{trim}, \texttt{index}, povinný údaj, výchozí hodnotu atd. Schéma se musí převést na model, s nímž pak lze pracovat.
+	
+	Všem schématům jsem nastavil striktní dodržování struktury a přidal časová razítka vytvoření a úpravy dokumentu.
+	Verzování dokumentů jsem vypnul, protože jsem ho nepotřeboval a naopak jsem povolil virtuální vlastnosti, které nejsou uloženy v databázi, ale dopočítávají se.
+	
+	
+	\subsubsection{Položka}
+Položce jsem určil tyto vlastnosti: \texttt{name}, \texttt{description} a \texttt{amount}. Vlastnost \texttt{amount} má výchozí hodnotu 0, protože množství položky lze zadat jen při editaci položky. 
+Schéma položky:	
+\begin{verbatim}
+{
+    name: { type: String, trim: true, minlength: 3,
+            maxlength: 200, required: true },
+    description: { type: String, trim: true, maxlength: 2000 },
+    amount: { type: Number, default: 0, min: 0, required: true }
+}
+\end{verbatim}
+
+	\subsubsection{Tag}
+Tagu jsem přidělil tyto vlastnosti: \texttt{uid}, \texttt{type} a \texttt{item}. Vlastnost \texttt{uid} má omezení na 8 znaků, aby se nevkládalo \texttt{uid} z jiných typů tagů, které nejsou podporovány čtečkou \texttt{RFID}.
+Vlastnost \texttt{item} může obsahovat \texttt{\_id} položky, \texttt{autopopulate} je proces automatického nahrazení specifikované cesty v dokumentu s dokumentem z jiné kolekce.
+Schéma tagu:
+\begin{verbatim}
+{
+    uid: { type: String, lowercase: true, trim: true,
+            minlength: 8, maxlength: 8, required: true,
+            unique: true },
+    type: { type: String, enum: ['unknown', 'mode', 'item'],
+            default: 'unknown', required: true },
+    item: { type: Schema.Types.ObjectId, ref: 'Item',
+            index: true, autopopulate: true }
+}
+\end{verbatim}
+	
+	\subsubsection{Uživatel}
+Uživateli jsem stanovil tyto vlastnosti: \texttt{username}, \texttt{password}, \texttt{firstname}, \texttt{lastname} a \texttt{roles}. Pro lepší práci s uživatelem jsem přidal virtuální vlastnost \texttt{fullname}, která se skládá z \texttt{firstname} a \texttt{lastname}.\\
+Vlastnost \texttt{roles} musí obsahovat pole práv, může nabývat práv \texttt{admin} a \texttt{user}.
+Schéma uživatele:
+\begin{verbatim}
+{
+    username: { type: String, lowercase: true, trim: true,
+            minlength: 3, maxlength: 20, required: true,
+            unique: true },
+    password: { type: String, default: '', required: true,
+            select: false },
+    firstname: { type: String, default: '', trim: true,
+            maxlength: 30 },
+    lastname: { type: String, default: '', trim: true,
+            maxlength: 30 },
+    roles: { type: [{ type: String, enum: ['admin', 'user'] }],
+            required: true }
+}
+\end{verbatim}
+	
+	\subsubsection{Zařízení}
+
+Zařízení jsem určil tyto vlastnosti: \texttt{device\_id}, \texttt{name}, \texttt{version}, \texttt{description}, \texttt{status}, \texttt{allowed}, \texttt{serial\_number}, \texttt{ip\_address} a \texttt{metadata}. 
+Vlastnost metadata je typu \texttt{Mixed}, což znamená, že může obsahovat cokoliv.
+Důvodem jsou četná zařízení, která potřebují uložit různá data. 
+Také obsahuje virtuální vlastnost \texttt{client\_id}, která vzniká spojením \texttt{name}, lomítka a \texttt{device\_id}.\\
+Vlastnost \texttt{status} může obsahovat jen hodnoty z \texttt{enum}, je to obdoba číselníků z relační databáze. 
+Celé schéma zařízení:
+
+\begin{verbatim}
+{
+    device_id: { type: String, trim: true, required: true },
+    name: { type: String, trim: true, required: true },
+    version: { type: String, trim: true},
+    description: { type: String, trim: true },
+    status: { type: String,
+            enum: ['active', 'inactive', 'error'],
+            default: 'inactive', required: true },
+    allowed: { type: Boolean, default: false },
+    serial_number: { type: String, trim: true },
+    ip_address: { type: String, trim: true },
+    metadata: { type: Schema.Types.Mixed }
+}
+\end{verbatim}
+
+
+
+	
+	
+\section{Konfigurace}
+		Konfiguraci obstarává modul \texttt{config}, který načte konfigurační soubory ze složky \texttt{./config} typicky umístěné v kořenovém adresáři aplikace. 	
+		Modul podporuje velké množství konfiguračních souborů: \texttt{json}, \texttt{js}, \texttt{xml}, \texttt{toml}, \texttt{yaml} a další.
+		Ze souboru \texttt{config/default.[format]} dědí všechny ostatní konfigurační soubory.
+		Formát konfiguračního souboru byl vybrán \texttt{js}, pro možnost načíst data ze souboru \texttt{package.json}, který slouží jako konfigurační soubor pro správce modulů \texttt{NPM}.	
+			
+		V \texttt{Node.js} lze při spuštění nastavit parametr \texttt{NODE\_ENV}, který určuje v jakém prostředí běží. Výchozí hodnotou je \texttt{development}.
+		Některé moduly se přizpůsobují prostředí, např. podle \texttt{NODE\_ENV} změní level logování. 
+		Modul \texttt{config} vybírá konfigurační soubor podle \texttt{NODE\_ENV}, např. při \texttt{NODE\_ENV=test} se vybere soubor \texttt{config/test.js}.
+\\\\
+		Ukázka konfiguračního souboru \texttt{config/default.js}:	
+\begin{verbatim}
+{
+    name: 'BPINI',
+    version: package.version,
+    host: '127.0.0.1',
+    port: {
+        http: 80,
+        mqtt: 1883
+    },
+    logger: {
+        level: 'info',
+        path: './logs/bpini.log'
+    },
+    mongodb: {
+        uri: 'mongodb://127.0.0.1:27017/warehouse',
+        options: {}
+    },
+    api: true
+}
+\end{verbatim}
+	
+	V konfiguračním souboru lze nastavit  \texttt{host} a  \texttt{porty} pro \texttt{MQTT} a \texttt{HTTP}.
+	
+	Další nastavení se týká umístění a level logování.
+	
+	Pro připojení databáze musí do parametru \texttt{uri} zadat \texttt{Connection string} podle standardního formátu \texttt{MongoDB URI}.
+	Dodatečná nastavení jako \texttt{ssl}, \texttt{connectTimeoutMS} atd. se nastavují přes parametr \texttt{options}.
+	
+	Spolu se servem se spouští i \texttt{API}, automatické spuštění můžeme zakázat změněním parametrů \texttt{api} na false. 
+	\texttt{API} lze také spustit zcela samostatně.	
+	
+	
+	\section{Logování}
+	Logování zajišťuje modul \texttt{Bunyan}. Velmi často se používá a má podporu v ostatních modulech např. \texttt{Restify}.
+	Typ logu je \texttt{rotating-file}, znamená to, že každý den se vytvoří nový soubor logu, který se uchová po dobu jednoho týdne.
+	\texttt{Bunyan} je charakteristický logováním ve formátu \texttt{JSON}, díky tomu je lepší práce s logy např. vyhledávání.
+	Propojení s \texttt{Restify} zajišťuje logování všech požadavků a odpovědí serveru. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
 	
 \chapter{Čtečka RFID}
-
-%Pro realizaci jsou k dispozici zařízení \texttt{RFID-RC522} s frekvenci \texttt{13,56 MHz}.
-
-%Indikace standardně	probíhá prostřednictvím \texttt{LED}.
+	\section{Sestrojení}
 	
-%		Další možností je přepínat stavy přidat/odebrat prostřednictvím \texttt{RFID tagu}. To by vyžadovalo rozdělení \texttt{UID} na dva typy, produkt a přepínač stavů. 		
+		Pro sestrojení čtečky \texttt{RFID} jsem použil tyto hlavní komponenty: \texttt{Raspberry Pi 2}, \texttt{RFID-RC522} a \texttt{RGB LED diodu}. 
+		Kompletní model zapojení viz obrázek \ref{fig:reader_rfid_diagram}, schéma je k dispozici v manuálu.
 		
-
-
-
-
-
-
-	\section{Sestavení}
-	%Pro komunikaci mezi \texttt{Raspberry Pi} a \texttt{RFID-RC522} se využívá \texttt{SPI (Serial Peripheral Interface)}. \texttt{Sběrnice} je typu \texttt{full duplex}, což umožňuje současně data vysílat a přijímat viz \ref{fig:spi}.
-		
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.9\textwidth]{../images/spi.png}	
-		\caption{Zapojení \texttt{sběrnice SPI}: řídicí (master) a podřízené (slave) zařízení}
-		\label{fig:spi}
-	\end{figure}
-	
-%\texttt{GPIO} má předdefinováné piny pro \texttt{SPI} viz \ref{fig:gpio}. Navíc je potřeba napájení \texttt{3V3}, \texttt{zem} a \texttt{pin 22} (podle BOARD) pro RST. Kompletní zapojení je popsáno na schématu \ref{fig:reader_rfid_diagram}.
-
-
-	%RGB LED má 4 piny červená, zem, zelená a modrá. Před piny určující barvu je potřeba zapojit rezistory, aby se LED nespálila. Zapojení je vidět na schématu \ref{fig:reader_rfid_diagram}.
-
-	\begin{figure}[h]
+\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.9\textwidth]{../diagrams/reader_rfid_diagram_bb.png}	
-		\caption{Schéma zapojení \texttt{RFID-RC522} a \texttt{RGB LED} do \texttt{GPIO}}
+		\caption{Model zapojení \texttt{RFID-RC522} a \texttt{RGB LED} do \texttt{GPIO}}
 		\label{fig:reader_rfid_diagram}
-	\end{figure}	
-	
-	
+	\end{figure}		
+		
+				
+		\section{Zapojení RFID-RC522}
+Čtečka \texttt{RFID-RC522} (viz obrázek \ref{fig:rfid_rc522}) se k \texttt{Raspberry Pi} zapojí přes GPIO. 
+\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\textwidth]{../images/rfid_rc522.jpg}	
+		\caption{Čtečka \texttt{RFID-RC522}}
+		\label{fig:rfid_rc522}
+	\end{figure}
+\ \\
+Komunikace probíhá přes \texttt{SPI}, což je synchronní sériový datový protokol používaný pro komunikaci mezi mikroprocesory nebo s periferními zařízeními.
+Při komunikaci přes \texttt{SPI} je vždy jedno zařízení hlavní, které řídí periferní zařízení.
+Komunikaci \texttt{SPI} se vždy skládá z těchto pinů (viz obrázek \ref{fig:spi}):			
+\begin{itemize}[noitemsep]
+\item [-] \texttt{MISO (Master Slave Out)} - \texttt{Slave} linka pro odesílání dat do \texttt{Master}
+\item [-] \texttt{MOSI (Master Out Slave In)} - \texttt{Master} linka pro odesílání dat do periferií
+\item [-] \texttt{SCK (Serial ClocK)} - hodinové pulsy, které synchronizují přenos dat 
+\end{itemize}
+						
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\textwidth]{../images/spi.png}	
+		\caption{Zapojení \texttt{sběrnice SPI}: řídicí (\texttt{master}) a podřízené (\texttt{slave}) zařízení}
+		\label{fig:spi}
+	\end{figure}
+\ \\
+\texttt{GPIO} má vyhrazené piny pro \texttt{SPI} (viz obrázek \ref{fig:gpio}). \texttt{RFID-RC522} potřebuje navíc napájení \texttt{3V3}, \texttt{GND} a \texttt{pin 22} (podle BOARD) pro \texttt{RST} (Reset). Kompletní zapojení je popsáno na schématu (viz obrázek \ref{fig:reader_rfid_diagram}).
 
-	\section{Platforma}
-		Pro Raspberry Pi jsem zvolil operační systém RASPBIAN JESSIE LITE, protože je přímo vyvíjen výrobcem, tím je zajištěna nejlepší kompatibilita a stabilita. Systém používá velká komunita při vyskytnutí problému není problém dohledat řešení.\\
-		Aplikace je vyvíjena v programovacím jazyku Python, protože je součástí systému spolu s knihovnou RPi.GPIO viz \ref{subsec:prigpio}
-	
-	\section{Komunikace}
-	
-		
-	%client id je vygenerovano pomoci jemna zarizeni(aplikace) a jako id se vezme MAC adresa zarizeni, tim se zajisti jedinecnost.
-	
-	
-	\section{Použité knihovny}
-		\subsection{RPi.GPIO}
-		\label{subsec:prigpio}
-		
-		\subsection{RC522}
-			https://github.com/ondryaso/pi-rc522
-		\subsection{Eclipse Paho}
-			http://www.eclipse.org/paho/
-		\subsection{SPI-Py}
-			https://github.com/lthiery/SPI-Py
+
+
+
+
+
+\subsection{Zapojení RGB LED diody}
+	Pro rozsvícení \texttt{RGB LED diody} potřebujeme 4 piny (viz obrázek \ref{fig:rgb_led_dioda}). Nejdelší pin je \texttt{GND}, nalevo od \texttt{GND} je pin pro červenou, napravo pro zelenou a modrou barvu.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.09\textwidth]{../images/rgb_led_dioda.png}	
+		\caption{\texttt{RGB LED dioda}}
+		\label{fig:rgb_led_dioda}
+\end{figure}
+\ \\
+Parametry diody pro provoz jsou: proud až 20 mA, napětí v propustném směru až 1,7 V.
+Před piny určující barvu je potřeba zapojit rezistory, protože \texttt{GPIO} dodává napětí 3,3 V.
+Rezistory se používají na ochranu diody před poškozením. 
+Pro výpočet potřebného odporu rezistoru se používá Ohmův zákon. Udává vztah mezi napětím (U), proudem (I) a odporem (R) v obvodu. Matematicky formulovaný je takto:
+\[ U = R * I \]
+\ \\
+Z toho vyplývá také vztah:
+\[ R = U/I \]
+\[ 80=(3.3-1.7)/0.02 \]
+Rezistor s odporem 80 Ohm je těžko dostupný, proto jsem použil nejčastěji používaný rezistor s 200 Ohm.
+Zapojení je vidět na schématu (viz obrázek \ref{fig:reader_rfid_diagram}).
+
+
+	\section{Aplikace}
+Aplikace je napsaná v jazyce \texttt{Python} ve verzi 2.7, abych zajistil správnou funkčnost všech balíčků. Všechny potřebné balíčky pro spuštění aplikace jsou umístěny v souboru \texttt{requirements.txt}, který je umístěný v kořenovém adresáři.
+
+
+	\subsection{Načtení UID tagu}
+Pro načtení \texttt{UID} je zapotřebí řídit \texttt{GPIO} na \texttt{Raspberry Pi}, to zajišťuje balíček RPi.GPIO. Vybrán byl tento balíček, protože je to oficiální knihovna od tvůrců \texttt{Raspberry Pi} a je součástí operačního systému.
+Balíček \texttt{spidev} umožňuje komunikovat se zařízením \texttt{SPI} s \texttt{Raspberry Pi} jako hlavním zařízením. 
+Dalším balíčkem je rc522. Jeho hlavní účel je ovládat přes \texttt{SPI} součástku \texttt{RFID-RC522}. Tento balíček byl využit hlavně pro načtení \texttt{UID}, které jsem musel poupravit, jelikož docházelo k neustálému načítání tagu. 
+Pro další načtení \texttt{UID} je nutné mít za sebou dva neúspěšné pokusy o načtení tagu, což znamená, že tag je odebrán z dosahu čtečky a nedochází tak k vícenásobnému načtení, než je potřeba.
+
+
+
+	\subsection{Komunikace}
+	Pro komunikaci s \texttt{MQTT} brokerem jsem použil oficiální balíček od tvůrců \texttt{MQTT}.
+	Balíček \texttt{Paho} vyžaduje před připojením určit klient \texttt{ID}.
+	Klient \texttt{ID} je vygenerováno z názvu aplikace a ID zařízení. 
+	Jako \texttt{ID} se bere \texttt{MAC} adresa zařízení, tím se zajistí jedinečnost. \texttt{MAC} adresu má každé zařízení se síťovou kartou.
+	\\\\
+	Ukázka klient \texttt{ID} pro čtečku \texttt{RFID}:
+	\begin{verbatim}
+		reader_rfid/b827eb7c800d
+	\end{verbatim}		
+	\ \\
+	Klient \texttt{ID} se používá v tématu (topicku) zpráv, aby se identifikovalo od koho a komu je zpráva určená.		
+	Zde je ukázka komunikace pro připojení čtečky \texttt{RFID} k \texttt{MQTT} serveru/brokeru:	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{../diagrams/mqtt_communication.png}	
+		\caption{Komunikace mezi čtečkou RFID a MQTT server/broker}
+		\label{fig:mqtt_communication}
+	\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{Mobilní aplikace}
-	%Mobilní aplikace umožňuje se přiklásit na libobolý servern 
-	
-	%zobrazit přehled tagů, jejich úpravu a odstranění. Přidávání by probíhalo jen přes čtečku RFID. 
-%	Další přehled se týká položek skladu, jednotlivé položky půjdou vytvářet i upravovat.
-
-
-%casova pasma
-
-	\section{Platforma}
-%		Původně měla být aplikace multiplatformní, však začalo postrádá smysl, když Windows Phone používá minimum lidí a iOS neumožňuje vývojářům přístup k NFC. Tím se vyselektoval Android, pro něj jsem zvolil nativní vývoj v programujícím jazyce Java.
-	
-	
-	
-	\section{Komunikace}
-
-	
+	Vývoj mobilní aplikace probíhal nativně v \texttt{Javě} pro \texttt{Android 6.0}.
+	Pro zrychlení vývoje jsem použil knihovnu \texttt{Butter Knife}. Její hlavní účel je eliminovat používání metody \texttt{findViewById} pomocí \texttt{property injection @BindView}.
+	\texttt{@BindView} do jeho parametru stačí zadat \texttt{ID} požadované komponenty a knihovna \texttt{Butter Knife} automaticky inicializuje \texttt{atribut}. Tímto způsobem jsem dosáhl větší přehlednosti v kódu.
+\\\\
+Aby aplikace mohla správně fungovat potřebuje tato práva:
+\begin{itemize}[noitemsep]
+\item [-] INTERNET - umožňuje aplikacím otevřít síťové sokety.
+\item [-] ACCESS\_NETWORK\_STATE - umožňuje přístup k informacím o síti.
+\item [-] NFC - umožňuje provádět \texttt{I/O} operace přes \texttt{NFC}.
+\end{itemize}	
 		
+\section{Grafické rozhraní}
+Do grafického rozhraní jsem zavedl několik vylepšení. Na procházení velkého množství dat byla použita elegantní technika \texttt{infinite scroll}, bez nutnosti čekání se načte další stránka. Princip je jednoduchý, zatímco uživatel skroluje, další obsah je automaticky načítán.
+				
+Tlačítka jako Uložit, Přihlásit, atd. jsou umístěna v komponentě \texttt{Toolbar}, což je z důvodu dlouhých formulářů, aby nemusel uživatel skrolovat. Takto je tlačítko stále k dispozici.
+	
+Pro znázornění \texttt{loadingu} byly použity komponenty \texttt{ProgressDialog} a \texttt{ProgressBar}.
+\texttt{ProgressBar} se zobrazí při čekání na data od serveru.
+\texttt{ProgressDialog} při odesílání dat nejde zrušit kvůli tomu, aby se zabránilo přerušení nebo opětovné operaci. Dialog se zavře, pokud se operace dokončí nebo skončí chybou.
 
-	\section{Použité knihovny}
-		\subsection{Retrofit}
-		\subsection{Butter Knife}
+Pro zobrazení dat v přehledech byla použita komponenta \texttt{CardView} pro možnost zobrazit velké množství informací o jednom záznamu. Tímto způsobem jsem se vyhnul prokliku na detaily.
 
-\chapter{Testování a zhodnocení výsledků}	
-
-%Samsung Galaxy A3 2016
-%Huawei P8 Lite
-%Sony Xperia E5
-
-%Android 6.0 (Marshmallow)
+\section{Komunikace}
+	Komunikaci s \texttt{REST API} serveru mi zjednodušuje knihovna \texttt{Retrofit}.
+	Stačí vytvořit Java rozhraní se všemi možnými dotazy na server a \texttt{Retrofit} si je sám implementuje.
+	Požadavky lze volat jako \texttt{Java metody} a přijatá data formátu \texttt{JSON} se konvertují na \texttt{JAVA objekty} pomocí knihovny \texttt{Gson}. 
+	Pro editaci \texttt{HTTP hlavičky} jsem použil knihovnu \texttt{OkHttp}. Tato knihovna mi také umožní komunikovat přes \texttt{HTTPS}. 
 
 
-\chapter{Možnosti rozšíření}
-%databaze
-%mobilni aplikace, nacitani nfc
+\section{Lokalizace}
+Mobilní aplikace je plně přeložená do dvou jazyků češtiny a angličtiny.
+Jazyk se vybírá automaticky podle nastavení v systému a pokud se nenajde požadovaný jazyk, tak se zvolí angličtina. 
 
+Na straně serveru se pracuje s časem bez časových zón.
+Aby čas nebyl irelevantní k uživateli, musí se podle časové zóny, kterou má systém \texttt{Android} nastavenou, přepočítat čas.
+Toto přináší výhodu, ať je uživatel odkudkoliv, vždy se mu zobrazí správný čas.
+
+
+%\section{Čtečka NFC}
+
+
+
+
+
+
+
+
+
+\chapter{Testování}	
+Pro testování mé aplikace pro skladové hospodářství jsem si vybral 6 lidí různého věku a odborného vzdělání. Účastníky testu jsem 
+stručně seznámil s funkcemi mé aplikace a zadal jsem jim úkoly, které měli plnit na mobilním zařízení. 
+Prvním úkolem bylo přihlásit se do systému aplikace. Administrátorem byl uživatelům dopředu vytvořen účet. Poté měli přidat novou položku skladu. 
+Dalším krokem bylo zaevidovat libovolný tag a přidělit mu právě vytvořenou položku. 
+Testující použili pro zaevidování tagu různé bezkontaktní karty.  
+Posledním úkolem bylo přes čtečku \texttt{RFID} přidat nové položce tři kusy a jeden odebrat.
+\\\\
+Testování probíhalo na těchto mobilních zařízeních:
+\begin{itemize}[noitemsep]
+	\item [-] Samsung Galaxy A3 2016 (Android 6.0)
+	\item [-] Sony Xperia E5 (Android 6.0)
+	\item [-] Huawei P8 Lite (Android 6.0)
+\end{itemize}
+
+
+\section{Výsledky testování}
+Účastníci testování, ač byli seznámeni s aplikací jen stručně, si s mobilní aplikací většinou poradili. Nejčastějším problémem se ukázalo, že chtěli přidělit tag k položce, ačkoli to má být opačně. Většina hledala tuto možnost v úpravách položky místo v úpravách tagu. Opačným způsobem to nelze, protože při přidělování tagu k položce bychom nevěděli, jaký tag přidělujeme, což by způsobilo nekonzistentnost dat. Po důkladném vysvětlení se zorientovali a už to pro ně nebyl žádný problém.   
+Častý dotaz testujících byl, jak je možné vyhledat konkrétní položku podle názvu. Viz Možnosti rozšíření 
+Po objasnění vše velmi dobře zvládli. Nakonec ohodnotili aplikaci jako uživatelsky přívětivou. Testující si vyzkoušeli různé bezkontaktní karty včetně Plzeňské karty. Systém nepřijal karty načtené pomocí mobilní aplikace, jejichž \texttt{UID} bylo delší než 8 znaků, protože to je jiný typ tagu a není podporován čtečkou \texttt{RFID}.   
+Vypozoroval jsem, že testujícím chybí některé popisky, nebo že je některé matou. Tyto popisky jsem změnil a např. \uv{Host} byl přejmenován na \uv{Server}.  
+
+Mobilní aplikace fungovala na všech zařízeních bez problémů.
+
+
+\section{Možnosti rozšíření}
+Systém skladového hospodářství potřebuje hodně vylepšení, nejvíce asi aktuální autentizace pro \texttt{API}. Autentizace \texttt{Basic Auth} není dostatečně bezpečná, nahradil bych jí bezpečnější strategií \texttt{OAuth 2.0}, která je ovšem složitější na implementaci.
+
+Dále v tomto systému chybí údaje o tom, kdo vytvořil a upravil záznam v databázi. Tento údaj by pomohl dohledat skladníka, kdy a jak se zbožím manipuloval.
+
+Také bych rozšířil údaje o skladové položce, jelikož nyní obsahuje jen základní údaje: jméno, popisek a množství. Přidal bych např. tyto údaje: cena, expirace a šarže. 
+S jiným typem tagu by se otevřela možnost, uložit některé informace do paměti tagu. Tyto informace by mohly být k dispozici i off-line. 
+
+Mobilní aplikaci by prospělo, pokud by v aplikaci bylo vyhledávání v položkách. Z výsledku testování vyplývá, že tato funkce je pro uživatele důležitá a neměla být vynechána.
+U tagu je vyhledávání zbytečné, jelikož by šlo vyhledávat jen pomocí \texttt{UID}, což by bylo uživatelsky nepřívětivé. Aktuálně k vyhledání tagu slouží čtečka v mobilní aplikaci. 
+
+Ke zlepšení čtečky \texttt{RFID} by velmi pomohl \texttt{LCD} displej s rozlišením 16x2 znaky. 
+\texttt{RGB LED dioda} pro signalizaci stavu čtečky není dostatečná.
+Je složité pochopit význam její signalizace. Má omezený počet stavů např. pro odpojení a vypnutí čtečky je stejný stav - zhasnutá \texttt{LED dioda}.
+\texttt{LCD} displej by mohl sloužit nejen k zobrazení konkrétního stavu čtečky, ale také k zobrazení informací o tagu a případně o změnách skladové položky.
+Takovéto řešení by bylo více uživatelsky přívětivé a cena zařízení by se zvedla jen o 150 korun.
+
+Poslední rozšíření se věnuje posílání informací o zařízení serveru, bylo by vhodné pokud by se posílaly i chybové hlášky. Hlášky by sloužily správci, aby mohl konkrétní zařízení zkontrolovat a případně opravit.
 
 \chapter{Závěr}
-%Cílem bakalářské práce bylo vytvoření 
+Výsledkem mé práce je skladový systém postavený na technologii \texttt{RFID}. Systém se skládá ze tří částí: serveru, čtečky \texttt{RFID} a mobilní aplikace. Server je postavený na \texttt{Node.js}. Komunikaci s dalšími částmi zajišťuje protokol \texttt{MQTT} a \texttt{REST API}. Informace o skladu jsou ukládány do \texttt{NoSQL} databáze \texttt{MongoDB}. Čtečka \texttt{RFID} slouží k přidávání a odebírání skladových položek. Mobilní aplikace pro \texttt{Android} slouží ke správě skladového systému, \texttt{NFC} se využívá k rychlému načtení informací o položce skladu.
+\\\\
+Pro nasazení skladového systému k praktickému použití by bylo zapotřebí změnit \texttt{RFID}. Aktuálně se používá \texttt{RFID} s nízkou frekvencí. Tento typ \texttt{RFID} je určen např. pro autentizaci.
+Pro potřeby skladu je vhodné \texttt{RFID} s velmi vysokou frekvencí, tento typ umožňuje ukládat data na tag.
+\texttt{UID} tagu by mělo reprezentovat jeden fyzický kus ve skladě a informace o jakou položku se jedná uložit na tag. Další výhodou by byla možnost hromadného načítání.
+\\\\
+V rámci této práce jsem vyzkoušel hodně rozmanitých činností, jako je pájení pinů, navrhování elektrických obvodů, práci s \texttt{NoSQL} databází a mobilní vývoj atd. 
+Také jsem poznal druhou stranu mince nových technologií, jejichž vývoj postupuje velmi rychle. Během ročního vývoje skladového systému jsem musel kvůli změnám v knihovnách měnit již hotové části práce. Vždy to byl krok k lepšímu, ale zpomalovalo to celkový vývoj.
+ 
 
-%zmenit databazi skladu, podle druhu skladu, aktulane uplny zaklad
-%vymyslel lepsi signalizaci stavu čtečky, mozna pridat led diodu ale to by zkomplikovalo predhlednost 
 
-%mobulni apliace
-%vyhledavani polozek
 
-%zarizeni sprava chyb
 
-%oAUTH 2.0
+
 
 
 \chapter*{Přehled zkratek}
@@ -620,29 +991,36 @@ PUT & /api/v1/account/password/ & Aktualizuje heslo přihlášeného uživatele 
 	\begin{acronym}[etc]
 \acro{API}{Application Programming Interface}
 \acro{BSON}{Bin­ary JSON}
+\acro{CRUD}{Create, Read, Update, Delete}
+\acro{DOM}{Document Object Model}
+\acro{GND}{GrouND}
 \acro{GPIO}{General-Purpose Input/Output}
 \acro{GUI}{Graphical User Interface}
 \acro{HTTP}{Hypertext Transfer Protocol}
+\acro{I/O}{Input/Output}
 \acro{ID}{Identification}
 \acro{IoT}{Internet of Things}
 \acro{IP}{Internet Protocol}
 \acro{JSON}{JavaScript Object Notation}
 \acro{LAN}{Local Area Network}
+\acro{LCD}{Liquid-crystal display}
 \acro{LED}{Light-Emitting Diode}
 \acro{MAC}{Media Access Control}
 \acro{NFC}{Near Field Communication}
 \acro{NPM}{Node Package Manager}
+\acro{ORM}{Object-relational mapping}
 \acro{PyPI}{Python Package Index}
+\acro{QoS}{Quality of Service}
 \acro{REST}{Representational State Transfer}
 \acro{RFID}{Radio Frequency Identification}
-\acro{RGB}{Red, Green and Blue}
+\acro{RGB}{Red, Green, Blue}
 \acro{RPi}{Raspberry Pi}
-\acro{SPI}{Serial Peripheral Interface Bus}
 \acro{SPI}{Serial Peripheral Interface}
 \acro{SSH}{Secure Shell}
 \acro{SSL}{Secure Sockets Layer}
 \acro{TCP}{Transmission Control Protocol}
 \acro{TLS}{Transport Layer Security}
+\acro{UID}{Unique Identification}
 \acro{UID}{Unique Identification}
 \acro{URL}{Uniform Resource Locator}
 \acro{UWB}{Ultra-Wideband}
@@ -687,7 +1065,6 @@ Nainstalujte také databázi \texttt{MongoDB}, postup naleznete zde: \\
 Ve složce projektu \texttt{/src/Server/config} jsou konfigurační soubory. 
 V souboru \texttt{default.js} zadejte do \texttt{uri} adresu spuštěné databáze s názvem databáze, kterou chcete vytvořit.
 Dále také můžete nastavit adresu a porty serveru. Ukázka konfigurace:
- 
 \begin{verbatim}
 host: '127.0.0.1',
 port: {
@@ -700,8 +1077,9 @@ mongodb: {
 }
 \end{verbatim}
 
-\subsection{Spuštění}
 
+
+\subsection{Spuštění}
 Server spustíte tímto příkazem:
 \begin{verbatim}
 node server.js
@@ -723,7 +1101,7 @@ node server.js
 
 \subsection{Zapojení součástek}
 
-Součástky zapojte podle schématu (viz \ref{fig:reader_rfid_diagram_bb} a \ref{fig:reader_rfid_diagram_schem}).
+Součástky zapojte podle schématu (viz obrázky \ref{fig:reader_rfid_diagram_bb} a \ref{fig:reader_rfid_diagram_schem}).
 
 \begin{figure}[H]
 	\centering
@@ -740,10 +1118,13 @@ Součástky zapojte podle schématu (viz \ref{fig:reader_rfid_diagram_bb} a \ref
 \end{figure}
 
 \subsection{Instalace}
-
-Návod na instalaci sytému \texttt{Raspbian Jessie} naleznete na oficiálních stránkách: \\ \url{https://www.raspberrypi.org/documentation/installation/installing-images/README.md}
+Návod na instalaci sytému \texttt{Raspbian Jessie} naleznete na oficiálních stránkách: 
+\\ 
+\url{https://www.raspberrypi.org/documentation/installation/installing-images/README.md}
 \\\\
-\texttt{SSH protokol} je z důvodu bezpečnosti ve výchozím stavu zakázán. Návod pro povolení naleznete na stránce: \\ \url{https://www.raspberrypi.org/documentation/remote-access/ssh/}
+\texttt{SSH} protokol je z důvodu bezpečnosti ve výchozím stavu zakázán. Návod pro povolení naleznete na stránce: 
+\\
+\url{https://www.raspberrypi.org/documentation/remote-access/ssh/}
 \\\\
 V konfiguraci \texttt{Raspberry Pi} povolte tyto položky:
 \begin{itemize}[noitemsep]
@@ -768,7 +1149,6 @@ sudo pip install -r requirements.txt
 
 \subsection{Spuštění}
 Příklad spuštění s nastavením adresy serveru:
-
 \begin{verbatim}
 python ./reader_rfid/ -H 10.10.90.26
 \end{verbatim}
@@ -777,15 +1157,13 @@ Volitelné parametry:
 \begin{itemize}[noitemsep]
 	\item \texttt{-h} ... vypíše nápovědu
 	\item \texttt{-v} ... vypíše verzi
-	\item \texttt{-d} ... zapne logování levelu debug
+	\item \texttt{-d} ... zapne logování levelu \texttt{debug}
 	\item \texttt{-H} ... adresa serveru
 	\item \texttt{-p} ... port pro připojení k serveru
 \end{itemize}
 
 
-	\section{Mobilní aplikace}
-	
-
+\section{Mobilní aplikace}
 Aplikace je určena pro \texttt{Android 6.0} a vyšší.	
 Soubor \texttt{BPINI-1.4.2.apk} nahrajte do mobilního zařízení a spusťte instalaci.
 Při instalaci bude potřeba dočasně povolit \texttt{instalaci z neznámých zdrojů}.
@@ -795,7 +1173,7 @@ Po dokončení najdete aplikaci v menu mezi ostatními aplikacemi.
 \chapter{Uživatelský manuál}
 
 	\section{Čtečka RFID}
-Čtečka svůj stav signalizuje pomocí LED diody, její stavy viz \ref{table:led_states}.
+Čtečka svůj stav signalizuje pomocí \texttt{LED diody} její stavy (viz tabulka \ref{table:led_states}).
 
 \begin{table}[H]
 \centering
@@ -814,23 +1192,21 @@ bliká modře & tag nemá nastavenou žádnou funkci  \\ \hline
 \ \\
 Tag načtený čtečkou se automaticky zaeviduje. Funkčnost tagu potom můžeme nastavit v mobilní aplikaci.
 Je-li čtečka v režimu přidávání položek a načte-li tag reprezentující položku, přičte se k položce +1 množství.
-K přepínání režimů slouží speciální tag typu "režim".
+K přepínání režimů slouží speciální tag typu \uv{režim}.
 
 \newpage
 
-	\section{Mobilní aplikace}
+\section{Mobilní aplikace}
 	
 \subsection{Přihlášení}	
-	
-Při prvním spuštění aplikace se zobrazí přihlašovací formulář viz \ref{fig:Screenshot_20170610-134211}.
-Zadejte adresu serveru, pak následuje uživatelské jméno a heslo viz \ref{fig:Screenshot_20170612-002041}. 
+Při prvním spuštění aplikace se zobrazí přihlašovací formulář (viz obrázek \ref{fig:Screenshot_20170610-134211}).
+Zadejte adresu serveru, pak následuje uživatelské jméno a heslo (viz obrázek \ref{fig:Screenshot_20170612-002041}). 
 \\\\
 Výchozí přihlašovací údaje administrátora systému jsou:
 \begin{itemize}[noitemsep]
 \item [-] uživatelské jméno: admin
 \item [-] heslo: heslo
 \end{itemize}
-
 \begin{figure}[H]
 	\centering
   \begin{subfigure}[b]{0.3\textwidth}
@@ -849,14 +1225,14 @@ Výchozí přihlašovací údaje administrátora systému jsou:
   \caption{Přihlašovací formulář}
 \end{figure}
 
-\subsection{Menu}
-Menu se zobrazí stisknutím hamburger menu nebo vysunutím z poza okraje viz \ref{fig:Screenshot_20170607-164924}.
-První položka menu otevírá detail přihlášeného uživatele.
-Na  řádce jsou výše zmíněné "Položky", pak následují "Tagy".
-Další položkou v menu je "Čtečka", ta je dostupná jen pro mobilní zařízení s \texttt{NFC}, ostatním se nezobrazí.
-Poté následují "Zařízení" a "Uživatelé", které jsou přístupné jen pro administrátora.
-Poslední je "O aplikaci", zobrazí verzi, popis a autora aplikace.
 
+\subsection{Menu}
+Menu se zobrazí stisknutím hamburger menu nebo vysunutím zpoza okraje (viz obrázek \ref{fig:Screenshot_20170607-164924}).
+První položka menu otevírá detail přihlášeného uživatele.
+Na  řádce jsou výše zmíněné \uv{Položky}, pak následují \uv{Tagy}.
+Další položkou v menu je \uv{Čtečka}, ta je dostupná jen pro mobilní zařízení s \texttt{NFC}, ostatním se nezobrazí.
+Poté následují \uv{Zařízení} a \uv{Uživatelé}, které jsou přístupné jen pro administrátora.
+Poslední je \uv{O aplikaci}, zobrazí verzi, popis a autora aplikace.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170607-164924.png}	
@@ -864,12 +1240,12 @@ Poslední je "O aplikaci", zobrazí verzi, popis a autora aplikace.
 	\label{fig:Screenshot_20170607-164924}
 \end{figure}
 
-\subsection{Položky}	
 
-Po spuštění aplikace se zobrazí seznam položek skladu viz \ref{fig:Screenshot_20170607-164919}.
+
+\subsection{Položky}	
+Po spuštění aplikace se zobrazí seznam položek skladu (viz obrázek \ref{fig:Screenshot_20170607-164919}).
 Položky můžete přidat pomocí zeleného plus v pravém dolním rohu a kliknutím na danou položku editovat.
 Položku lze smazat jen tehdy, když se její počet rovná nule.
-
 \begin{figure}[H]
 	\centering
   \begin{subfigure}[b]{0.3\textwidth}
@@ -889,8 +1265,8 @@ Položku lze smazat jen tehdy, když se její počet rovná nule.
 \end{figure}
 
 
-\subsection{Tagy}
 
+\subsection{Tagy}
 Tagy nelze přidávat ručně, jen pomocí čtečky. Kliknutím na tag se zobrazí editace, která nabízí změnu typu. Tag může být tří typů:
 \begin{description}
 \item [neznámý] - tag nemá nastavenou žádnou funkci
@@ -917,8 +1293,8 @@ Tagy nelze přidávat ručně, jen pomocí čtečky. Kliknutím na tag se zobraz
 
 
 \subsection{Čtečka}
-Čtečka čekající na přiložení tagu viz \ref{fig:Screenshot_20170607-165058}.
-Po přiložení tagu se načtou detailní informace viz \ref{fig:Screenshot_20170607-165117}, ale pokud není v systému zaevidován, pak je vytvořen tag typu "neznámý".
+Čtečka čekající na přiložení tagu (viz obrázek \ref{fig:Screenshot_20170607-165058}).
+Po přiložení tagu se načtou detailní informace (viz obrázek \ref{fig:Screenshot_20170607-165117}), ale pokud není v systému zaevidován, pak je vytvořen tag typu \uv{neznámý}.
 \begin{figure}[H]
 	\centering
   \begin{subfigure}[b]{0.3\textwidth}
@@ -936,22 +1312,20 @@ Po přiložení tagu se načtou detailní informace viz \ref{fig:Screenshot_2017
   \end{subfigure}
   \caption{Čtečka}
 \end{figure}
-\subsection{Administrace}
 
-Seznam zařízení se ukazuje jen administrátorům viz \ref{fig:Screenshot_20170607-165221}. Zařízení se evidují automaticky při jakémkoli pokusu o připojení k serveru. Aby se zařízení připojilo, je nutné, aby konkrétnímu zařízení byl povolen přístup. Ten se mění pomocí přepínače.
+
+\subsection{Administrace}
+Seznam zařízení se ukazuje jen administrátorům (viz obrázek \ref{fig:Screenshot_20170607-165221}). Zařízení se evidují automaticky při jakémkoli pokusu o připojení k serveru. Aby se zařízení připojilo, je nutné, aby konkrétnímu zařízení byl povolen přístup. Ten se mění pomocí přepínače.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.3\textwidth]{../images/client_android/Screenshot_20170607-165221.png}	
 	\caption{Zařízení}
 	\label{fig:Screenshot_20170607-165221}
 \end{figure}
-Jen administrátor má přístup ke správě uživatelů viz \ref{fig:Screenshot_20170607-165248}.
+\ \\
+Jen administrátor má přístup ke správě uživatelů (viz obrázek \ref{fig:Screenshot_20170607-165248}).
 Dostat se na vytvoření nového uživatele je možné přes zelené plus v pravém dolním rohu a kliknutím na uživatele editovat.
-Uživatele s rolí "administrátor" může vytvářet a editovat jen výchozí administrátor.
-
-
-
-
+Uživatele s rolí \uv{administrátor} může vytvářet a editovat jen výchozí administrátor.
 \begin{figure}[H]
 	\centering
   \begin{subfigure}[b]{0.3\textwidth}
@@ -970,8 +1344,7 @@ Uživatele s rolí "administrátor" může vytvářet a editovat jen výchozí a
   \caption{Uživatelé}
 \end{figure}
 
-	
-	
+
 
 \chapter{Obsah přiloženého CD}
 

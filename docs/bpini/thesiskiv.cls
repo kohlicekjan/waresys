@@ -49,6 +49,7 @@
 \newcommand{\declarationdate}[1]{\def\KIV@declarationdate{#1}}
 \newcommand{\abstracttexten}[1]{\long\def\KIV@abstracttexten{#1}}
 \newcommand{\abstracttextcz}[1]{\long\def\KIV@abstracttextcz{#1}}
+\newcommand{\thanktext}[1]{\long\def\KIV@thanktext{#1}}
 %
 % in Czech, Declaration text differs if the writer is male or female
 %
@@ -117,6 +118,15 @@
   \noindent\KIV@declarationfoot\KIV@declarationdate\par
   \vskip 0.7em
   \noindent\hfill\@author\hspace*{10mm}\par
+  \newpage
+  %
+  %Thank Page
+  %
+  \begin{otherlanguage}{czech}
+  \chapter*{\KIV@chapstarrule Poděkování}
+  \medskip
+  \parbox{\textwidth}{\parindent 1.5em\noindent \KIV@thanktext}
+  \end{otherlanguage}
   \newpage
   %
   % ABSTRACT PAGE(S)
