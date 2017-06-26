@@ -1,6 +1,6 @@
 {
   "name": "bpini-server",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": true,
   "description": "BPINI server",
   "author": {
@@ -16,27 +16,27 @@
     "bcryptjs": "^2.4.3",
     "bunyan": "^1.8.10",
     "bunyan-format": "^0.2.1",
-    "config": "^1.25.1",
-    "debug": "^2.6.4",
+    "config": "^1.26.1",
+    "debug": "^2.6.8",
     "mkdirp": "^0.5.1",
-    "mongoose": "^4.10.6",
+    "mongoose": "^4.10.8",
     "mongoose-autopopulate": "^0.5.0",
-    "mosca": "^2.3.0",
+    "mosca": "^2.5.1",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "querymen": "^2.1.1",
     "restify": "^4.3.0",
     "restify-router": "^0.4.2",
-    "serve-static": "^1.12.1",
-    "swagger-jsdoc": "^1.9.2"
+    "serve-static": "^1.12.3",
+    "swagger-jsdoc": "^1.9.4"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.0.2",
     "chai-http": "^3.0.0",
-    "debug": "^2.6.1",
+    "debug": "^2.6.8",
     "faker": "^4.1.0",
-    "mocha": "^3.2.0",
-    "newman": "^3.5.0"
+    "mocha": "^3.4.2",
+    "newman": "^3.7.2"
   },
   "engines": {
     "node": "7.8.x",
