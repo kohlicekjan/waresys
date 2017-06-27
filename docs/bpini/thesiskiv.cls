@@ -122,10 +122,13 @@
   %
   %Thank Page
   %
+
   \begin{otherlanguage}{czech}
   \chapter*{\KIV@chapstarrule Poděkování}
+  \thispagestyle{empty}
   \medskip
   \parbox{\textwidth}{\parindent 1.5em\noindent \KIV@thanktext}
+
   \end{otherlanguage}
   \newpage
   %
