@@ -166,7 +166,7 @@ Technologie \texttt{RFID} pracuje na principu radaru. Transpondéry (tagy) mohou
     		\label{fig:rfidsmartlabel}
 		\end{figure}
 
-
+\newpage
 \subsection{Frekvenční pásma}
 Systémy \texttt{RFID} pracují s různými frekvencemi, přičemž frekvence ovlivňuje rychlost čtení a zápisu, dosah signálu a prostor pokrytí atd.
 Více informací v tabulce \ref{table:rfid_frekvence}
@@ -349,8 +349,8 @@ Standardní port pro \texttt{MQTT} je \texttt{1883}, pro komunikaci \texttt{MQTT
 				\end{itemize}
 				\ \\
 				Došel jsem k závěru, že pro přidání a odebrání skladových položek bude využita jen jedna čtečka \texttt{RFID-RC522} s přepínáním mezi režimy.
-				Jelikož nemám k dispozici displej ani bzučák, bude zobrazení režimu obstarávat jen \texttt{RGB LED dioda}. Čtečka načte \texttt{UID} tagu a odešle ho na server. Tam se zjistí typ tagu a podle toho se rozhodne, jaká bude akce. Podle typu akce se objeví barevná signalizace. 
-				\ \\
+				Jelikož nemám k dispozici displej ani bzučák, bude zobrazení režimu obstarávat jen \texttt{RGB LED dioda}. Čtečka načte \texttt{UID} tagu a odešle ho na server. Tam se zjistí typ tagu a podle toho se rozhodne, jaká bude akce.\\ Podle typu akce se objeví barevná signalizace. 
+				\\\\
 				Akce podle typu tagu:
 				\begin{description}
 					\item [položka] - Tag reprezentuje položku ve skladu. K vybrané položce se podle aktuálního režimu přičte nebo odečte kus. Při úspěšné akci se pošle příkaz k zablikání zelenou barvou.
@@ -492,7 +492,7 @@ Vývoj \texttt{MongoDB} je zaměřen na čtyři hlavní oblasti:
 		Také obsahuje užitečnou funkci \texttt{throttle}, při překročení 50 dotazů za sekundu dojde k zablokování zdroje žádostí.		
 		
 		\texttt{REST API} je umístěno na adrese \texttt{/api/v1/}, verzování standardně v \texttt{URL}. Data jsou k dispozici jen ve formátu \texttt{JSON}. 
-\\\\
+		\\\\
 Popis všech dostupných \texttt{URL} adres v \texttt{API} viz tabulka \ref{table:api}.
 \begin{table}[H]
 \centering
@@ -670,7 +670,8 @@ Celé schéma zařízení:
 		V \texttt{Node.js} lze při spuštění nastavit parametr \texttt{NODE\_ENV}, který určuje v jakém prostředí běží. Výchozí hodnotou je \texttt{development}.
 		Některé moduly se přizpůsobují prostředí, např. podle \texttt{NODE\_ENV} změní level logování. 
 		Modul \texttt{config} vybírá konfigurační soubor podle \texttt{NODE\_ENV}, např. při \texttt{NODE\_ENV=test} se vybere soubor \texttt{config/test.js}.
-\\\\
+\newpage
+\ \\
 		Ukázka konfiguračního souboru \texttt{config/default.js}:	
 \begin{verbatim}
 {
@@ -733,18 +734,18 @@ Celé schéma zařízení:
 		\label{fig:reader_rfid_diagram}
 	\end{figure}		
 		
-				
+\newpage
 		\section{Zapojení RFID-RC522}
 Čtečka \texttt{RFID-RC522} (viz obrázek \ref{fig:rfid_rc522}) se k \texttt{Raspberry Pi} zapojí přes \texttt{GPIO}. 
 \begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\textwidth]{../images/rfid_rc522.jpg}	
+		\includegraphics[width=0.50\textwidth]{../images/rfid_rc522.jpg}	
 		\caption{Čtečka \texttt{RFID-RC522}}
 		\label{fig:rfid_rc522}
 	\end{figure}
 \ \\
 Komunikace probíhá přes \texttt{SPI}, což je synchronní sériový datový protokol používaný pro komunikaci mezi mikroprocesory nebo s periferními zařízeními.
-Při komunikaci přes \texttt{SPI} je vždy jedno zařízení hlavní, které řídí periferní zařízení \cite{upton2014raspberry}.
+Při komunikaci přes \texttt{SPI} je vždy jedno zařízení hlavní, které řídí periferní zařízení \cite{upton2014raspberry}.\\\\
 Komunikaci \texttt{SPI} se vždy skládá z těchto pinů (viz obrázek \ref{fig:spi}):			
 \begin{itemize}[noitemsep]
 \item [-] \texttt{MISO (Master Slave Out)} - \texttt{slave} linka pro odesílání dat do \texttt{master}
