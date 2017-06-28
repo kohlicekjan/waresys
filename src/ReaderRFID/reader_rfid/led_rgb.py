@@ -49,7 +49,7 @@ class LedRGB(object):
     def is_on(self):
         return GPIO.input(self.__pins[0]) or GPIO.input(self.__pins[1]) or GPIO.input(self.__pins[2])
 
-
+#třída ob
 class Color(object):
 
     def __init__(self, color_red = None, color_green = None, color_blue = None, color_hex = None):

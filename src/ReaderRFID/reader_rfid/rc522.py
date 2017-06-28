@@ -4,6 +4,8 @@ from pirc522 import RFID
 class RFID(RFID):
 
     def read_uid(self, wait = 0.1):
+        """ Načte UID jen jednou """
+
         self.undetected_num = 0
 
         while True:

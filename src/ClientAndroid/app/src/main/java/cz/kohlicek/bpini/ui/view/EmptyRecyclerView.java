@@ -6,6 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * RecyclerView rozšířena o schovávání/zorazování popisku pro prazdný seznam
+ */
 public class EmptyRecyclerView extends RecyclerView {
     private View mEmptyView;
     private int visibility;

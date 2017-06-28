@@ -8,7 +8,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class BasicModel {
+/**
+ * Základ pro který mají všechny modely
+ */
+public abstract class BasicModel {
 
     @SerializedName("_id")
     @Expose
@@ -27,30 +30,21 @@ public class BasicModel {
         return id;
     }
 
-    public Date getCreated() {
-        Calendar cal = new GregorianCalendar();
-        int mGMTOffset = cal.getTimeZone().getRawOffset();
-
-        cal.setTime(this.created);
-        cal.add(Calendar.HOUR_OF_DAY, mGMTOffset);
-
-        return cal.getTime();
-    }
-
+    /**
+     * Převede datum výtvoření na požadovaný formát
+     * @param format
+     * @return datum v požadovaném formátu
+     */
     public String getCreatedFormat(String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(created);
     }
 
-    public Date getUpdated() {
-        Calendar cal = new GregorianCalendar();
-        int mGMTOffset = cal.getTimeZone().getRawOffset();
-
-        cal.setTime(this.updated);
-        cal.add(Calendar.HOUR_OF_DAY, mGMTOffset);
-        return cal.getTime();
-    }
-
+    /**
+     * Převede datum úpravy na požadovaný formát
+     * @param format
+     * @return datum v požadovaném formátu
+     */
     public String getUpdatedFormat(String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(updated);

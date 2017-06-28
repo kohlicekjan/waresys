@@ -54,13 +54,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        //získání lokálního účtu
         account = Account.getLocalAccount(this);
         navMenu = navigationView.getMenu();
 
         if (account == null) {
+            //zobrazení přihlášení
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else if (savedInstanceState == null) {
+            //přizpůsobení menu podle práv a zařízení
             navMenu.setGroupVisible(R.id.group_admin, account.isRole(Account.ROLE_ADMIN));
             navMenu.findItem(R.id.nav_account).setTitle(account.getName());
 
@@ -82,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * zobrazí dialog s informacemi o aplikacemi
+     */
     private void showInfo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);

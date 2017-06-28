@@ -18,6 +18,8 @@ var User = require('../../models/user');
  *     name: Authorization
  *     in: header
  */
+
+//nastavení strategie autentizace
 passport.use(new BasicStrategy(function (username, password, done) {
 
     User.findOne({ username: username }).select("+password").exec(function (err, user) {
@@ -35,7 +37,7 @@ passport.use(new BasicStrategy(function (username, password, done) {
     });
 }));
 
-
+//rekce na autentizaci 
 module.exports.authenticate = function authenticate(req, res, next) {
     passport.authenticate('basic', { session: false }, function (err, user, info) {
         if (err)
@@ -49,7 +51,7 @@ module.exports.authenticate = function authenticate(req, res, next) {
     })(req, res, next);
 }
 
-
+//kontrola přiřazené role
 module.exports.isRole = function (role) {
     return function (req, res, next) {
         if (req.user.roles.indexOf(role) < 0) {

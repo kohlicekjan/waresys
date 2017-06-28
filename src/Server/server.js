@@ -4,13 +4,13 @@ var mosca = require('mosca');
 var mongoose = require('mongoose');
 var util = require('util');
 var config = require('config');
-
 var logger = require('./lib/logger');
-
 
 var Device = require('./models/device');
 var devices = require('./devices');
 
+
+//konfigurace MQTT serveru/brokeru
 var server = new mosca.Server({
     id: config.name,
     host: config.host,
@@ -25,19 +25,22 @@ var server = new mosca.Server({
     publishNewClient: false,
     publishClientDisconnect: false,
     publishSubscriptions: false
-    //logger: {
-    //    name: 'server',
-    //    level: 'debug'
-    //}
 });
 
+//spuštění serveru
 server.on('ready', function () {
 
+    //připojení k databáze, pokud není spojení navázáno
     if (!mongoose.connection.readyState) {
+        //logování dotazů na databázi
         mongoose.set('debug', function (coll, method, query, doc, options) {
             logger.debug('Mongoose: %s.%s(%j, %j)', coll, method, query, doc);
         });
+
+        //globální prřístup k navázanému připojení
         mongoose.Promise = global.Promise;
+
+        //připojení
         mongoose.connect(config.mongodb.uri, config.mongodb.options, function (err) {
             if (err) {
                 logger.error(err);
@@ -53,9 +56,11 @@ server.on('ready', function () {
     logger.info('%s MQTT v%s listening at %s:%s in %s', config.name, config.version, config.host, config.port.mqtt, process.env.NODE_ENV);
 
     if (config.api)
+        //spuštění API
         var api = require('./api');
 });
 
+//MQTT autentizace, vytvoří záznam v databázi o zařízení
 var authenticate = function (client, username, password, callback) {
     logger.info('Client Authenticate := ', client.id);
 
@@ -80,6 +85,7 @@ var authenticate = function (client, username, password, callback) {
     }
 }
 
+//MQTT ověření práv k přihlášení odběru
 var authorizeSubscribe = function (client, topic, callback) {
     logger.info('Client Authorize Subscribe := ', client.id);
     var [name, id] = client.id.split('/');
@@ -94,6 +100,7 @@ var authorizeSubscribe = function (client, topic, callback) {
     });
 }
 
+//MQTT ověření práv k publikování zprávy
 var authorizePublish = function (client, topic, payload, callback) {
     logger.info('Client Authorize Publish := ', client.id);
     var [name, id] = client.id.split('/');
@@ -108,10 +115,12 @@ var authorizePublish = function (client, topic, payload, callback) {
     });
 }
 
+//zachycení chyby
 server.on("error", function (err) {
     logger.error(err);
 });
 
+//při připojení změní stav zařízení na "aktivní"
 server.on('clientConnected', function (client) {
     logger.info('Client Connected := ', client.id);
 
@@ -129,6 +138,7 @@ server.on('clientConnected', function (client) {
 
 });
 
+//při dopojení změní stav zařízení na "neaktivní"
 server.on('clientDisconnected', function (client) {
     logger.info('Client Disconnected := ', client.id);
 
@@ -150,16 +160,21 @@ server.on('unsubscribed', function (topic, client) {
     logger.info('Unsubscribed := ', topic);
 });
 
+//publikování zprávy
 server.on('published', function (packet, client) {
     logger.info("Published :=", packet);
 
     var [name, id, actionType] = packet.topic.split('/');
 
+    //hledání zařízení, které publikuje
     Device.findOne({ device_id: id, name: name }, function (err, device) {
         if (device && device.allowed) {
             var data = JSON.parse(packet.payload.toString('utf-8'));
 
+            //základní akce pro všechny zařízení
             devices.basic.actions(server, actionType, device, data);
+
+            //akce jen pro četečky RFID
             devices.readerRFID.actions(server, actionType, device, data);
         }
     });

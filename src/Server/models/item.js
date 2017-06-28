@@ -7,11 +7,11 @@ var itemSchema = new Schema({
     amount: { type: Number, default: 0, min: 0, required: true }
 });
 
-itemSchema.set('strict', true);
-itemSchema.set('versionKey', false);
-itemSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
+itemSchema.set('strict', true); //skriktní dodržování schématu
+itemSchema.set('versionKey', false); //vypnutí verzovacího klíče
+itemSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' }); //nastavení časového razítka
 
-
+//přidat virtuální vlastnosti do formátu JSON
 itemSchema.set('toJSON', {
     virtuals: true
 });

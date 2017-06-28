@@ -7,8 +7,10 @@ var bformat = require('bunyan-format');
 
 var formatOut = bformat({ outputMode: 'short' });
 
+//vyvoření složky pro logy
 mkdirp(path.dirname(config.logger.path));
 
+//nastvení loggeru bunyan
 module.exports = bunyan.createLogger({
     name: config.name,
     streams: [{
@@ -19,9 +21,11 @@ module.exports = bunyan.createLogger({
         count: 7
     },
         {
+            //nastevené logování na obrazovku
             level: config.logger.level,
             stream: formatOut
         }],
+    //logování chyb, dotazů a opovědí
     serializers: {
         err: bunyan.stdSerializers.err,
         req: bunyan.stdSerializers.req,

@@ -7,7 +7,10 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Stará se o zobrazení loadingu při načítání dalších dat
+ * @param <E>
+ */
 public abstract class BaseAdapter<E> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int VIEW_TYPE_ITEM = 0;

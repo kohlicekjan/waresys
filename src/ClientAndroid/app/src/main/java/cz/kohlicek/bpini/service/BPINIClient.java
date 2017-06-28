@@ -10,15 +10,27 @@ import cz.kohlicek.bpini.R;
 import cz.kohlicek.bpini.model.Account;
 import cz.kohlicek.bpini.ui.LoginActivity;
 
+/**
+ *
+ */
 public class BPINIClient {
 
-
+    /**
+     * Vytvoření služby s vyplněnými přihlašovacími údaji
+     * @param context
+     * @return
+     */
     public static BPINIService getInstance(Context context) {
         Account account = Account.getLocalAccount(context);
 
         return ServiceGenerator.createService(BPINIService.class, account.getHost(), account.getUsername(), account.getPassword());
     }
 
+    /**
+     * Informování o nepovedeném požadavku
+     * @param code
+     * @param activity
+     */
     public static void requestAnswerFailure(int code, Activity activity) {
         Intent intentLogin = new Intent(activity, LoginActivity.class);
         intentLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

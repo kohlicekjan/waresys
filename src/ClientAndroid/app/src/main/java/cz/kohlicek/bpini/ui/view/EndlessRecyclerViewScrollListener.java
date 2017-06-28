@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 
-
-//source: https://gist.github.com/junfengren/f06c6f19e5832c62fe93b61ac8f72ff9
+/**
+ * Při skrolování dolů se zavolá načítání dalších dat
+ * source: https://gist.github.com/junfengren/f06c6f19e5832c62fe93b61ac8f72ff9
+ */
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     RecyclerView.LayoutManager mLayoutManager;
     // The minimum amount of items to have below your current scroll position

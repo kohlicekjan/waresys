@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
         String username = inputUsername.getText().toString();
         String password = inputPassword.getText().toString();
 
-        if (host.isEmpty() || (!Patterns.IP_ADDRESS.matcher(host).matches() && !Patterns.DOMAIN_NAME.matcher(host).matches())) {
+        if (host.isEmpty()) {
             layoutHost.setError(getString(R.string.login_validate_host));
             valid = false;
         } else {

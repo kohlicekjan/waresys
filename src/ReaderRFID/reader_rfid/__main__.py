@@ -13,9 +13,12 @@ from __init__ import __version__, APP_NAME, HOST, PORT, LED_PINS, MQTT_TOPIC, LO
 
 
 def message_led(client, userdata, msg):
+    """ zpracovává zprávy na téma /led """
+
     data = json.loads(msg.payload.decode('utf-8'))
 
     try:
+        #kontrola formatu zprávy
         if(set(('color', 'blink')).issubset(data)):                     
             color = led_rgb.Color(color_hex=data['color'])
             
@@ -30,6 +33,8 @@ def message_led(client, userdata, msg):
 def on_disconnect(client, userdata, rc):
     print("Disconnect to {0}:{1}".format(client._host, client._port))
     logging.info("Disconnect to {0}:{1}".format(client._host, client._port))
+
+    #vypne diodu
     userdata['ledrgb'].switch_off()
 
 def on_log(client, userdata, level, string):
@@ -38,6 +43,7 @@ def on_log(client, userdata, level, string):
 def on_message(client, userdata, msg):
     logging.info('on_message', {'msg': msg})
 
+
 def on_connect(client, userdata, flags, rc):
     logging.info('connect',{'flags': flags, 'rc': rc})
 
@@ -45,9 +51,12 @@ def on_connect(client, userdata, flags, rc):
         print("Connected to {0}:{1}".format(client._host, client._port))
         logging.info("Connected to {0}:{1}".format(client._host, client._port))
 
+        #odešle se žádost o odběr
         client.subscribe(MQTT_TOPIC['LED'].format(client._client_id), 0)
+        #nastaví fukce pro zpracování zprávy na téma /led
         client.message_callback_add(MQTT_TOPIC['LED'].format(client._client_id), message_led)   
 
+        #odešlou se informace o zařízení
         data = {'serial_number': utils.serial_number(), 'version': __version__}
         client.publish(MQTT_TOPIC['INFO'].format(client._client_id), json.dumps(data))
 
@@ -76,6 +85,7 @@ def main():
     log_level = args.debug if logging.DEBUG else logging.INFO
     logging.basicConfig(filename=LOG_FILE, level=log_level, format=LOG_FORMAT)
 
+    #vytvoření klient ID
     client_id = '{0}/{1}'.format(APP_NAME, utils.device_id())
     ledrgb = led_rgb.LedRGB(LED_PINS['RED'], LED_PINS['GREEN'], LED_PINS['BLUE'])
     rfid = rc522.RFID()
@@ -84,6 +94,7 @@ def main():
     print("Client ID: {0}".format(client_id))
     logging.info("Client ID: {0}".format(client_id))
 
+    #vytvoření MQTT klienta
     client = mqtt.Client(client_id)
     client.on_message = on_message
     client.on_connect = on_connect
@@ -91,6 +102,7 @@ def main():
     client.on_log = on_log    
     client.user_data_set({'ledrgb': ledrgb})
 
+    #bude se pokoušet připojit dokud se to nepovede
     while True:
         try:
             time.sleep(2)
@@ -112,11 +124,14 @@ def main():
 
     while(True):
         try:
+            #načtení UID tagu
             uid = rfid.read_uid()
             if(uid is not None):
+                #převedení UID na format hex code
                 uid_hex = ''.join('{0:02x}'.format(uid[x]) for x in range(4))
                 logging.info("Read TAG UID: {0}".format(uid_hex))
-
+                
+                #odeslání zpravy s UID
                 infot = client.publish(MQTT_TOPIC['TAG'].format(client._client_id), json.dumps({'uid': uid_hex}))
                 infot.wait_for_publish()
 

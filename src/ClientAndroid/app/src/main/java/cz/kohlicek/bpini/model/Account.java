@@ -10,7 +10,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-
+/**
+ * Lokálně ukládá a načítá údaje o přihlášeném účtu
+ */
 public class Account {
 
     public static final String SP_NAME = "bpini_account";

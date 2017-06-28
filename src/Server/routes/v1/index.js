@@ -3,7 +3,7 @@ var swaggerJSDoc = require('swagger-jsdoc');
 var config = require('config');
 const router = new Router();
 
-
+//vytvoření swagger specifikace z komentářů
 var swaggerSpec = swaggerJSDoc({
     swaggerDefinition: {
         info: {
@@ -18,6 +18,7 @@ var swaggerSpec = swaggerJSDoc({
     apis: ['./routes/v1/*.js', './models/*.js']
 });
 
+//zpřístupnění swagger specifikace
 router.get('/swagger.json', function (req, res, next) {
     res.send(swaggerSpec);
 });

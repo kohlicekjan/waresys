@@ -8,12 +8,20 @@ import android.content.DialogInterface;
 
 import cz.kohlicek.bpini.R;
 
+/**
+ * Nástroje pro rychlé vytváření dialogů
+ */
 public final class DialogUtils {
 
     private DialogUtils() {
-        // This utility class is not publicly instantiable
+
     }
 
+    /**
+     * Vytvoří načítací dialog
+     * @param context
+     * @return dialog
+     */
     public static ProgressDialog showLoadingDialog(Context context) {
         ProgressDialog progressDialog = new ProgressDialog(context);
 
@@ -25,6 +33,11 @@ public final class DialogUtils {
         return progressDialog;
     }
 
+    /**
+     * Vytvoří dilaog s tlačítkem zrušit
+     * @param context
+     * @return dialog
+     */
     public static AlertDialog DialogWithCancel(Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

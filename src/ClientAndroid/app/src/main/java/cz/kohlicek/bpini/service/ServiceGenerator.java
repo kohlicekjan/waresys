@@ -10,11 +10,22 @@ import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ *
+ */
 public class ServiceGenerator {
 
     private static OkHttpClient.Builder httpClient;
     private static Retrofit.Builder builder;
 
+    /**
+     * Vytváří službu s auth tokenem
+     * @param serviceClass
+     * @param baseUrl
+     * @param authToken
+     * @param <S>
+     * @return službu
+     */
     public static <S> S createService(Class<S> serviceClass, String baseUrl, final String authToken) {
         httpClient = new OkHttpClient.Builder();
         builder = new Retrofit.Builder()
@@ -43,6 +54,15 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
+    /**
+     * Vytváří službu s přihlašujícími údaji
+     * @param serviceClass
+     * @param baseUrl
+     * @param username
+     * @param password
+     * @param <S>
+     * @return službu
+     */
     public static <S> S createService(Class<S> serviceClass, String baseUrl, String username, String password) {
 
         String authToken = Credentials.basic(username, password);
