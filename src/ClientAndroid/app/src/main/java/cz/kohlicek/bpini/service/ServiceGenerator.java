@@ -20,6 +20,7 @@ public class ServiceGenerator {
 
     /**
      * Vytváří službu s auth tokenem
+     *
      * @param serviceClass
      * @param baseUrl
      * @param authToken
@@ -56,6 +57,7 @@ public class ServiceGenerator {
 
     /**
      * Vytváří službu s přihlašujícími údaji
+     *
      * @param serviceClass
      * @param baseUrl
      * @param username

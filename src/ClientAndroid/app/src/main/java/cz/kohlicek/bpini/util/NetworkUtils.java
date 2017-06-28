@@ -16,6 +16,7 @@ public final class NetworkUtils {
 
     /**
      * Zjišťuje se jestli je zařízení připojené k síti
+     *
      * @param context
      * @return je připojený k síti
      */

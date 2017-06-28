@@ -19,6 +19,7 @@ public final class DialogUtils {
 
     /**
      * Vytvoří načítací dialog
+     *
      * @param context
      * @return dialog
      */
@@ -35,6 +36,7 @@ public final class DialogUtils {
 
     /**
      * Vytvoří dilaog s tlačítkem zrušit
+     *
      * @param context
      * @return dialog
      */

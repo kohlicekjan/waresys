@@ -89,7 +89,7 @@ public class UserFormActivity extends AppCompatActivity {
         account = Account.getLocalAccount(this);
         roles = Arrays.asList(getResources().getStringArray(R.array.user_roles_value));
 
-        if(account.getUsername().equals("admin")){
+        if (account.getUsername().equals("admin")) {
             inputRoles.setVisibility(View.VISIBLE);
             userRoles.setVisibility(View.GONE);
         }

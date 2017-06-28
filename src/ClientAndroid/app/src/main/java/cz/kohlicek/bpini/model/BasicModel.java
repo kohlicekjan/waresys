@@ -4,9 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Základ pro který mají všechny modely
@@ -32,6 +30,7 @@ public abstract class BasicModel {
 
     /**
      * Převede datum výtvoření na požadovaný formát
+     *
      * @param format
      * @return datum v požadovaném formátu
      */
@@ -42,6 +41,7 @@ public abstract class BasicModel {
 
     /**
      * Převede datum úpravy na požadovaný formát
+     *
      * @param format
      * @return datum v požadovaném formátu
      */

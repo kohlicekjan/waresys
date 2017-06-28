@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Stará se o zobrazení loadingu při načítání dalších dat
+ *
  * @param <E>
  */
 public abstract class BaseAdapter<E> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

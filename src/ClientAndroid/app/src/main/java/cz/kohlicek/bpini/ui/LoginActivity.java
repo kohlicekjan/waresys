@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;

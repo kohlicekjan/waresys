@@ -17,6 +17,7 @@ public class BPINIClient {
 
     /**
      * Vytvoření služby s vyplněnými přihlašovacími údaji
+     *
      * @param context
      * @return
      */
@@ -28,6 +29,7 @@ public class BPINIClient {
 
     /**
      * Informování o nepovedeném požadavku
+     *
      * @param code
      * @param activity
      */
