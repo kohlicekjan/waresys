@@ -61,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
             case R.id.action_login:
                 login();
                 return true;
+            case R.id.action_about:
+                MainActivity.showInfo(this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -19,9 +19,11 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
+import cz.kohlicek.bpini.model.Account;
 import cz.kohlicek.bpini.model.Tag;
 import cz.kohlicek.bpini.service.BPINIClient;
 import cz.kohlicek.bpini.service.BPINIService;
+import cz.kohlicek.bpini.ui.LoginActivity;
 import cz.kohlicek.bpini.ui.item.ItemFormActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,7 +54,7 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.label_item)
     View labelItem;
 
-
+    private Account account;
     private BPINIService bpiniService;
     private NfcAdapter nfcAdapter;
     private Tag tag;
@@ -74,6 +76,14 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
         ButterKnife.bind(this);
 
         setTitle(R.string.tag_reader_title);
+
+        account = Account.getLocalAccount(this);
+        if (account == null) {
+            Toast.makeText(getApplicationContext(), R.string.tag_reader_nfc_not_login, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
 
         bpiniService = BPINIClient.getInstance(this);
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);

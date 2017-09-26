@@ -7,4 +7,8 @@
         android:title="@string/action_login"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/nav_about" />
+
 </menu>

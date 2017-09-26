@@ -140,6 +140,7 @@
     <string name="tag_reader_nfc_no_support">This device doesn\'t support NFC.</string>
     <string name="tag_reader_nfc_disabled">NFC is disabled.</string>
     <string name="tag_reader_nfc_enabled">Enabled</string>
+    <string name="tag_reader_nfc_not_login">You are not logged in.</string>
 
     <!-- DeviceListFragmnet-->
     <string name="device_list_title">Devices</string>

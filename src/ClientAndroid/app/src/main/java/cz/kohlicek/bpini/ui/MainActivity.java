@@ -1,6 +1,7 @@
 package cz.kohlicek.bpini.ui;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //zobrazení přihlášení
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+            return;
         } else if (savedInstanceState == null) {
             //přizpůsobení menu podle práv a zařízení
             navMenu.setGroupVisible(R.id.group_admin, account.isRole(Account.ROLE_ADMIN));
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             boolean isNFC = getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC);
             navMenu.findItem(R.id.nav_tag_reader).setVisible(isNFC);
+            navMenu.findItem(R.id.nav_tags).setVisible(!isNFC);
 
             onNavigationItemSelected(navMenu.findItem(R.id.nav_items));
         }
@@ -88,10 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * zobrazí dialog s informacemi o aplikacemi
      */
-    private void showInfo() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    public static void showInfo(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.app_name);
-        builder.setMessage(Html.fromHtml(getResources().getString(R.string.about, BuildConfig.VERSION_NAME)));
+        builder.setMessage(Html.fromHtml(context.getResources().getString(R.string.about, BuildConfig.VERSION_NAME)));
         builder.setCancelable(false);
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(new Intent(this, TagReaderActivity.class));
                     return false;
                 case R.id.nav_about:
-                    showInfo();
+                    showInfo(this);
                     return false;
                 default:
                     return false;
