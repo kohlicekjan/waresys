@@ -1,4 +1,5 @@
 ﻿var restify = require('restify');
+var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
@@ -19,7 +20,6 @@ var User = require('../../models/user');
  *     in: header
  */
 
-//nastavení strategie autentizace
 passport.use(new BasicStrategy(function (username, password, done) {
 
     User.findOne({ username: username }).select("+password").exec(function (err, user) {
@@ -37,25 +37,23 @@ passport.use(new BasicStrategy(function (username, password, done) {
     });
 }));
 
-//rekce na autentizaci 
 module.exports.authenticate = function authenticate(req, res, next) {
     passport.authenticate('basic', { session: false }, function (err, user, info) {
         if (err)
             return next(err);
 
         if (!user)
-            return next(new restify.NotAuthorizedError('Username or password is incorrect'));
+            return next(new errs.NotAuthorizedError('Username or password is incorrect'));
 
         req.user = user.toJSON();
         return next();
     })(req, res, next);
 }
 
-//kontrola přiřazené role
 module.exports.isRole = function (role) {
     return function (req, res, next) {
         if (req.user.roles.indexOf(role) < 0) {
-            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+            return next(new errs.ForbiddenError('Do not have permission to access on this server'));
         }
         return next();
     }
@@ -122,22 +120,22 @@ router.put('/account/password', function (req, res, next) {
 
     User.findById(req.user._id).select("+password").exec(function (err, user) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!user)
-            return next(new restify.NotFoundError('User not found'));
+            return next(new errs.NotFoundError('User not found'));
 
         if (!user.validPassword(req.body.oldPassword))
-            return next(new restify.BadRequestError('Wrong old password'));
+            return next(new errs.BadRequestError('Wrong old password'));
 
         user.password = req.body.password;
 
         user.save(function (err, user) {
             if (err)
-                return next(new restify.BadRequestError(err.message));
+                return next(new errs.BadRequestError(err.message));
 
             if (!user)
-                return next(new restify.InternalError("Error saving user"));
+                return next(new errs.InternalError("Error saving user"));
 
             user = user.toObject();
             delete user.password;
@@ -147,8 +145,6 @@ router.put('/account/password', function (req, res, next) {
         });
     });
 });
-
-
 
 
 module.exports.router = router;

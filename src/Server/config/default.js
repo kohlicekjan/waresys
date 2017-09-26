@@ -3,7 +3,7 @@
 module.exports = {
     name: 'BPINI',
     version: package.version,
-    host: '127.0.0.1',
+    host: '192.168.1.252',
     port: {
         http: 80,
         mqtt: 1883
@@ -14,7 +14,7 @@ module.exports = {
     },
     mongodb: {
         uri: 'mongodb://127.0.0.1:27017/warehouse',
-        options: {}
+        options: { useMongoClient: true}
     },
     api: true
 };

@@ -16,17 +16,15 @@ var deviceSchema = new Schema({
     //messages: [{ type: Schema.Types.ObjectId }]
 });
 
-deviceSchema.set('strict', true); //skriktní dodržování schématu
-deviceSchema.set('versionKey', false); //vypnutí verzovacího klíče
-deviceSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' }); //nastavení časového razítka
-deviceSchema.index({ device_id: 1, name: 1 }, { unique: true }); //nastavení indexu
+deviceSchema.set('strict', true);
+deviceSchema.set('versionKey', false);
+deviceSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
+deviceSchema.index({ device_id: 1, name: 1 }, { unique: true });
 
-//virtuální vlastnost klient ID
 deviceSchema.virtual('client_id').get(function () {
     return (this.name + '/' + this.device_id);
 });
 
-//přidat virtuální vlastnosti do formátu JSON
 deviceSchema.set('toJSON', {
     virtuals: true
 });

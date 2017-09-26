@@ -1,4 +1,5 @@
 ﻿var restify = require('restify');
+var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -55,7 +56,7 @@ router.get('/users', querymen.middleware(), function (req, res, next) {
 
     User.find(query.query, query.select, query.cursor, function (err, users) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         res.json(users);
     });
@@ -94,13 +95,13 @@ router.get('/users/:user_id', function (req, res, next) {
 
     User.findById(req.params.user_id, function (err, user) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!user)
-            return next(new restify.NotFoundError('User not found'));
+            return next(new errs.NotFoundError('User not found'));
 
         if (user._id.toString() == req.user._id || user.username == 'admin')
-            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+            return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
         res.json(user);
     });
@@ -168,10 +169,10 @@ router.post('/users', function (req, res, next) {
 
     user.save(function (err, user) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!user)
-            return next(new restify.InternalError("Error saving user"));
+            return next(new errs.InternalError("Error saving user"));
 
         req.log.info('create user', user);
         res.json(201, user);
@@ -239,13 +240,13 @@ router.put('/users/:user_id', function (req, res, next) {
 
     User.findById(req.params.user_id, function (err, user) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!user)
-            return next(new restify.NotFoundError('User not found'));
+            return next(new errs.NotFoundError('User not found'));
 
         if (user._id.toString() == req.user._id || user.username == 'admin')
-            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+            return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
         user.username = req.body.username;
         if (req.body.password !== null && req.body.password.length !== 0) {
@@ -257,10 +258,10 @@ router.put('/users/:user_id', function (req, res, next) {
 
         user.save(function (err, user) {
             if (err)
-                return next(new restify.BadRequestError(err.message));
+                return next(new errs.BadRequestError(err.message));
 
             if (!user)
-                return next(new restify.InternalError("Error saving user"));
+                return next(new errs.InternalError("Error saving user"));
 
             req.log.info('update user', user);
             res.json(user);
@@ -299,17 +300,17 @@ router.del('/users/:user_id', function (req, res, next) {
 
     User.findById(req.params.user_id, function (err, user) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!user)
-            return next(new restify.NotFoundError('User not found'));
+            return next(new errs.NotFoundError('User not found'));
 
         if (user._id.toString() == req.user._id || user.username == 'admin')
-            return next(new restify.ForbiddenError('Do not have permission to access on this server'));
+            return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
         user.remove(function (err) {
             if (err)
-                return next(new restify.InternalError("Error removing user"));
+                return next(new errs.InternalError("Error removing user"));
         });
 
         req.log.info('delete user', user);

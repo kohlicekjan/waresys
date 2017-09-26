@@ -11,11 +11,10 @@ var tagSchema = new Schema({
     item: { type: Schema.Types.ObjectId, ref: 'Item', index: true, autopopulate: true }
 });
 
-tagSchema.set('strict', true); //skriktní dodržování schématu
-tagSchema.set('versionKey', false); //vypnutí verzovacího klíče
-tagSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' }); //nastavení časového razítka
+tagSchema.set('strict', true);
+tagSchema.set('versionKey', false);
+tagSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
-//kontrola jestli položka existuje, náhrada "cizích klíčů"
 tagSchema.path('item').validate(function (value, respond) {
 
     Item.findById(value, function (err, item) {
@@ -28,14 +27,14 @@ tagSchema.path('item').validate(function (value, respond) {
 
 }, 'Item does not exist');
 
-//kontrola UID, musí být ve formatátu hex code
+
 tagSchema.path('uid').validate(function (value, respond) {
     var a = parseInt(value, 16);
     respond(a.toString(16) === value.toLowerCase());
 
 }, 'UID does not hex code');
 
-//při ukladání se změní položka podle typu tagu. např. pokud je tag typu "režim", smaže se vazba na položku
+
 tagSchema.pre('save', function (next) {
     if (this.type != 'item')
         this.item = undefined;
@@ -46,7 +45,6 @@ tagSchema.pre('save', function (next) {
     next();
 });
 
-//přidat virtuální vlastnosti do formátu JSON
 tagSchema.set('toJSON', {
     virtuals: true
 });

@@ -13,16 +13,14 @@ var userSchema = new Schema({
     roles: { type: [{ type: String, enum: ['admin', 'user'] }], required: true }
 });
 
-userSchema.set('strict', true); //skriktní dodržování schématu
-userSchema.set('versionKey', false); //vypnutí verzovacího klíče
-userSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' }); //nastavení časového razítka
+userSchema.set('strict', true);
+userSchema.set('versionKey', false);
+userSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
-//virtuální vlastnost celé jméno 
 userSchema.virtual('fullname').get(function () {
     return (this.firstname + ' ' + this.lastname).trim();
 });
 
-//při ukladání se heslo zahešuje
 userSchema.pre('save', function (next) {
     var user = this;
 
@@ -37,12 +35,10 @@ userSchema.pre('save', function (next) {
 
 });
 
-//metoda pro validaci hesla
 userSchema.methods.validPassword = function (candidatePassword) {
     return bcrypt.compareSync(candidatePassword, this.password);
 };
 
-//přidat virtuální vlastnosti do formátu JSON
 userSchema.set('toJSON', {
     virtuals: true
 });

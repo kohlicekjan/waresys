@@ -1,4 +1,5 @@
 ﻿var restify = require('restify');
+var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -8,8 +9,6 @@ var auth = require('./auth');
 var Tag = require('../../models/tag');
 
 router.use(auth.authenticate);
-
-
 
 
 /**
@@ -39,7 +38,7 @@ router.get('/tags', querymen.middleware(), function (req, res, next) {
 
     Tag.find(query.query, query.select, query.cursor, function (err, tags) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         res.json(tags);
     });
@@ -78,10 +77,10 @@ router.get('/tags/:tag_id', function (req, res, next) {
 
     Tag.findById(req.params.tag_id, function (err, tag) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!tag)
-            return next(new restify.NotFoundError('Tag not found'));
+            return next(new errs.NotFoundError('Tag not found'));
 
         res.json(tag);
     });
@@ -117,17 +116,17 @@ router.get('/tags/uid/:tag_uid', function (req, res, next) {
 
     Tag.findOne({ 'uid': req.params.tag_uid }, function (err, tag) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!tag) {
             tag = new Tag();
             tag.uid = req.params.tag_uid
             tag.save(function (err, tag) {
                 if (err)
-                    return next(new restify.BadRequestError(err.message));
+                    return next(new errs.BadRequestError(err.message));
 
                 if (!tag)
-                    return next(new restify.InternalError("Error saving tag"));
+                    return next(new errs.InternalError("Error saving tag"));
 
                 req.log.info('create tag', tag);
                 res.json(tag);
@@ -184,20 +183,20 @@ router.put('/tags/:tag_id', function (req, res, next) {
 
     Tag.findById(req.params.tag_id, function (err, tag) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!tag)
-            return next(new restify.NotFoundError('Tag not found'));
+            return next(new errs.NotFoundError('Tag not found'));
 
         tag.type = req.body.type;
         tag.item = req.body.item;
 
         tag.save(function (err, tag) {
             if (err)
-                return next(new restify.BadRequestError(err.message));
+                return next(new errs.BadRequestError(err.message));
 
             if (!tag)
-                return next(new restify.InternalError("Error saving tag"));
+                return next(new errs.InternalError("Error saving tag"));
 
             req.log.info('update tag', tag);
             res.json(tag);
@@ -237,10 +236,10 @@ router.del('/tags/:tag_id', function (req, res, next) {
 
     Tag.findByIdAndRemove(req.params.tag_id, function (err, tag) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!tag)
-            return next(new restify.NotFoundError('Tag not found'));
+            return next(new errs.NotFoundError('Tag not found'));
 
         req.log.info('delete tag', tag);
         res.send(204);

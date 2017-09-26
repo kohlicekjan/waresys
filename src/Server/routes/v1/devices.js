@@ -1,4 +1,5 @@
 ﻿var restify = require('restify');
+var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -37,7 +38,7 @@ router.get('/devices', querymen.middleware(), function (req, res, next) {
 
     Device.find(query.query, query.select, query.cursor, function (err, devices) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         res.json(devices);
     });
@@ -75,10 +76,10 @@ router.get('/devices/:device_id', function (req, res, next) {
 
     Device.findById(req.params.device_id, function (err, device) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!device)
-            return next(new restify.NotFoundError('Device not found'));
+            return next(new errs.NotFoundError('Device not found'));
 
         res.json(device);
     });
@@ -128,10 +129,10 @@ router.put('/devices/:device_id', function (req, res, next) {
 
     Device.findByIdAndUpdate(req.params.device_id, device, opts, function (err, device) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!device)
-            return next(new restify.NotFoundError('Device not found'));
+            return next(new errs.NotFoundError('Device not found'));
 
         req.log.info('update device', device);
         res.json(device);
@@ -168,10 +169,10 @@ router.del('/devices/:device_id', function (req, res, next) {
 
     Device.findByIdAndRemove(req.params.device_id, function (err, device) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!device)
-            return next(new restify.NotFoundError('Device not found'));
+            return next(new errs.NotFoundError('Device not found'));
 
         req.log.info('delete device', device);
         res.send(204);

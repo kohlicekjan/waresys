@@ -1,4 +1,5 @@
 ﻿var restify = require('restify');
+var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -38,7 +39,7 @@ router.get('/items', querymen.middleware(), function (req, res, next) {
 
     Item.find(query.query, query.select, query.cursor, function (err, items) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         res.json(items);
     });
@@ -77,10 +78,10 @@ router.get('/items/:item_id', function (req, res, next) {
 
     Item.findById(req.params.item_id, function (err, item) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!item)
-            return next(new restify.NotFoundError('Item not found'));
+            return next(new errs.NotFoundError('Item not found'));
 
         res.json(item);
 
@@ -125,10 +126,10 @@ router.post('/items', function (req, res, next) {
 
     item.save(function (err, item) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!item)
-            return next(new restify.InternalError("Error saving item"));
+            return next(new errs.InternalError("Error saving item"));
 
         req.log.info('create item', item);
         res.json(201, item);
@@ -189,10 +190,10 @@ router.put('/items/:item_id', function (req, res, next) {
 
     Item.findByIdAndUpdate(req.params.item_id, item, opts, function (err, item) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!item)
-            return next(new restify.NotFoundError('Item not found'));
+            return next(new errs.NotFoundError('Item not found'));
 
         req.log.info('update item', item);
         res.json(item);
@@ -229,10 +230,10 @@ router.del('/items/:item_id', function (req, res, next) {
 
     Item.findByIdAndRemove(req.params.item_id, function (err, item) {
         if (err)
-            return next(new restify.BadRequestError(err.message));
+            return next(new errs.BadRequestError(err.message));
 
         if (!item)
-            return next(new restify.NotFoundError('Item not found'));
+            return next(new errs.NotFoundError('Item not found'));
         else {
 
             var tag = {
@@ -242,7 +243,7 @@ router.del('/items/:item_id', function (req, res, next) {
 
             Tag.update({ item: item._id }, tag, { new: true }, function (err, tag) {
                 if (err)
-                    return next(new restify.InternalError(err.message));
+                    return next(new errs.InternalError(err.message));
 
                 if (tag)
                     req.log.info('update tags', tag);
