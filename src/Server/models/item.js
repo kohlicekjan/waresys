@@ -1,4 +1,5 @@
 ﻿var mongoose = require('mongoose');
+
 var Schema = mongoose.Schema;
 
 var itemSchema = new Schema({
@@ -18,6 +19,7 @@ itemSchema.set('toJSON', {
 
 
 module.exports = mongoose.model('Item', itemSchema);
+
 
 /**
  * @swagger

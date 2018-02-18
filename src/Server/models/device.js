@@ -1,4 +1,5 @@
 ﻿var mongoose = require('mongoose');
+
 var Schema = mongoose.Schema;
 
 var deviceSchema = new Schema({
@@ -29,7 +30,9 @@ deviceSchema.set('toJSON', {
     virtuals: true
 });
 
+
 module.exports = mongoose.model('Device', deviceSchema);
+
 
 /**
  * @swagger

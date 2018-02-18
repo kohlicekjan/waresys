@@ -43,7 +43,23 @@ userSchema.set('toJSON', {
     virtuals: true
 });
 
-module.exports = mongoose.model('User', userSchema);
+
+var User = mongoose.model('User', userSchema);
+
+User.findOne({ 'username': 'admin' }).exec(function (err, user) {
+    if (!user) {
+        var adminUser = new User({
+            username: 'admin',
+            password: 'heslo',
+            roles: ['admin']
+        });
+        adminUser.save();
+    }
+});
+
+
+module.exports = User;
+
 
 /**
  * @swagger

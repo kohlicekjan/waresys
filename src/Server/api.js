@@ -4,7 +4,6 @@ var restify = require('restify');
 var mongoose = require('mongoose');
 var config = require('config');
 var passport = require('passport');
-
 var logger = require('./lib/logger');
 
 var server = restify.createServer({
@@ -16,21 +15,15 @@ var server = restify.createServer({
 server.pre(restify.pre.sanitizePath());
 
 server.use(restify.plugins.requestLogger({ log: logger }));
-
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
-
-
 server.use(restify.plugins.gzipResponse());
-
-
 server.use(restify.plugins.throttle({
     burst: 100,
     rate: 50,
     ip: true
 }));
-
 server.use(passport.initialize());
 
 
@@ -65,5 +58,6 @@ server.listen(config.port.http, config.host, function () {
     routes.applyRoutes(server);
 
 });
+
 
 module.exports = server;

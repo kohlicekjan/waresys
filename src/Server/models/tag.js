@@ -1,7 +1,7 @@
 ﻿var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 var autopopulate = require("mongoose-autopopulate");
 
+var Schema = mongoose.Schema;
 
 var Item = require("./item");
 
@@ -36,9 +36,9 @@ tagSchema.path('uid').validate(function (value, respond) {
 
 
 tagSchema.pre('save', function (next) {
-    if (this.type != 'item')
+    if (this.type !== 'item')
         this.item = undefined;
-    else if (this.item == null)
+    else if (this.item === null)
         this.type = 'unknown';
 
     this.uid = this.uid.toLowerCase();
@@ -50,6 +50,7 @@ tagSchema.set('toJSON', {
 });
 
 tagSchema.plugin(autopopulate);
+
 
 module.exports = mongoose.model('Tag', tagSchema);
 

@@ -2,12 +2,12 @@
 
 var mosca = require('mosca');
 var mongoose = require('mongoose');
-var util = require('util');
 var config = require('config');
 var logger = require('./lib/logger');
 
 var Device = require('./models/device');
 var devices = require('./devices');
+
 
 var server = new mosca.Server({
     id: config.name,
@@ -24,6 +24,7 @@ var server = new mosca.Server({
     publishClientDisconnect: false,
     publishSubscriptions: false
 });
+
 
 server.on('ready', function () {
 
@@ -50,7 +51,9 @@ server.on('ready', function () {
 
     if (config.api)
         var api = require('./api');
+
 });
+
 
 var authenticate = function (client, username, password, callback) {
     logger.info('Client Authenticate := ', client.id);
@@ -74,7 +77,7 @@ var authenticate = function (client, username, password, callback) {
         logger.warn("Wrong fromat client ID", client.id);
         callback(null, false);
     }
-}
+};
 
 var authorizeSubscribe = function (client, topic, callback) {
     logger.info('Client Authorize Subscribe := ', client.id);
@@ -88,7 +91,8 @@ var authorizeSubscribe = function (client, topic, callback) {
             callback(null, device.allowed);
         }
     });
-}
+
+};
 
 var authorizePublish = function (client, topic, payload, callback) {
     logger.info('Client Authorize Publish := ', client.id);
@@ -102,13 +106,13 @@ var authorizePublish = function (client, topic, payload, callback) {
             callback(null, device.allowed);
         }
     });
-}
+
+};
 
 
 server.on("error", function (err) {
     logger.error(err);
 });
-
 
 server.on('clientConnected', function (client) {
     logger.info('Client Connected := ', client.id);
@@ -148,7 +152,6 @@ server.on('unsubscribed', function (topic, client) {
     logger.info('Unsubscribed := ', topic);
 });
 
-
 server.on('published', function (packet, client) {
     logger.info("Published :=", packet);
 
@@ -163,6 +166,7 @@ server.on('published', function (packet, client) {
             devices.readerRFID.actions(server, actionType, device, data);
         }
     });
+
 });
 
 

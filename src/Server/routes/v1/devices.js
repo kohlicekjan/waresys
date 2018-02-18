@@ -1,5 +1,4 @@
-﻿var restify = require('restify');
-var errs = require('restify-errors');
+﻿var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -10,6 +9,7 @@ var Device = require('../../models/device');
 
 router.use(auth.authenticate);
 router.use(auth.isRole('admin'));
+
 
 /**
  * @swagger
@@ -44,6 +44,7 @@ router.get('/devices', querymen.middleware(), function (req, res, next) {
     });
 
 });
+
 
 /**
  * @swagger
@@ -139,6 +140,7 @@ router.put('/devices/:device_id', function (req, res, next) {
     });
 
 });
+
 
 /**
  * @swagger

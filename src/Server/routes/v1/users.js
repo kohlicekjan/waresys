@@ -1,5 +1,4 @@
-﻿var restify = require('restify');
-var errs = require('restify-errors');
+﻿var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -7,17 +6,6 @@ const router = new Router();
 
 var auth = require('./auth');
 var User = require('../../models/user');
-
-User.findOne({ 'username': 'admin' }).exec(function (err, user) {
-    if (!user) {
-        var adminUser = new User({
-            username: 'admin',
-            password: 'heslo',
-            roles: ['admin']
-        });
-        adminUser.save();
-    }
-});
 
 router.use(auth.authenticate);
 router.use(auth.isRole('admin'));
@@ -48,7 +36,7 @@ router.get('/users', querymen.middleware(), function (req, res, next) {
     query.query.username = { $ne: 'admin' };
     query.query._id = { $ne: req.user._id };
 
-    if (req.user.username != 'admin')
+    if (req.user.username !== 'admin')
         query.query.roles = { $ne: 'admin' };
 
     if (req.query.skip)
@@ -100,7 +88,7 @@ router.get('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new errs.NotFoundError('User not found'));
 
-        if (user._id.toString() == req.user._id || user.username == 'admin')
+        if (user._id.toString() === req.user._id || user.username === 'admin')
             return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
         res.json(user);
@@ -180,6 +168,7 @@ router.post('/users', function (req, res, next) {
 
 });
 
+
 /**
  * @swagger
  * /users/{id}:
@@ -245,7 +234,7 @@ router.put('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new errs.NotFoundError('User not found'));
 
-        if (user._id.toString() == req.user._id || user.username == 'admin')
+        if (user._id.toString() === req.user._id || user.username === 'admin')
             return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
         user.username = req.body.username;
@@ -305,7 +294,7 @@ router.del('/users/:user_id', function (req, res, next) {
         if (!user)
             return next(new errs.NotFoundError('User not found'));
 
-        if (user._id.toString() == req.user._id || user.username == 'admin')
+        if (user._id.toString() === req.user._id || user.username === 'admin')
             return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
         user.remove(function (err) {
@@ -318,5 +307,6 @@ router.del('/users/:user_id', function (req, res, next) {
     });
 
 });
+
 
 module.exports = router;

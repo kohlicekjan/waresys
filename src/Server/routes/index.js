@@ -1,6 +1,5 @@
 ﻿var restify = require('restify');
 var Router = require('restify-router').Router;
-var config = require('config');
 
 const router = new Router();
 
@@ -21,7 +20,7 @@ router.get(/\/api\/docs\/*/, function (req, res, next) {
     })(req, res, next);
 });
 
-
 router.add('/api/v1', require('./v1'));
+
 
 module.exports = router;

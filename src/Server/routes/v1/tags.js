@@ -1,5 +1,4 @@
-﻿var restify = require('restify');
-var errs = require('restify-errors');
+﻿var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -86,6 +85,7 @@ router.get('/tags/:tag_id', function (req, res, next) {
     });
 
 });
+
 
 /**
  * @swagger
@@ -206,7 +206,6 @@ router.put('/tags/:tag_id', function (req, res, next) {
 });
 
 
-
 /**
  * @swagger
  * /tags/{id}:
@@ -246,7 +245,6 @@ router.del('/tags/:tag_id', function (req, res, next) {
     });
 
 });
-
 
 
 module.exports = router;

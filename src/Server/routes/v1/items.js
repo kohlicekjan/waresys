@@ -1,5 +1,4 @@
-﻿var restify = require('restify');
-var errs = require('restify-errors');
+﻿var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var querymen = require('querymen');
 
@@ -11,6 +10,7 @@ var Tag = require('../../models/tag');
 
 
 router.use(auth.authenticate);
+
 
 /**
  * @swagger
@@ -86,6 +86,7 @@ router.get('/items/:item_id', function (req, res, next) {
         res.json(item);
 
     });//.select("+password");
+
 });
 
 
@@ -136,6 +137,7 @@ router.post('/items', function (req, res, next) {
     });
 
 });
+
 
 /**
  * @swagger
@@ -201,6 +203,7 @@ router.put('/items/:item_id', function (req, res, next) {
 
 });
 
+
 /**
  * @swagger
  * /items/{id}:
@@ -239,7 +242,7 @@ router.del('/items/:item_id', function (req, res, next) {
             var tag = {
                 type: 'unknown',
                 $unset: { item: true }
-            }
+            };
 
             Tag.update({ item: item._id }, tag, { new: true }, function (err, tag) {
                 if (err)

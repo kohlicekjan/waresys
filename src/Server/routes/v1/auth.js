@@ -1,15 +1,14 @@
-﻿var restify = require('restify');
-var errs = require('restify-errors');
+﻿var errs = require('restify-errors');
 var Router = require('restify-router').Router;
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 //var JwtStrategy = require('passport-jwt').Strategy;
 //var ExtractJwt = require('passport-jwt').ExtractJwt;
-var config = require('config');
 
 const router = new Router();
 
 var User = require('../../models/user');
+
 
 /**
  * @swagger
@@ -19,6 +18,7 @@ var User = require('../../models/user');
  *     name: Authorization
  *     in: header
  */
+
 
 passport.use(new BasicStrategy(function (username, password, done) {
 
@@ -35,9 +35,11 @@ passport.use(new BasicStrategy(function (username, password, done) {
             return done(null, false);
 
     });
+
 }));
 
 module.exports.authenticate = function authenticate(req, res, next) {
+
     passport.authenticate('basic', { session: false }, function (err, user, info) {
         if (err)
             return next(err);
@@ -48,7 +50,8 @@ module.exports.authenticate = function authenticate(req, res, next) {
         req.user = user.toJSON();
         return next();
     })(req, res, next);
-}
+
+};
 
 module.exports.isRole = function (role) {
     return function (req, res, next) {
@@ -57,7 +60,7 @@ module.exports.isRole = function (role) {
         }
         return next();
     }
-}
+};
 
 router.use(module.exports.authenticate);
 
@@ -89,6 +92,7 @@ router.get('/account', function (req, res, next) {
     });
 
 });
+
 
 /**
  * @swagger
@@ -144,6 +148,7 @@ router.put('/account/password', function (req, res, next) {
             res.send(200);
         });
     });
+
 });
 
 
