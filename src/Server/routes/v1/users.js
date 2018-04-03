@@ -20,6 +20,27 @@ router.use(auth.isRole('admin'));
  *     description: Returns all users
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: search
+ *         description: Search in name and description
+ *         in: query
+ *         required: false
+ *         type: string
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: sort
+ *         description: Sorts records by key
+ *         in: query
+ *         required: false
+ *         type: string
  *     responses:
  *       200:
  *         description: An array of user
@@ -30,17 +51,30 @@ router.use(auth.isRole('admin'));
  *     security:
  *       - Bearer: []
  */
-router.get('/users', querymen.middleware(), function (req, res, next) {
+
+var userSchemaQuerymen = new querymen.Schema({
+    search: {
+        type: RegExp,
+        paths: ['username', 'firstname', 'lastname'],
+        bindTo: 'search'
+    },
+    skip: {
+        type: Number,
+        default: 0,
+        min: 0,
+        bindTo: 'cursor'
+    }
+}, {page: false});
+
+
+router.get('/users', querymen.middleware(userSchemaQuerymen), function (req, res, next) {
     var query = req.querymen;
 
-    query.query.username = { $ne: 'admin' };
-    query.query._id = { $ne: req.user._id };
+    query.query.username = {$ne: 'admin'};
+    query.query._id = {$ne: req.user._id};
 
     if (req.user.username !== 'admin')
-        query.query.roles = { $ne: 'admin' };
-
-    if (req.query.skip)
-        query.cursor.skip = Number(req.query.skip);
+        query.query.roles = {$ne: 'admin'};
 
     User.find(query.query, query.select, query.cursor, function (err, users) {
         if (err)

@@ -6,32 +6,24 @@ var Schema = mongoose.Schema;
 var Item = require("./item");
 
 var tagSchema = new Schema({
-    uid: { type: String, lowercase: true, trim: true, minlength: 8, maxlength: 8, required: true, unique: true },
-    type: { type: String, enum: ['unknown', 'mode', 'item'], default: 'unknown', required: true },
-    item: { type: Schema.Types.ObjectId, ref: 'Item', index: true, autopopulate: true }
+    uid: {type: String, lowercase: true, trim: true, minlength: 8, maxlength: 8, required: true, unique: true},
+    type: {type: String, enum: ['unknown', 'mode', 'item'], default: 'unknown', required: true},
+    item: {type: Schema.Types.ObjectId, ref: 'Item', index: true, autopopulate: true}
 });
 
 tagSchema.set('strict', true);
 tagSchema.set('versionKey', false);
-tagSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
+tagSchema.set('timestamps', {createdAt: 'created', updatedAt: 'updated'});
 
-tagSchema.path('item').validate(function (value, respond) {
-
-    Item.findById(value, function (err, item) {
-        if (err || !item) {
-            respond(false);
-        } else {
-            respond(true);
-        }
+tagSchema.path('item').validate(function (value) {
+    return Item.findById(value, function (err, item) {
+        return  !(err || !item);
     });
-
 }, 'Item does not exist');
 
 
-tagSchema.path('uid').validate(function (value, respond) {
-    var a = parseInt(value, 16);
-    respond(a.toString(16) === value.toLowerCase());
-
+tagSchema.path('uid').validate(function (value) {
+    return parseInt(value, 16).toString(16) === value.toLowerCase();
 }, 'UID does not hex code');
 
 

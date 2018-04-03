@@ -19,6 +19,22 @@ router.use(auth.authenticate);
  *     description: Returns all tags
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: sort
+ *         description: Sorts records by key
+ *         in: query
+ *         required: false
+ *         type: string
  *     responses:
  *       200:
  *         description: An array of tag
@@ -29,11 +45,19 @@ router.use(auth.authenticate);
  *     security:
  *       - Bearer: []
  */
-router.get('/tags', querymen.middleware(), function (req, res, next) {
-    var query = req.querymen;
 
-    if (req.query.skip)
-        query.cursor.skip = Number(req.query.skip);
+var tagSchemaQuerymen = new querymen.Schema({
+    skip: {
+        type: Number,
+        default: 0,
+        min: 0,
+        bindTo: 'cursor'
+    }
+}, {page: false});
+
+
+router.get('/tags', querymen.middleware(tagSchemaQuerymen), function (req, res, next) {
+    var query = req.querymen;
 
     Tag.find(query.query, query.select, query.cursor, function (err, tags) {
         if (err)
@@ -107,6 +131,10 @@ router.get('/tags/:tag_id', function (req, res, next) {
  *         description: A single tag
  *         schema:
  *           $ref: '#/definitions/Tag'
+ *       201:
+ *         description: Successfully created
+ *         schema:
+ *           $ref: '#/definitions/Tag'
  *       400:
  *         description: Bad request error
  *     security:
@@ -114,14 +142,15 @@ router.get('/tags/:tag_id', function (req, res, next) {
  */
 router.get('/tags/uid/:tag_uid', function (req, res, next) {
 
-    Tag.findOne({ 'uid': req.params.tag_uid }, function (err, tag) {
+    Tag.findOne({'uid': req.params.tag_uid}, function (err, tag) {
         if (err)
             return next(new errs.BadRequestError(err.message));
 
         if (!tag) {
-            tag = new Tag();
-            tag.uid = req.params.tag_uid
-            tag.save(function (err, tag) {
+            var newTag = new Tag();
+            newTag.uid = req.params.tag_uid;
+
+            newTag.save(function (err, tag) {
                 if (err)
                     return next(new errs.BadRequestError(err.message));
 
@@ -129,7 +158,7 @@ router.get('/tags/uid/:tag_uid', function (req, res, next) {
                     return next(new errs.InternalError("Error saving tag"));
 
                 req.log.info('create tag', tag);
-                res.json(tag);
+                res.json(201, tag);
             });
         } else {
             res.json(tag);

@@ -21,6 +21,27 @@ router.use(auth.authenticate);
  *     description: Returns all items
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: search
+ *         description: Search in name and description
+ *         in: query
+ *         required: false
+ *         type: string
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: sort
+ *         description: Sorts records by key
+ *         in: query
+ *         required: false
+ *         type: string
  *     responses:
  *       200:
  *         description: An array of item
@@ -31,13 +52,26 @@ router.use(auth.authenticate);
  *     security:
  *       - Bearer: []
  */
-router.get('/items', querymen.middleware(), function (req, res, next) {
+
+var itemSchemaQuerymen = new querymen.Schema({
+    search: {
+        type: RegExp,
+        paths: ['name', 'description'],
+        bindTo: 'search'
+    },
+    skip: {
+        type: Number,
+        default: 0,
+        min: 0,
+        bindTo: 'cursor'
+    }
+}, {page: false});
+
+
+router.get('/items', querymen.middleware(itemSchemaQuerymen), function (req, res, next) {
     var query = req.querymen;
 
-    if (req.query.skip)
-        query.cursor.skip = Number(req.query.skip);
-
-    Item.find(query.query, query.select, query.cursor, function (err, items) {
+    Item.find(query.search, query.select, query.cursor, function (err, items) {
         if (err)
             return next(new errs.BadRequestError(err.message));
 
@@ -85,7 +119,7 @@ router.get('/items/:item_id', function (req, res, next) {
 
         res.json(item);
 
-    });//.select("+password");
+    });
 
 });
 
@@ -188,7 +222,7 @@ router.put('/items/:item_id', function (req, res, next) {
         amount: req.body.amount
     };
 
-    var opts = { new: true, runValidators: true };
+    var opts = {new: true, runValidators: true};
 
     Item.findByIdAndUpdate(req.params.item_id, item, opts, function (err, item) {
         if (err)
@@ -241,10 +275,10 @@ router.del('/items/:item_id', function (req, res, next) {
 
             var tag = {
                 type: 'unknown',
-                $unset: { item: true }
+                $unset: {item: true}
             };
 
-            Tag.update({ item: item._id }, tag, { new: true }, function (err, tag) {
+            Tag.update({item: item._id}, tag, {new: true}, function (err, tag) {
                 if (err)
                     return next(new errs.InternalError(err.message));
 

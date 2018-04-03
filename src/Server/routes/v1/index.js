@@ -10,9 +10,8 @@ var swaggerSpec = swaggerJSDoc({
             version: config.version,
             description: ''
         },
-        host: config.host + ':' + config.port.http,
-        basePath: '/api/v1',
-        schemes: ['http']
+        host: config.host + ':' + config.port.https,
+        basePath: '/api/v1'
     },
     apis: ['./routes/v1/*.js', './models/*.js']
 });

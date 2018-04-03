@@ -1,5 +1,6 @@
 ﻿module.exports = {
 	port: {
+        https: 3001,
         http: 3000,
         mqtt: 2000
     },

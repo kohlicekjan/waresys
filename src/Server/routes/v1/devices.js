@@ -20,6 +20,27 @@ router.use(auth.isRole('admin'));
  *     description: Returns all devices
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: search
+ *         description: Search in name and description
+ *         in: query
+ *         required: false
+ *         type: string
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: sort
+ *         description: Sorts records by key
+ *         in: query
+ *         required: false
+ *         type: string
  *     responses:
  *       200:
  *         description: An array of device
@@ -30,11 +51,24 @@ router.use(auth.isRole('admin'));
  *     security:
  *       - Bearer: []
  */
-router.get('/devices', querymen.middleware(), function (req, res, next) {
-    var query = req.querymen;
 
-    if (req.query.skip)
-        query.cursor.skip = Number(req.query.skip);
+var deviceSchemaQuerymen = new querymen.Schema({
+    search: {
+        type: RegExp,
+        paths: ['device_id', 'name', 'description', 'serial_number', 'ip_address'],
+        bindTo: 'search'
+    },
+    skip: {
+        type: Number,
+        default: 0,
+        min: 0,
+        bindTo: 'cursor'
+    }
+}, {page: false});
+
+
+router.get('/devices', querymen.middleware(deviceSchemaQuerymen), function (req, res, next) {
+    var query = req.querymen;
 
     Device.find(query.query, query.select, query.cursor, function (err, devices) {
         if (err)
@@ -126,7 +160,7 @@ router.put('/devices/:device_id', function (req, res, next) {
         allowed: req.body.allowed
     };
 
-    var opts = { new: true, runValidators: true };
+    var opts = {new: true, runValidators: true};
 
     Device.findByIdAndUpdate(req.params.device_id, device, opts, function (err, device) {
         if (err)

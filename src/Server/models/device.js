@@ -8,7 +8,7 @@ var deviceSchema = new Schema({
     version: { type: String, trim: true},
     description: { type: String, trim: true },
     status: { type: String, enum: ['active', 'inactive', 'error'], default: 'inactive', required: true },
-    allowed: { type: Boolean, default: false },
+    allowed: { type: Boolean, default: false, required: true },
 
     serial_number: { type: String, trim: true },
     ip_address: { type: String, trim: true },

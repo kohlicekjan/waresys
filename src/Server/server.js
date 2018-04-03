@@ -35,12 +35,20 @@ server.on('ready', function () {
 
         mongoose.Promise = global.Promise;
 
-        mongoose.connect(config.mongodb.uri, config.mongodb.options, function (err) {
-            if (err) {
-                logger.error(err);
-                process.exit(1);
-            }
+        mongoose.connection.on('disconnected', function () {
+            logger.warn('Disconnected %s', config.mongodb.uri);
         });
+
+        mongoose.connection.on('error', function(err) {
+            logger.error(err);
+            process.exit(1);
+        });
+
+        mongoose.connection.on('connected', function(ref) {
+            logger.info('Connected %s', config.mongodb.uri);
+        });
+
+        mongoose.connect(config.mongodb.uri, config.mongodb.options);
     }
 
     server.authenticate = authenticate;

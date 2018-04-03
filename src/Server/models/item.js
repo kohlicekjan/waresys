@@ -5,7 +5,17 @@ var Schema = mongoose.Schema;
 var itemSchema = new Schema({
     name: { type: String, trim: true, minlength: 3, maxlength: 200, required: true },
     description: { type: String, trim: true, maxlength: 2000 },
-    amount: { type: Number, default: 0, min: 0, required: true }
+    amount: { type: Number, default: 0, min: 0, required: true },
+    // price: {
+    //     currency: {},
+    //     value: {}
+    // },
+    // weight: {type: Number, default: 0, min:0},
+    // dimensions: {
+    //     x: {type: Number, default: 0, min:0},
+    //     y: {type: Number, default: 0, min:0},
+    //     z: {type: Number, default: 0, min:0}
+    // }
 });
 
 itemSchema.set('strict', true);

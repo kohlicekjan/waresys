@@ -4,6 +4,7 @@ var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 //var JwtStrategy = require('passport-jwt').Strategy;
 //var ExtractJwt = require('passport-jwt').ExtractJwt;
+//var OAuth2Strategy = require('passport-oauth2').OAuth2Strategy;
 
 const router = new Router();
 
@@ -19,10 +20,9 @@ var User = require('../../models/user');
  *     in: header
  */
 
-
 passport.use(new BasicStrategy(function (username, password, done) {
 
-    User.findOne({ username: username }).select("+password").exec(function (err, user) {
+    User.findOne({username: username}).select("+password").exec(function (err, user) {
         if (err)
             return done(err);
 
@@ -40,7 +40,7 @@ passport.use(new BasicStrategy(function (username, password, done) {
 
 module.exports.authenticate = function authenticate(req, res, next) {
 
-    passport.authenticate('basic', { session: false }, function (err, user, info) {
+    passport.authenticate('basic', {session: false}, function (err, user, info) {
         if (err)
             return next(err);
 

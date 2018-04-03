@@ -10,7 +10,10 @@ var userSchema = new Schema({
     password: { type: String, default: '', required: true, select: false },
     firstname: { type: String, default: '', trim: true, maxlength: 30 },
     lastname: { type: String, default: '', trim: true, maxlength: 30 },
-    roles: { type: [{ type: String, enum: ['admin', 'user'] }], required: true }
+    roles: { type: [{ type: String, enum: ['admin', 'user'] }], required: true },
+    // settings:{
+    //
+    // }
 });
 
 userSchema.set('strict', true);
@@ -44,9 +47,11 @@ userSchema.set('toJSON', {
 });
 
 
+
+//DEFAULT USER
 var User = mongoose.model('User', userSchema);
 
-User.findOne({ 'username': 'admin' }).exec(function (err, user) {
+User.findOne({ 'username': 'admin' }, function (err, user) {
     if (!user) {
         var adminUser = new User({
             username: 'admin',
