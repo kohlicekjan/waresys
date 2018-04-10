@@ -1,16 +1,17 @@
 ﻿var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+var history = require('mongoose-history');
 
 var Schema = mongoose.Schema;
 
 var SALT_LENGTH = 10;
 
 var userSchema = new Schema({
-    username: { type: String, lowercase: true, trim: true, minlength: 3, maxlength: 20, required: true, unique: true },
-    password: { type: String, default: '', required: true, select: false },
-    firstname: { type: String, default: '', trim: true, maxlength: 30 },
-    lastname: { type: String, default: '', trim: true, maxlength: 30 },
-    roles: { type: [{ type: String, enum: ['admin', 'user'] }], required: true },
+    username: {type: String, lowercase: true, trim: true, minlength: 3, maxlength: 20, required: true, unique: true},
+    password: {type: String, default: '', required: true, select: false},
+    firstname: {type: String, default: '', trim: true, maxlength: 30},
+    lastname: {type: String, default: '', trim: true, maxlength: 30},
+    roles: {type: [{type: String, enum: ['admin', 'user']}], required: true}
     // settings:{
     //
     // }
@@ -18,7 +19,7 @@ var userSchema = new Schema({
 
 userSchema.set('strict', true);
 userSchema.set('versionKey', false);
-userSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
+userSchema.set('timestamps', {createdAt: 'created', updatedAt: 'updated'});
 
 userSchema.virtual('fullname').get(function () {
     return (this.firstname + ' ' + this.lastname).trim();
@@ -46,12 +47,12 @@ userSchema.set('toJSON', {
     virtuals: true
 });
 
+//userSchema.plugin(history, {diffOnly: true});
 
-
-//DEFAULT USER
 var User = mongoose.model('User', userSchema);
 
-User.findOne({ 'username': 'admin' }, function (err, user) {
+//DEFAULT USER
+User.findOne({'username': 'admin'}, function (err, user) {
     if (!user) {
         var adminUser = new User({
             username: 'admin',
@@ -96,4 +97,22 @@ module.exports = User;
  *       updated:
  *         type: string
  *         format: date-time
+ */
+
+
+/**
+ *   UserHistory:
+ *     type: object
+ *     properties:
+ *       t:
+ *         type: string
+ *         format: date-time
+ *       o:
+ *         type: string
+ *         enum:
+ *           - i
+ *           - u
+ *           - r
+ *       d:
+ *         $ref: '#/definitions/User'
  */

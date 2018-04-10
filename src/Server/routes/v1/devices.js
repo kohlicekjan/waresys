@@ -6,6 +6,8 @@ const router = new Router();
 
 var auth = require('./auth');
 var Device = require('../../models/device');
+//var DeviceHistory = Device.historyModel();
+//var ObjectId = require('mongoose').Types.ObjectId;
 
 router.use(auth.authenticate);
 router.use(auth.isRole('admin'));
@@ -49,7 +51,7 @@ router.use(auth.isRole('admin'));
  *       400:
  *         description: Bad request error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 
 var deviceSchemaQuerymen = new querymen.Schema({
@@ -105,7 +107,7 @@ router.get('/devices', querymen.middleware(deviceSchemaQuerymen), function (req,
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.get('/devices/:device_id', function (req, res, next) {
 
@@ -120,6 +122,63 @@ router.get('/devices/:device_id', function (req, res, next) {
     });
 
 });
+
+
+/**
+ * /devices/{id}/history:
+ *   get:
+ *     tags:
+ *       - devices
+ *     description: Returns a device history
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Device's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: A device history
+ *         schema:
+ *           $ref: '#/definitions/DeviceHistory'
+ *       400:
+ *         description: Bad request error
+ *     security:
+ *       - BasicAuth: []
+ */
+// var deviceHistorySchemaQuerymen = new querymen.Schema({
+//     skip: {
+//         type: Number,
+//         default: 0,
+//         min: 0,
+//         bindTo: 'cursor'
+//     },
+//     sort: '-t'
+// }, {page: false});
+//
+// router.get('/devices/:device_id/history', querymen.middleware(deviceHistorySchemaQuerymen), function (req, res, next) {
+//     var query = req.querymen;
+//
+//     DeviceHistory.find({'d._id': new ObjectId(req.params.device_id)}, query.select, query.cursor, function (err, history) {
+//         if (err)
+//             return next(new errs.BadRequestError(err.message));
+//
+//         res.json(history);
+//     });
+//
+// });
 
 
 /**
@@ -152,25 +211,26 @@ router.get('/devices/:device_id', function (req, res, next) {
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.put('/devices/:device_id', function (req, res, next) {
 
-    var device = {
-        allowed: req.body.allowed
-    };
-
-    var opts = {new: true, runValidators: true};
-
-    Device.findByIdAndUpdate(req.params.device_id, device, opts, function (err, device) {
+    Device.findById(req.params.device_id, function (err, device) {
         if (err)
             return next(new errs.BadRequestError(err.message));
 
         if (!device)
             return next(new errs.NotFoundError('Device not found'));
 
-        req.log.info('update device', device);
-        res.json(device);
+        device.allowed = req.body.allowed;
+
+        device.save(function (err, device) {
+            if (err)
+                return next(new errs.BadRequestError(err.message));
+
+            req.log.info('update device', device);
+            res.json(device);
+        });
     });
 
 });
@@ -199,19 +259,24 @@ router.put('/devices/:device_id', function (req, res, next) {
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.del('/devices/:device_id', function (req, res, next) {
 
-    Device.findByIdAndRemove(req.params.device_id, function (err, device) {
+    Device.findById(req.params.device_id, function (err, device) {
         if (err)
             return next(new errs.BadRequestError(err.message));
 
         if (!device)
             return next(new errs.NotFoundError('Device not found'));
 
-        req.log.info('delete device', device);
-        res.send(204);
+        device.remove(function (err, device) {
+            if (err)
+                return next(new errs.InternalError("Error removing device"));
+
+            req.log.info('delete device', device);
+            res.send(204);
+        });
     });
 
 });

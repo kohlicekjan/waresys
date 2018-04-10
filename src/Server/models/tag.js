@@ -1,5 +1,6 @@
 ﻿var mongoose = require('mongoose');
 var autopopulate = require("mongoose-autopopulate");
+var history = require('mongoose-history');
 
 var Schema = mongoose.Schema;
 
@@ -17,7 +18,7 @@ tagSchema.set('timestamps', {createdAt: 'created', updatedAt: 'updated'});
 
 tagSchema.path('item').validate(function (value) {
     return Item.findById(value, function (err, item) {
-        return  !(err || !item);
+        return !(err || !item);
     });
 }, 'Item does not exist');
 
@@ -42,7 +43,7 @@ tagSchema.set('toJSON', {
 });
 
 tagSchema.plugin(autopopulate);
-
+//tagSchema.plugin(history, {diffOnly: true});
 
 module.exports = mongoose.model('Tag', tagSchema);
 
@@ -70,4 +71,22 @@ module.exports = mongoose.model('Tag', tagSchema);
  *       updated:
  *         type: string
  *         format: date-time
+ */
+
+
+/**
+ *   TagHistory:
+ *     type: object
+ *     properties:
+ *       t:
+ *         type: string
+ *         format: date-time
+ *       o:
+ *         type: string
+ *         enum:
+ *           - i
+ *           - u
+ *           - r
+ *       d:
+ *         $ref: '#/definitions/Tag'
  */

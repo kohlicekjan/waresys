@@ -6,6 +6,8 @@ const router = new Router();
 
 var auth = require('./auth');
 var User = require('../../models/user');
+//var UserHistory = User.historyModel();
+//var ObjectId = require('mongoose').Types.ObjectId;
 
 router.use(auth.authenticate);
 router.use(auth.isRole('admin'));
@@ -49,7 +51,7 @@ router.use(auth.isRole('admin'));
  *       400:
  *         description: Bad request error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 
 var userSchemaQuerymen = new querymen.Schema({
@@ -111,7 +113,7 @@ router.get('/users', querymen.middleware(userSchemaQuerymen), function (req, res
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.get('/users/:user_id', function (req, res, next) {
 
@@ -129,6 +131,63 @@ router.get('/users/:user_id', function (req, res, next) {
     });
 
 });
+
+
+/**
+ * /users/{id}/history:
+ *   get:
+ *     tags:
+ *       - users
+ *     description: Returns a user history
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: User's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: A user history
+ *         schema:
+ *           $ref: '#/definitions/UserHistory'
+ *       400:
+ *         description: Bad request error
+ *     security:
+ *       - BasicAuth: []
+ */
+// var userHistorySchemaQuerymen = new querymen.Schema({
+//     skip: {
+//         type: Number,
+//         default: 0,
+//         min: 0,
+//         bindTo: 'cursor'
+//     },
+//     sort: '-t'
+// }, {page: false});
+//
+// router.get('/users/:user_id/history', querymen.middleware(userHistorySchemaQuerymen), function (req, res, next) {
+//     var query = req.querymen;
+//
+//     UserHistory.find({'d._id': new ObjectId(req.params.user_id)}, query.select, query.cursor, function (err, history) {
+//         if (err)
+//             return next(new errs.BadRequestError(err.message));
+//
+//         res.json(history);
+//     });
+//
+// });
 
 
 /**
@@ -178,7 +237,7 @@ router.get('/users/:user_id', function (req, res, next) {
  *       400:
  *         description: Bad request error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.post('/users', function (req, res, next) {
 
@@ -192,9 +251,6 @@ router.post('/users', function (req, res, next) {
     user.save(function (err, user) {
         if (err)
             return next(new errs.BadRequestError(err.message));
-
-        if (!user)
-            return next(new errs.InternalError("Error saving user"));
 
         req.log.info('create user', user);
         res.json(201, user);
@@ -257,7 +313,7 @@ router.post('/users', function (req, res, next) {
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.put('/users/:user_id', function (req, res, next) {
 
@@ -282,9 +338,6 @@ router.put('/users/:user_id', function (req, res, next) {
         user.save(function (err, user) {
             if (err)
                 return next(new errs.BadRequestError(err.message));
-
-            if (!user)
-                return next(new errs.InternalError("Error saving user"));
 
             req.log.info('update user', user);
             res.json(user);
@@ -317,7 +370,7 @@ router.put('/users/:user_id', function (req, res, next) {
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.del('/users/:user_id', function (req, res, next) {
 
@@ -331,13 +384,13 @@ router.del('/users/:user_id', function (req, res, next) {
         if (user._id.toString() === req.user._id || user.username === 'admin')
             return next(new errs.ForbiddenError('Do not have permission to access on this server'));
 
-        user.remove(function (err) {
+        user.remove(function (err, user) {
             if (err)
                 return next(new errs.InternalError("Error removing user"));
-        });
 
-        req.log.info('delete user', user);
-        res.send(204);
+            req.log.info('delete user', user);
+            res.send(204);
+        });
     });
 
 });

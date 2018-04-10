@@ -1,6 +1,6 @@
 {
   "name": "bpini-server",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "description": "BPINI server",
   "author": {
@@ -18,8 +18,9 @@
     "bunyan-format": "^0.2.1",
     "config": "^1.30.0",
     "mkdirp": "^0.5.1",
-    "mongoose": "^5.0.12",
+    "mongoose": "^5.0.13",
     "mongoose-autopopulate": "^0.6.1",
+    "mongoose-history": "^0.6.0",
     "mosca": "^2.8.0",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
@@ -38,8 +39,8 @@
     "newman": "^3.9.3"
   },
   "engines": {
-    "node": "8.9.x",
-    "npm": "5.6.x"
+    "node": "8.10.x",
+    "npm": "5.8.x"
   },
   "scripts": {
     "test": "mocha"

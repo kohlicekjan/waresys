@@ -3,7 +3,7 @@
 module.exports = {
     name: 'BPINI',
     version: package.version,
-    host: '192.168.1.238',
+    host: '127.0.0.1',
     port: {
         http: 80,
         https: 443,

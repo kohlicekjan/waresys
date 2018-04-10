@@ -14,10 +14,8 @@ var User = require('../../models/user');
 /**
  * @swagger
  * securityDefinitions:
- *   Bearer:
- *     type: apiKey
- *     name: Authorization
- *     in: header
+ *   BasicAuth:
+ *     type: basic
  */
 
 passport.use(new BasicStrategy(function (username, password, done) {
@@ -80,7 +78,7 @@ router.use(module.exports.authenticate);
  *       401:
  *         description: Unauthorized
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.get('/account', function (req, res, next) {
 
@@ -118,7 +116,7 @@ router.get('/account', function (req, res, next) {
  *       400:
  *         description: Bad request error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.put('/account/password', function (req, res, next) {
 

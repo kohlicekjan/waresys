@@ -6,6 +6,8 @@ const router = new Router();
 
 var auth = require('./auth');
 var Tag = require('../../models/tag');
+//var TagHistory = Tag.historyModel();
+//var ObjectId = require('mongoose').Types.ObjectId;
 
 router.use(auth.authenticate);
 
@@ -43,7 +45,7 @@ router.use(auth.authenticate);
  *       400:
  *         description: Bad request error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 
 var tagSchemaQuerymen = new querymen.Schema({
@@ -94,7 +96,7 @@ router.get('/tags', querymen.middleware(tagSchemaQuerymen), function (req, res, 
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.get('/tags/:tag_id', function (req, res, next) {
 
@@ -109,6 +111,63 @@ router.get('/tags/:tag_id', function (req, res, next) {
     });
 
 });
+
+
+/**
+ * /tags/{id}/history:
+ *   get:
+ *     tags:
+ *       - tags
+ *     description: Returns a tag history
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Tag's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: skip
+ *         description: Skips the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *       - name: limit
+ *         description: Returns the number of records
+ *         in: query
+ *         required: false
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: A tag history
+ *         schema:
+ *           $ref: '#/definitions/TagHistory'
+ *       400:
+ *         description: Bad request error
+ *     security:
+ *       - BasicAuth: []
+ */
+// var tagHistorySchemaQuerymen = new querymen.Schema({
+//     skip: {
+//         type: Number,
+//         default: 0,
+//         min: 0,
+//         bindTo: 'cursor'
+//     },
+//     sort: '-t'
+// }, {page: false});
+//
+// router.get('/tags/:tag_id/history', querymen.middleware(tagHistorySchemaQuerymen), function (req, res, next) {
+//     var query = req.querymen;
+//
+//     TagHistory.find({'d._id': new ObjectId(req.params.tag_id)}, query.select, query.cursor, function (err, history) {
+//         if (err)
+//             return next(new errs.BadRequestError(err.message));
+//
+//         res.json(history);
+//     });
+//
+// });
 
 
 /**
@@ -138,7 +197,7 @@ router.get('/tags/:tag_id', function (req, res, next) {
  *       400:
  *         description: Bad request error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.get('/tags/uid/:tag_uid', function (req, res, next) {
 
@@ -153,9 +212,6 @@ router.get('/tags/uid/:tag_uid', function (req, res, next) {
             newTag.save(function (err, tag) {
                 if (err)
                     return next(new errs.BadRequestError(err.message));
-
-                if (!tag)
-                    return next(new errs.InternalError("Error saving tag"));
 
                 req.log.info('create tag', tag);
                 res.json(201, tag);
@@ -206,7 +262,7 @@ router.get('/tags/uid/:tag_uid', function (req, res, next) {
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.put('/tags/:tag_id', function (req, res, next) {
 
@@ -218,17 +274,24 @@ router.put('/tags/:tag_id', function (req, res, next) {
             return next(new errs.NotFoundError('Tag not found'));
 
         tag.type = req.body.type;
-        tag.item = req.body.item;
+
+        if (typeof req.body.item === 'string') {
+            tag.item = req.body.item;
+        } else {
+            tag.item = req.body.item.id ? req.body.item.id : req.body.item._id;
+        }
 
         tag.save(function (err, tag) {
             if (err)
                 return next(new errs.BadRequestError(err.message));
 
-            if (!tag)
-                return next(new errs.InternalError("Error saving tag"));
-
             req.log.info('update tag', tag);
-            res.json(tag);
+            tag.populate('item', function(err, tag) {
+                if (err)
+                    return next(new errs.BadRequestError(err.message));
+
+                res.json(tag);
+            });
         });
     });
 
@@ -258,20 +321,26 @@ router.put('/tags/:tag_id', function (req, res, next) {
  *       404:
  *         description: Not found error
  *     security:
- *       - Bearer: []
+ *       - BasicAuth: []
  */
 router.del('/tags/:tag_id', function (req, res, next) {
 
-    Tag.findByIdAndRemove(req.params.tag_id, function (err, tag) {
+    Tag.findById(req.params.tag_id, function (err, tag) {
         if (err)
             return next(new errs.BadRequestError(err.message));
 
         if (!tag)
             return next(new errs.NotFoundError('Tag not found'));
 
-        req.log.info('delete tag', tag);
-        res.send(204);
+        tag.remove(function (err, tag) {
+            if (err)
+                return next(new errs.InternalError("Error removing tag"));
+
+            req.log.info('delete tag', tag);
+            res.send(204);
+        });
     });
+
 
 });
 
