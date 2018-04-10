@@ -2,6 +2,14 @@ package cz.kohlicek.bpini.service;
 
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
@@ -15,8 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ServiceGenerator {
 
-    private static OkHttpClient.Builder httpClient;
-    private static Retrofit.Builder builder;
+    private final static String PROTOCOL = "https://";
 
     /**
      * Vytváří službu s auth tokenem
@@ -27,31 +34,15 @@ public class ServiceGenerator {
      * @param <S>
      * @return službu
      */
-    public static <S> S createService(Class<S> serviceClass, String baseUrl, final String authToken) {
-        httpClient = new OkHttpClient.Builder();
-        builder = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create());
+    public static <S> S createService(Class<S> serviceClass, final String baseUrl, final String authToken) {
 
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request originalRequest = chain.request();
+        OkHttpClient okHttpClient = getOkHttpClient(authToken);
 
-                Request.Builder builder = originalRequest.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Content-type", "application/json");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(String.format("%s%s", PROTOCOL, baseUrl))
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient).build();
 
-                if (authToken != null)
-                    builder.header("Authorization", authToken);
-
-                Request newRequest = builder.build();
-                return chain.proceed(newRequest);
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = builder.client(client).build();
         return retrofit.create(serviceClass);
     }
 
@@ -65,10 +56,62 @@ public class ServiceGenerator {
      * @param <S>
      * @return službu
      */
-    public static <S> S createService(Class<S> serviceClass, String baseUrl, String username, String password) {
+    public static <S> S createService(Class<S> serviceClass, final String baseUrl, final String username, final String password) {
 
         String authToken = Credentials.basic(username, password);
         return createService(serviceClass, baseUrl, authToken);
+    }
+
+
+    private static OkHttpClient getOkHttpClient(final String authToken) {
+
+        try {
+
+            final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[0];
+                }
+            }};
+
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+
+            return new OkHttpClient.Builder()
+                    .sslSocketFactory(sslSocketFactory)
+                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
+                    .addInterceptor(new Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            Request originalRequest = chain.request();
+
+                            Request.Builder builder = originalRequest.newBuilder()
+                                    .header("Accept", "application/json")
+                                    .header("Content-type", "application/json");
+
+                            if (authToken != null)
+                                builder.header("Authorization", authToken);
+
+                            Request newRequest = builder.build();
+                            return chain.proceed(newRequest);
+                        }
+                    }).build();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

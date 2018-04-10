@@ -10,12 +10,15 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import cz.kohlicek.bpini.BuildConfig;
+
 /**
  * Lokálně ukládá a načítá údaje o přihlášeném účtu
  */
 public class Account {
 
-    public static final String SP_NAME = "bpini_account";
+    public static final String SP_ACCOUNT = "bpini_account";
+    public static final String SP_VERSION = "bpini_version";
 
     public static final String ROLE_ADMIN = "admin";
     public static final String ROLE_USER = "user";
@@ -44,14 +47,19 @@ public class Account {
     public static Account getLocalAccount(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String json = sp.getString(SP_NAME, null);
+        if (sp.getInt(SP_VERSION, 0) < BuildConfig.VERSION_CODE) {
+            clearLocalAccount(context);
+            return null;
+        }
+
+        String json = sp.getString(SP_ACCOUNT, null);
         Account account = new Gson().fromJson(json, Account.class);
         return account;
     }
 
     public static void clearLocalAccount(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().remove(SP_NAME).apply();
+        sp.edit().remove(SP_ACCOUNT).apply();
     }
 
     public String getHost() {
@@ -113,6 +121,8 @@ public class Account {
     public void saveLocalAccount(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String json = new Gson().toJson(this);
-        sp.edit().putString(SP_NAME, json).apply();
+        sp.edit().putString(SP_ACCOUNT, json).apply();
+
+        sp.edit().putInt(SP_VERSION, BuildConfig.VERSION_CODE).apply();
     }
 }

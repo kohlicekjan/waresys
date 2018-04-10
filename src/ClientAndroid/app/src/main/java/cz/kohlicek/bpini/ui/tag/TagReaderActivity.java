@@ -47,8 +47,6 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
     View layoutTag;
     @BindView(R.id.layout_item)
     View layoutItem;
-    @BindView(R.id.wait_tag)
-    View waitTag;
     @BindView(R.id.label_tag)
     View labelTag;
     @BindView(R.id.label_item)

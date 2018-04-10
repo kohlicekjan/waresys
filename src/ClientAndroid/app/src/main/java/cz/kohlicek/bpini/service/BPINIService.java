@@ -33,7 +33,7 @@ public interface BPINIService {
 
     //ITEM
     @GET("api/v1/items?limit=10")
-    Call<List<Item>> getItems(@Query("sort") String order, @Query("skip") Integer skip);
+    Call<List<Item>> getItems(@Query("search") String search, @Query("skip") Integer skip, @Query("sort") String order);
 
     @GET("api/v1/items/{id}")
     Call<Item> getItem(@Path("id") String itemId);
@@ -50,7 +50,7 @@ public interface BPINIService {
 
     //TAG
     @GET("api/v1/tags?limit=10")
-    Call<List<Tag>> getTags(@Query("sort") String order, @Query("skip") Integer skip);
+    Call<List<Tag>> getTags(@Query("skip") Integer skip, @Query("sort") String order);
 
     @GET("api/v1/tags/{id}")
     Call<Tag> getTag(@Path("id") String tagId);
@@ -67,7 +67,7 @@ public interface BPINIService {
 
     //USER
     @GET("api/v1/users?limit=10")
-    Call<List<User>> getUsers(@Query("sort") String order, @Query("skip") Integer skip);
+    Call<List<User>> getUsers(@Query("search") String search, @Query("skip") Integer skip, @Query("sort") String order);
 
     @GET("api/v1/users/{id}")
     Call<User> getUser(@Path("id") String userId);
@@ -84,7 +84,7 @@ public interface BPINIService {
 
     //DEVICE
     @GET("api/v1/devices?limit=10")
-    Call<List<Device>> getDevices(@Query("sort") String order, @Query("skip") Integer skip);
+    Call<List<Device>> getDevices(@Query("search") String search, @Query("skip") Integer skip, @Query("sort") String order);
 
     @GET("api/v1/devices/{id}")
     Call<Device> getDevice(@Path("id") String deviceId);

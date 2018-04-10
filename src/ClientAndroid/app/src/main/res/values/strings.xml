@@ -129,6 +129,9 @@
     <string name="tag_form_input_uid">UID</string>
     <string name="tag_form_input_type">Type</string>
     <string name="tag_form_input_item">Item</string>
+    <string name="tag_form_input_item_suggest">Search item...</string>
+    <string name="tag_form_input_item_empty">Item not found</string>
+    <string name="tag_form_validate_item">Search for an item</string>
 
 
     <!-- TagReaderActivity-->
@@ -194,9 +197,9 @@
     <string name="request_unauthorized">Wrong login information. Sign in again.</string>
     <string name="request_forbidden">You do not have rights for this action.</string>
     <string name="request_notfound">The record was not found.</string>
-    <string name="request_error">An unexpected error has occurred.</string>
+    <string name="request_error">An unexpected error occurred on the server.</string>
 
-    <string name="no_connection_message">No connections</string>
+    <string name="no_connection_message">Connection failed...</string>
     <string name="no_connection_repeat">Repeat</string>
     <string name="no_connection_server">Failed to connect to server.</string>
     <string name="no_connection_internet">Connect to the Internet.</string>

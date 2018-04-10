@@ -68,7 +68,7 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         this.getActivity().setTitle(R.string.tag_list_title);
 
-        fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab_add);
+        fab = this.getActivity().findViewById(R.id.fab_add);
         fab.setVisibility(View.GONE);
         fab.setOnClickListener(null);
 
@@ -116,7 +116,7 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onClick(View v) {
         switch (v.getId()) {
             case android.support.design.R.id.snackbar_action:
-                adapter.clear();
+                snackbar.dismiss();
                 load(0, true);
                 break;
         }
@@ -187,13 +187,15 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        adapter.clear();
         load(0, false);
         mSnipSwipeRefreshLayout.setRefreshing(false);
     }
 
 
     private void load(int skip, boolean loading) {
+        if (skip == 0)
+            adapter.clear();
+
         if (!NetworkUtils.isNetworkConnected(this.getContext())) {
             recyclerView.setVisibility(View.GONE);
             visibleNoConnection(true, R.string.no_connection_internet);
@@ -206,7 +208,7 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
             visibleNoConnection(false, 0);
         }
 
-        Call<List<Tag>> call = bpiniService.getTags("-created", skip);
+        Call<List<Tag>> call = bpiniService.getTags(skip, "-created");
         call.enqueue(new Callback<List<Tag>>() {
             @Override
             public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
@@ -216,7 +218,8 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     recyclerView.setVisibility(View.VISIBLE);
                     visibleNoConnection(false, 0);
                 } else {
-                    BPINIClient.requestAnswerFailure(response.code(), getActivity());
+                    recyclerView.setVisibility(View.GONE);
+                    visibleNoConnection(true, R.string.request_error);
                 }
             }
 
@@ -230,7 +233,7 @@ public class TagListFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void visibleNoConnection(boolean visible, int stringId) {
         if (visible) {
-            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_LONG);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction(R.string.no_connection_repeat, this);
             snackbar.show();
             ((TextView) noConnection.findViewById(R.id.text_no_connection)).setText(getString(stringId));

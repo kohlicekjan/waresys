@@ -55,22 +55,56 @@
                 android:prompt="@string/tag_form_input_type"
                 android:spinnerMode="dialog" />
 
-            <TextView
-                android:id="@+id/label_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/form_row_vertical_margin"
-                android:text="@string/tag_form_input_item"
-                android:textSize="@dimen/form_label_text" />
-
-            <Spinner
-                android:id="@+id/input_item"
+            <LinearLayout
+                android:id="@+id/form_item"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/spinner_height"
-                android:layout_marginBottom="@dimen/form_row_vertical_margin"
-                android:prompt="@string/tag_form_input_item"
-                android:spinnerMode="dialog"
-                android:textSize="@dimen/form_value_text" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/label_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/form_row_vertical_margin"
+                    android:text="@string/tag_form_input_item"
+                    android:textSize="@dimen/form_label_text" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/input_item_suggest"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spinner_height"
+                    android:layout_marginBottom="@dimen/form_row_vertical_margin"
+                    android:hint="@string/tag_form_input_item_suggest"
+                    android:textSize="@dimen/form_value_text"
+                    android:completionThreshold="1" />
+
+                <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/loading_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/input_item_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    android:text="@string/tag_form_input_item_empty"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/form_label_text" />
+
+                <include
+                    android:id="@+id/layout_item"
+                    layout="@layout/card_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:clickable="false" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -78,7 +112,8 @@
             android:id="@+id/loading"
             layout="@layout/loading"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="0dp" />
 
     </LinearLayout>
 </ScrollView>

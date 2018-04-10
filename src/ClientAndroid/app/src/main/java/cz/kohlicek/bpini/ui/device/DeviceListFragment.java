@@ -11,7 +11,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, DeviceAdapter.OnCheckedChangeListener, DialogInterface.OnClickListener {
+public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, DeviceAdapter.OnCheckedChangeListener, DialogInterface.OnClickListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     @BindView(R.id.recycler_view)
     EmptyRecyclerView recyclerView;
@@ -59,14 +62,17 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
     private LinearLayoutManager linearLayoutManager;
     private EndlessRecyclerViewScrollListener scrollListener;
 
+    private String search;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_device_list, container, false);
         ButterKnife.bind(this, view);
 
         this.getActivity().setTitle(R.string.device_list_title);
+        setHasOptionsMenu(true);
 
-        fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab_add);
+        fab = this.getActivity().findViewById(R.id.fab_add);
         fab.setVisibility(View.GONE);
         fab.setOnClickListener(null);
 
@@ -83,7 +89,7 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                load(totalItemsCount, true);
+                load(search, totalItemsCount, true);
             }
         };
 
@@ -98,9 +104,47 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
         mSnipSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
         mSnipSwipeRefreshLayout.setOnRefreshListener(this);
 
-        load(0, true);
+        search = null;
+        load(null, 0, true);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.menuSearch);
+        menuItem.setOnActionExpandListener(this);
+
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        load(query, 0, true);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        adapter.clear();
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        load(null, 0, true);
+        return true;
     }
 
     @Override
@@ -114,8 +158,8 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
     public void onClick(View v) {
         switch (v.getId()) {
             case android.support.design.R.id.snackbar_action:
-                adapter.clear();
-                load(0, true);
+                snackbar.dismiss();
+                load(search, 0, true);
                 break;
         }
     }
@@ -194,12 +238,16 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onRefresh() {
-        adapter.clear();
-        load(0, false);
+        load(search, 0, false);
         mSnipSwipeRefreshLayout.setRefreshing(false);
     }
 
-    private void load(int skip, boolean loading) {
+    private void load(String search, int skip, boolean loading) {
+        this.search = search;
+
+        if (skip == 0)
+            adapter.clear();
+
         if (!NetworkUtils.isNetworkConnected(this.getContext())) {
             recyclerView.setVisibility(View.GONE);
             visibleNoConnection(true, R.string.no_connection_internet);
@@ -212,7 +260,7 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
             visibleNoConnection(false, 0);
         }
 
-        Call<List<Device>> call = bpiniService.getDevices("-created", skip);
+        Call<List<Device>> call = bpiniService.getDevices(search, skip, "-created");
         call.enqueue(new Callback<List<Device>>() {
             @Override
             public void onResponse(Call<List<Device>> call, Response<List<Device>> response) {
@@ -222,7 +270,8 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
                     recyclerView.setVisibility(View.VISIBLE);
                     visibleNoConnection(false, 0);
                 } else {
-                    BPINIClient.requestAnswerFailure(response.code(), getActivity());
+                    recyclerView.setVisibility(View.GONE);
+                    visibleNoConnection(true, R.string.request_error);
                 }
             }
 
@@ -237,7 +286,7 @@ public class DeviceListFragment extends Fragment implements SwipeRefreshLayout.O
 
     private void visibleNoConnection(boolean visible, int stringId) {
         if (visible) {
-            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_LONG);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction(R.string.no_connection_repeat, this);
             snackbar.show();
             ((TextView) noConnection.findViewById(R.id.text_no_connection)).setText(getString(stringId));

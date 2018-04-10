@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = DialogUtils.showLoadingDialog(this);
         progressDialog.setMessage(getString(R.string.login_loggingin));
 
-        final String host = "http://" + inputHost.getText().toString();
+        final String host = inputHost.getText().toString();
         String username = inputUsername.getText().toString();
         final String password = inputPassword.getText().toString();
 

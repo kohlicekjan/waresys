@@ -13,7 +13,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class UserListFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, UserAdapter.OnClickListener<User>, DialogInterface.OnClickListener {
+public class UserListFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, UserAdapter.OnClickListener<User>, DialogInterface.OnClickListener, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     @BindView(R.id.recycler_view)
     EmptyRecyclerView recyclerView;
@@ -60,6 +63,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
     private LinearLayoutManager linearLayoutManager;
     private EndlessRecyclerViewScrollListener scrollListener;
 
+    private String search;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,8 +71,9 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
         ButterKnife.bind(this, view);
 
         this.getActivity().setTitle(R.string.user_list_title);
+        setHasOptionsMenu(true);
 
-        fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab_add);
+        fab = this.getActivity().findViewById(R.id.fab_add);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(this);
 
@@ -86,7 +91,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
 
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                load(totalItemsCount, true);
+                load(search, totalItemsCount, true);
             }
         };
 
@@ -100,9 +105,48 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
         mSnipSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
         mSnipSwipeRefreshLayout.setOnRefreshListener(this);
 
-        load(0, true);
+        load(null, 0, true);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.menuSearch);
+        menuItem.setOnActionExpandListener(this);
+
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        load(query, 0, true);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        fab.setVisibility(View.GONE);
+        adapter.clear();
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        fab.setVisibility(View.VISIBLE);
+        load(null, 0, true);
+        return true;
     }
 
     @Override
@@ -116,8 +160,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case android.support.design.R.id.snackbar_action:
-                adapter.clear();
-                load(0, true);
+                load(search, 0, true);
                 break;
             case R.id.fab_add:
                 Intent intent = new Intent(this.getContext(), UserFormActivity.class);
@@ -135,8 +178,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onRefresh() {
-        adapter.clear();
-        load(0, false);
+        load(search, 0, false);
         mSnipSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -196,7 +238,12 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
     }
 
 
-    private void load(int skip, boolean loading) {
+    private void load(String search, int skip, boolean loading) {
+        this.search = search;
+
+        if (skip == 0)
+            adapter.clear();
+
         if (!NetworkUtils.isNetworkConnected(this.getContext())) {
             recyclerView.setVisibility(View.GONE);
             visibleNoConnection(true, R.string.no_connection_internet);
@@ -209,7 +256,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
             visibleNoConnection(false, 0);
         }
 
-        Call<List<User>> call = bpiniService.getUsers("-created", skip);
+        Call<List<User>> call = bpiniService.getUsers(search, skip, "-created");
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -219,7 +266,8 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
                     recyclerView.setVisibility(View.VISIBLE);
                     visibleNoConnection(false, 0);
                 } else {
-                    BPINIClient.requestAnswerFailure(response.code(), getActivity());
+                    recyclerView.setVisibility(View.GONE);
+                    visibleNoConnection(true, R.string.request_error);
                 }
             }
 
@@ -233,7 +281,7 @@ public class UserListFragment extends Fragment implements View.OnClickListener, 
 
     private void visibleNoConnection(boolean visible, int stringId) {
         if (visible) {
-            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_LONG);
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), R.string.no_connection_message, Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction(R.string.no_connection_repeat, this);
             snackbar.show();
             ((TextView) noConnection.findViewById(R.id.text_no_connection)).setText(getString(stringId));

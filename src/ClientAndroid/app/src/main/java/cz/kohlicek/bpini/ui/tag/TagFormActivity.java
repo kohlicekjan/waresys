@@ -5,16 +5,18 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TagFormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class TagFormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TextWatcher, View.OnClickListener {
 
     public static final String TAG_ID = "tag_id";
     public static final int REQUEST_CODE = 6;
@@ -42,10 +44,26 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
     Spinner inputType;
 
 
+    @BindView(R.id.form_item)
+    View formItem;
+
     @BindView(R.id.label_item)
     TextView labelItem;
-    @BindView(R.id.input_item)
-    Spinner inputItem;
+    @BindView(R.id.input_item_suggest)
+    AutoCompleteTextView inputItemSuggest;
+    @BindView(R.id.loading_item)
+    View loadingItem;
+    @BindView(R.id.input_item_empty)
+    View inputItemEmpty;
+    @BindView(R.id.layout_item)
+    View layoutItem;
+    @BindView(R.id.item_name)
+    TextView itemName;
+    @BindView(R.id.item_description)
+    TextView itemDescription;
+    @BindView(R.id.item_amount)
+    TextView itemAmount;
+
 
     @BindView(R.id.form)
     View form;
@@ -57,7 +75,9 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
     private String tagId;
     private Tag tag;
     private List<String> types;
-    private List<Item> items;
+    private Item selectItem;
+    private ArrayAdapter itemSuggestAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,23 +90,54 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
 
         bpiniService = BPINIClient.getInstance(this);
         types = Arrays.asList(getResources().getStringArray(R.array.tag_types_value));
-        items = new ArrayList<>();
 
         tagId = getIntent().getStringExtra(TAG_ID);
         load(tagId);
+
+        itemSuggestAdapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line);
+        inputItemSuggest.setAdapter(itemSuggestAdapter);
+        inputItemSuggest.addTextChangedListener(this);
+        inputItemSuggest.setOnClickListener(this);
+
+        inputType.setOnItemSelectedListener(this);
     }
+
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        searchItem(s.toString());
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        //EMPTY
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        //EMPTY
+    }
+
+    @Override
+    public void onClick(final View view) {
+        switch (view.getId()) {
+            case R.id.input_item_suggest:
+                inputItemSuggest.showDropDown();
+                break;
+        }
+    }
+
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (types.get(inputType.getSelectedItemPosition()).equals(Tag.TYPE_ITEM)) {
-            loadItems();
+            formItem.setVisibility(View.VISIBLE);
         } else {
-            labelItem.setVisibility(View.GONE);
-            inputItem.setVisibility(View.GONE);
+            formItem.setVisibility(View.GONE);
         }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-
+        //EMPTY
     }
 
 
@@ -116,6 +167,10 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
             return;
         }
 
+        if (!validate()) {
+            return;
+        }
+
         final ProgressDialog progressDialog = DialogUtils.showLoadingDialog(this);
         progressDialog.setMessage(getString(R.string.form_saving));
 
@@ -123,7 +178,7 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
         String type = types.get(inputType.getSelectedItemPosition());
         tag.setType(type);
         if (type.equals(Tag.TYPE_ITEM)) {
-            tag.setItem(items.get(inputItem.getSelectedItemPosition()));
+            tag.setItem(selectItem);
         } else {
             tag.setItem(null);
         }
@@ -157,7 +212,6 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
 
     private void load(final String id) {
         Call<Tag> call = bpiniService.getTag(id);
-
         call.enqueue(new Callback<Tag>() {
             @Override
             public void onResponse(Call<Tag> call, Response<Tag> response) {
@@ -167,12 +221,11 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
                     inputType.setSelection(types.indexOf(tag.getType()));
 
                     if (tag.getItem() != null) {
-                        loadItems();
-                    } else {
-                        loading.setVisibility(View.GONE);
-                        inputType.setOnItemSelectedListener(TagFormActivity.this);
+                        inputItemEmpty.setVisibility(View.GONE);
+                        BindViewItem(tag.getItem());
                     }
 
+                    loading.setVisibility(View.GONE);
                     form.setVisibility(View.VISIBLE);
                 } else {
                     BPINIClient.requestAnswerFailure(response.code(), TagFormActivity.this);
@@ -187,27 +240,32 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
         });
     }
 
-    private void loadItems() {
-        loading.setVisibility(View.VISIBLE);
 
-        Call<List<Item>> call2 = bpiniService.getItems("-created", 0);
-        call2.enqueue(new Callback<List<Item>>() {
+    private void searchItem(String search) {
+        inputItemEmpty.setVisibility(View.GONE);
+        layoutItem.setVisibility(View.GONE);
+        loadingItem.setVisibility(View.VISIBLE);
+
+        Call<List<Item>> call = bpiniService.getItems(search, 0, "-created");
+        call.enqueue(new Callback<List<Item>>() {
             @Override
             public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                 if (response.isSuccessful()) {
-                    items.clear();
-                    items.addAll(response.body());
+                    List<Item> items = response.body();
 
-                    ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(TagFormActivity.this, android.R.layout.simple_spinner_dropdown_item, items.toArray());
-                    inputItem.setAdapter(spinnerArrayAdapter);
+                    itemSuggestAdapter.clear();
+                    itemSuggestAdapter.addAll(items);
 
-                    if (tag.getItem() != null)
-                        inputItem.setSelection(items.indexOf(tag.getItem()));
+                    loadingItem.setVisibility(View.GONE);
 
-                    loading.setVisibility(View.GONE);
-                    labelItem.setVisibility(View.VISIBLE);
-                    inputItem.setVisibility(View.VISIBLE);
-                    inputType.setOnItemSelectedListener(TagFormActivity.this);
+                    if (items.size() == 1) {
+                        BindViewItem(items.get(0));
+                        inputItemEmpty.setVisibility(View.GONE);
+                    } else {
+                        selectItem = null;
+                        layoutItem.setVisibility(View.GONE);
+                        inputItemEmpty.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     BPINIClient.requestAnswerFailure(response.code(), TagFormActivity.this);
                 }
@@ -219,6 +277,36 @@ public class TagFormActivity extends AppCompatActivity implements AdapterView.On
                 onBackPressed();
             }
         });
+
+    }
+
+    private void BindViewItem(Item item) {
+        layoutItem.setVisibility(View.VISIBLE);
+        formItem.setVisibility(View.VISIBLE);
+
+        selectItem = item;
+
+        itemName.setText(item.getName());
+        itemDescription.setText(item.getDescription());
+        itemAmount.setText(item.getAmountToString());
+
+        TextView itemCreated = layoutItem.findViewById(R.id.data_created);
+        itemCreated.setText(item.getCreatedFormat("dd.MM.yyyy HH:mm"));
+        TextView itemUpdated = layoutItem.findViewById(R.id.data_updated);
+        itemUpdated.setText(item.getUpdatedFormat("dd.MM.yyyy HH:mm"));
+    }
+
+
+    private boolean validate() {
+        boolean valid = true;
+
+        String type = types.get(inputType.getSelectedItemPosition());
+        if (type.equals(Tag.TYPE_ITEM) && selectItem == null) {
+            inputItemSuggest.setError(getString(R.string.tag_form_validate_item));
+            valid = false;
+        }
+
+        return valid;
     }
 
 }

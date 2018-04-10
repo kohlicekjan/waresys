@@ -129,6 +129,9 @@
     <string name="tag_form_input_uid">UID</string>
     <string name="tag_form_input_type">Typ</string>
     <string name="tag_form_input_item">Položka</string>
+    <string name="tag_form_input_item_suggest">Vyhledat položku...</string>
+    <string name="tag_form_input_item_empty">Položka nenalezena</string>
+    <string name="tag_form_validate_item">Vyhledejte položku</string>
 
 
     <!-- TagReaderActivity-->
@@ -195,9 +198,9 @@
     <string name="request_unauthorized">Chybné přihlašovací údaje. Přihlašte se znovu.</string>
     <string name="request_forbidden">Pro tuto akci nemáte práva.</string>
     <string name="request_notfound">Záznam nebyl nalezen.</string>
-    <string name="request_error">Nastala neočekávaná chyba.</string>
+    <string name="request_error">Na serveru nastala neočekávaná chyba.</string>
 
-    <string name="no_connection_message">Žádné připojení</string>
+    <string name="no_connection_message">Připojení se nezdařilo...</string>
     <string name="no_connection_repeat">Opakovat</string>
     <string name="no_connection_server">Nepodařilo se připojit k serveru.</string>
     <string name="no_connection_internet">Připojte se k internetu.</string>
