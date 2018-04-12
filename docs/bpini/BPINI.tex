@@ -119,7 +119,7 @@ K \texttt{modulu proměnných logistických dat} se vztahují ultra-širokopásm
 		\label{fig:rpi2}
 	\end{figure}
 		
-	
+\newpage	
 
 		\subsection{GPIO}
 			\texttt{GPIO (General Purpose Input/Output)} je \texttt{40 pinů} umístěných na desce ve dvouch řadách. Číslování pinů je dvojího typu \texttt{BCM} a \texttt{BOARD}, u \texttt{BCM} se počítají jen nastavitelné piny, kdežto u \texttt{BOARD} se počítají všechny.
@@ -221,33 +221,6 @@ Snímače neboli čtečky \texttt{RFID} jsou zařízení, která dokáží zachy
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 \chapter{Návrh řešení}
 
 Skladový sytém se skládá ze tří propojených částí. 
@@ -271,7 +244,10 @@ Poslední částí je klient umožňující uživatelům správu skladu.
 			\caption{Návrh komunikace}
     		\label{fig:network}
 		\end{figure}
-		
+
+
+
+
 		\subsection{Komunikace s čtečkou RFID}
 			Komunikačním standardem pro \texttt{IoT} je \texttt{MQTT} protokol s velkou podporou výrobců různých zařízení, která by mohla být přínosem pro skladový systém. Takto bude skladový systém připraven na případné rozšíření.
 			Z těchto důvodů jsem vybral pro komunikaci se čtečkou \texttt{RFID} protokol \texttt{MQTT}.
@@ -292,7 +268,7 @@ Samotný obsah zpráv není nijak daný ani vyžadovaný, \texttt{MQTT} je \text
 Pro zajištění zabezpečení může \texttt{MQTT} broker vyžadovat ověřování pomocí uživatelského jména a hesla. Šifrování komunikace může být řešeno pomocí \texttt{SSL}. 
 Standardní port pro \texttt{MQTT} je \texttt{1883}, pro komunikaci \texttt{MQTT} přes \texttt{SSL} je výchozím portem \texttt{8883} \cite{karagiannis2015survey}.
 			
-
+\newpage
 		\subsection{Komunikace s klientem}
 			Pro klienta potřebujeme jednotný a snadný přístup ke zdrojům. Nelze vyloučit ani přístup jiných systémů, které budou potřebovat k provozu skladový sytém. Samozřejmostí je import a export dat skladového sytému. Nejlepší volbou je otevřené \texttt{REST API}, jehož široká podpora umožní vznik různým aplikacím.
 
@@ -347,9 +323,11 @@ Standardní port pro \texttt{MQTT} je \texttt{1883}, pro komunikaci \texttt{MQTT
 				\end{description}				
 				
 				\end{itemize}
-				\ \\
+							
+\newpage
+\noindent					
 				Došel jsem k závěru, že pro přidání a odebrání skladových položek bude využita jen jedna čtečka \texttt{RFID-RC522} s přepínáním mezi režimy.
-				Jelikož nemám k dispozici displej ani bzučák, bude zobrazení režimu obstarávat jen \texttt{RGB LED dioda}. Čtečka načte \texttt{UID} tagu a odešle ho na server. Tam se zjistí typ tagu a podle toho se rozhodne, jaká bude akce.\\ Podle typu akce se objeví barevná signalizace. 
+				Jelikož nemám k dispozici displej ani bzučák, bude zobrazení režimu obstarávat jen \texttt{RGB LED dioda}. Čtečka načte \texttt{UID} tagu a odešle ho na server. Tam se zjistí typ tagu a podle toho se rozhodne, jaká bude akce. Podle typu akce se objeví barevná signalizace. 
 				\\\\
 				Akce podle typu tagu:
 				\begin{description}
@@ -421,7 +399,9 @@ Standardní port pro \texttt{MQTT} je \texttt{1883}, pro komunikaci \texttt{MQTT
 	Pro uložení dat bude využita dokumentová databáze \texttt{MongoDB}. Dokument je v \texttt{MongoDB} základní datovou jednotkou, srovnatelnou s řádkem v relačních databázích. Jedná se o semistrukturované dokumenty vybavené indexy. Dokumenty jsou seskupovány do kolekcí, které se podobají tabulkám relačních databází, ale nemají pevně dané schéma. Protože kolekce neomezují schéma, mohou být seskupovány libovolné dokumenty v jedné kolekci. Dokumenty v kolekci by ale měly být podobné, aby bylo možné efektivní indexování. Kolekce se seskupují do databází, které jsou uloženy jako soubory v operačním systému. Jedna instance \texttt{MongoDB} může spravovat několik databází, které jsou zcela nezávislé \cite{houvzvivcka2012aplikace}.
 
 Dokumenty jsou ukládány ve formátu \texttt{BSON}. \texttt{BSON} je binární reprezentace \texttt{JSON} formátu. \texttt{BSON} formát je bohatší než \texttt{JSON} formát a podporuje další datové typy, jako regulární výrazy, binární data nebo datum. Každý dokument má unikátní identifikátor, který je zadán uživatelem při vytváření dokumentu nebo je vytvořen \texttt{MongoDB} \cite{houvzvivcka2012aplikace}.
-\\\\
+
+\newpage	
+\noindent
 Vývoj \texttt{MongoDB} je zaměřen na čtyři hlavní oblasti:
 \begin{description}
 \item [Flexibilita]
@@ -472,7 +452,7 @@ Vývoj \texttt{MongoDB} je zaměřen na čtyři hlavní oblasti:
 			Připojené zařízení informuje server o své verzi softwaru a sériovém čísle, tyto informace pomůžou správci v rozhodnutí, které zařízení aktualizovat a nalezení konkrétního zařízení. 
 			
 			
-		
+\newpage	
 			\subsubsection{Autorizace}
 		Standardně se přístup k \texttt{MQTT} brokeru řeší přihlašujícími údaji. 
 		Buď se pro všechna zařízení určí společné přihlašovací údaje, které si každé zařízení bude pamatovat, nebo každému zařízení přidělí vlastní přihlašovací údaje, což zkomplikuje správu zařízení.		
@@ -553,6 +533,8 @@ Příklad přidané autentizace do hlavičky \texttt{HTTP}:
 \end{verbatim}
 Aby byla zajištěna bezpečnost, počítá se s šifrovanou komunikací, jinak lze heslo lehce odposlechnout.
 
+
+
 	\subsubsection{Autorizace}
 	Autorizace je proces ověření potřebných oprávnění pro přístup uživatele k datům. Oprávnění je možné získat s přidělenou rolí.
 	
@@ -563,6 +545,8 @@ Aby byla zajištěna bezpečnost, počítá se s šifrovanou komunikací, jinak 
 	Od spuštění serveru existuje účet s uživatelským jménem \uv{admin}.
 	Tento účet se vyváří automaticky a nelze smazat. Dalším specifikem účtu jsou rozšířená práva pro správu uživatele s rolí \texttt{admin}.
 	
+	
+\newpage	
 	
 	\subsubsection{Dokumentace}
 	Dokumentace je řešena frameworkem \texttt{Swagger} nejrozšířenějším nástrojem pro vývojáře \texttt{API}, který umožňuje vývoj napříč životním cyklem \texttt{API} od návrhu či dokumentace až po testování či zavádění.	
@@ -583,10 +567,13 @@ Aby byla zajištěna bezpečnost, počítá se s šifrovanou komunikací, jinak 
 	
 	Databáze obsahuje jen nejnutnější údaje, aby se dala prezentovat funkčnost skladového systému. 	
 	
+\newpage	
 	
 	\subsubsection{Položka}
 Položce jsem určil tyto vlastnosti: \texttt{name}, \texttt{description} a \texttt{amount}. Ostatní údaje jako cena, expirace a šarže jsou aktuálně nedůležité. Vlastnost \texttt{amount} má výchozí hodnotu 0, protože množství položky lze zadat jen při editaci položky. 
 Schéma položky:	
+\begingroup
+\fontsize{10pt}{12pt}\selectfont
 \begin{verbatim}
 {
     name: { type: String, trim: true, minlength: 3,
@@ -595,11 +582,14 @@ Schéma položky:
     amount: { type: Number, default: 0, min: 0, required: true }
 }
 \end{verbatim}
+\endgroup
 
 	\subsubsection{Tag}
 Tagu jsem přidělil tyto vlastnosti: \texttt{uid}, \texttt{type} a \texttt{item}. Vlastnost \texttt{uid} má omezení na 8 znaků, aby se nevkládalo \texttt{uid} z jiných typů tagů, které nejsou podporovány čtečkou \texttt{RFID}.
 Vlastnost \texttt{item} může obsahovat \texttt{\_id} položky, \texttt{autopopulate} je proces automatického nahrazení specifikované cesty v dokumentu s dokumentem z jiné kolekce.
 Schéma tagu:
+\begingroup
+\fontsize{10pt}{12pt}\selectfont
 \begin{verbatim}
 {
     uid: { type: String, lowercase: true, trim: true,
@@ -611,11 +601,16 @@ Schéma tagu:
             index: true, autopopulate: true }
 }
 \end{verbatim}
+\endgroup	
+
+\newpage	
 	
 	\subsubsection{Uživatel}
 Uživateli jsem stanovil tyto vlastnosti: \texttt{username}, \texttt{password}, \texttt{firstname}, \texttt{lastname} a \texttt{roles}. Pro lepší práci s uživatelem jsem přidal virtuální vlastnost \texttt{fullname}, která se skládá z \texttt{firstname} a \texttt{lastname}.\\
 Vlastnost \texttt{roles} musí obsahovat pole práv, může nabývat práv \texttt{admin} a \texttt{user}.
 Schéma uživatele:
+\begingroup
+\fontsize{10pt}{12pt}\selectfont
 \begin{verbatim}
 {
     username: { type: String, lowercase: true, trim: true,
@@ -631,6 +626,7 @@ Schéma uživatele:
             required: true }
 }
 \end{verbatim}
+\endgroup
 	
 	\subsubsection{Zařízení}
 
@@ -640,7 +636,8 @@ Důvodem jsou četná zařízení, která potřebují uložit různá data.
 Také obsahuje virtuální vlastnost \texttt{client\_id}, která vzniká spojením \texttt{name}, lomítka a \texttt{device\_id}.\\
 Vlastnost \texttt{status} může obsahovat jen hodnoty z \texttt{enum}, je to obdoba číselníků z relační databáze. 
 Celé schéma zařízení:
-
+\begingroup
+\fontsize{10pt}{12pt}\selectfont
 \begin{verbatim}
 {
     device_id: { type: String, trim: true, required: true },
@@ -656,7 +653,7 @@ Celé schéma zařízení:
     metadata: { type: Schema.Types.Mixed }
 }
 \end{verbatim}
-
+\endgroup
 
 
 	
@@ -670,9 +667,11 @@ Celé schéma zařízení:
 		V \texttt{Node.js} lze při spuštění nastavit parametr \texttt{NODE\_ENV}, který určuje v jakém prostředí běží. Výchozí hodnotou je \texttt{development}.
 		Některé moduly se přizpůsobují prostředí, např. podle \texttt{NODE\_ENV} změní level logování. 
 		Modul \texttt{config} vybírá konfigurační soubor podle \texttt{NODE\_ENV}, např. při \texttt{NODE\_ENV=test} se vybere soubor \texttt{config/test.js}.
-\newpage
+
 \ \\
 		Ukázka konfiguračního souboru \texttt{config/default.js}:	
+\begingroup
+\fontsize{10pt}{12pt}\selectfont		
 \begin{verbatim}
 {
     name: 'BPINI',
@@ -693,6 +692,7 @@ Celé schéma zařízení:
     api: true
 }
 \end{verbatim}
+\endgroup
 \ \\
 	V konfiguračním souboru lze nastavit  \texttt{host} a  \texttt{porty} pro \texttt{MQTT} a \texttt{HTTP}. Další nastavení se týká umístění a level logování. Pro připojení databáze musí do parametru \texttt{uri} zadat \texttt{Connection string} podle standardního formátu \texttt{MongoDB URI}. Dodatečná nastavení jako \texttt{ssl}, \texttt{connectTimeoutMS} atd. se nastavují přes parametr \texttt{options}. 
 	
@@ -779,11 +779,8 @@ Komunikaci \texttt{SPI} se vždy skládá z těchto pinů (viz obrázek \ref{fig
 Parametry \texttt{RGB LED diody} pro provoz jsou: proud až \texttt{20 mA}, napětí v propustném směru až \texttt{1,7 V}.
 Před piny určující barvu je potřeba zapojit \texttt{rezistory} \cite{voda2016rezistor}, protože \texttt{GPIO} dodává napětí \texttt{3,3 V}.
 \texttt{Rezistory} se používají na ochranu diody před poškozením. 
-Pro výpočet potřebného odporu \texttt{rezistoru} se používá \texttt{Ohmův zákon}. Udává vztah mezi \texttt{U (napětí)}, \texttt{I (proud)} a  \texttt{R (odpor)} v obvodu. Matematicky formulovaný je takto:
+Pro výpočet potřebného odporu \texttt{rezistoru} se používá \texttt{Ohmův zákon}. Matematický vzorec je takto:
 \[ U = R * I \]
-\ \\
-Z toho vyplývá také vztah:
-\[ R = U/I \]
 \[ 80=(3.3-1.7)/0.02 \]
 \texttt{Rezistor} s odporem \texttt{80 Ohm} je těžko dostupný, proto jsem použil nejčastěji používaný \texttt{rezistor} s \texttt{200 Ohm}.
 Zapojení je vidět na schématu (viz obrázek \ref{fig:reader_rfid_diagram}).
@@ -792,6 +789,7 @@ Zapojení je vidět na schématu (viz obrázek \ref{fig:reader_rfid_diagram}).
 	\section{Aplikace}
 Aplikace je napsaná v jazyce \texttt{Python} ve verzi \texttt{2.7}, abych zajistil správnou funkčnost všech balíčků. Všechny potřebné balíčky pro spuštění aplikace jsou umístěny v souboru \texttt{requirements.txt}, který je umístěný v kořenovém adresáři.
 
+\newpage
 
 	\subsection{Načtení UID tagu}
 Pro načtení \texttt{UID} je zapotřebí řídit \texttt{GPIO} na \texttt{Raspberry Pi}, to zajišťuje balíček \texttt{RPi.GPIO}. Vybrán byl tento balíček, protože je to oficiální knihovna od tvůrců \texttt{Raspberry Pi} a je součástí operačního systému.
@@ -864,6 +862,8 @@ Pro znázornění \texttt{loadingu} byly použity komponenty \texttt{ProgressDia
 
 Pro zobrazení dat v přehledech byla použita komponenta \texttt{CardView} pro možnost zobrazit velké množství informací o jednom záznamu. Tímto způsobem jsem se vyhnul prokliku na detaily.
 
+\newpage	
+
 \section{Komunikace}
 	Komunikaci s \texttt{REST API} serveru mi zjednodušuje knihovna \texttt{Retrofit}.
 	Stačí vytvořit \texttt{Java} rozhraní se všemi možnými dotazy na server a \texttt{Retrofit} si je sám implementuje.
@@ -878,16 +878,6 @@ Jazyk se vybírá automaticky podle nastavení v systému a pokud se nenajde po�
 Na straně serveru se pracuje s časem bez časových zón.
 Aby čas nebyl irelevantní k uživateli, musí se podle časové zóny, kterou má systém \texttt{Android} nastavenou, přepočítat čas.
 Toto přináší výhodu, ať je uživatel odkudkoliv, vždy se mu zobrazí správný čas.
-
-
-%\section{Čtečka NFC}
-
-
-
-
-
-
-
 
 
 \chapter{Testování}	
@@ -1105,7 +1095,10 @@ Příkaz pro otevření konfigurace:
 \begin{verbatim}
 sudo raspi-config
 \end{verbatim}
-\ \\
+
+
+\newpage	
+\noindent
 \texttt{Python} je součástí \texttt{Raspbianu}, potřebné balíčky se budou instalovat z \texttt{Python Package Index (PyPI)}. K tomu slouží nástroj \texttt{pip}. Tento nástroj je standardně nainstalován v \texttt{Raspbian Jessie} (ale ne \texttt{Jessie Lite}). Můžete jej nainstalovat pomocí příkazu: 
 \begin{verbatim}
 sudo apt-get install python-pip
