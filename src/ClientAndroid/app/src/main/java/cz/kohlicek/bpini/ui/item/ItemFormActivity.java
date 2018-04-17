@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import cz.kohlicek.bpini.model.Item;
 import cz.kohlicek.bpini.service.BPINIClient;
 import cz.kohlicek.bpini.service.BPINIService;
 import cz.kohlicek.bpini.util.DialogUtils;
+import cz.kohlicek.bpini.util.InputFilterUtils;
 import cz.kohlicek.bpini.util.NetworkUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,8 +78,9 @@ public class ItemFormActivity extends AppCompatActivity {
         } else {
             setTitle(R.string.item_form_title_new);
             form.setVisibility(View.VISIBLE);
-
         }
+
+        inputAmount.setFilters(new InputFilter[]{new InputFilterUtils.MinMax(0, Integer.MAX_VALUE)});
     }
 
     @Override
@@ -157,10 +160,21 @@ public class ItemFormActivity extends AppCompatActivity {
         boolean valid = true;
 
         String name = inputName.getText().toString();
+        String description = inputDescription.getText().toString();
         String amount = inputAmount.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
             layoutName.setError(getString(R.string.item_form_validate_name));
+            valid = false;
+        } else if (name.length() > 255) {
+            layoutName.setError(getString(R.string.item_form_validate_name_max_len));
+            valid = false;
+        } else {
+            layoutName.setErrorEnabled(false);
+        }
+
+        if (description.length() > 2000) {
+            layoutName.setError(getString(R.string.item_form_validate_description_max_len));
             valid = false;
         } else {
             layoutName.setErrorEnabled(false);
@@ -190,7 +204,7 @@ public class ItemFormActivity extends AppCompatActivity {
                     item = response.body();
                     inputName.setText(item.getName());
                     inputDescription.setText(item.getDescription());
-                    inputAmount.setText(item.getAmountToString());
+                    inputAmount.setText(Integer.toString(item.getAmount()));
 
                     loading.setVisibility(View.GONE);
                     form.setVisibility(View.VISIBLE);

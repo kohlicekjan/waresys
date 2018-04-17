@@ -115,6 +115,8 @@
     <string name="item_form_input_amount">Množství</string>
 
     <string name="item_form_validate_name">Zadejte název položky, alespoň 3 znaky dlouhý</string>
+    <string name="item_form_validate_name_max_len">Název položky může být dlouhý maximálně 255 znaků</string>
+    <string name="item_form_validate_description_max_len">Popis položky může být dlouhý maximálně 2000 znaků</string>
     <string name="item_form_validate_amount">Zadejte množství</string>
 
     <!-- TagListFragmnet-->
@@ -179,6 +181,7 @@
     <string name="user_form_input_roles">Práva</string>
 
     <string name="user_form_validate_username">Zadejte uživatelské jméno, alespoň 3 znaky dlouhé</string>
+    <string name="user_form_validate_username_max_len">Uživatelské jméno může být dlouhé maximálně 20 znaků</string>
     <string name="user_form_validate_password">Zadejte heslo</string>
 
 

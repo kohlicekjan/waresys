@@ -115,6 +115,8 @@
     <string name="item_form_input_amount">Amount</string>
 
     <string name="item_form_validate_name">Enter an item name, at least 3 characters long</string>
+    <string name="item_form_validate_name_max_len">The item name can be up to 255 characters long</string>
+    <string name="item_form_validate_description_max_len">Item description can be up to 2000 characters long</string>
     <string name="item_form_validate_amount">Enter amount</string>
 
     <!-- TagListFragmnet-->
@@ -178,6 +180,7 @@
     <string name="user_form_input_roles">Roles</string>
 
     <string name="user_form_validate_username">Enter a user name, at least 3 characters long</string>
+    <string name="user_form_validate_username_max_len">The username can be up to 20 characters long</string>
     <string name="user_form_validate_password">Enter password</string>
 
 

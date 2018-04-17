@@ -191,6 +191,10 @@ public class UserFormActivity extends AppCompatActivity {
         if (username.isEmpty() || username.length() < 3) {
             layoutUsername.setError(getString(R.string.user_form_validate_username));
             valid = false;
+        }
+        if (username.length() > 20) {
+            layoutUsername.setError(getString(R.string.user_form_validate_username_max_len));
+            valid = false;
         } else {
             layoutUsername.setErrorEnabled(false);
         }
