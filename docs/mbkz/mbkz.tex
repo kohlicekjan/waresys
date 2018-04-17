@@ -47,7 +47,7 @@
 \chapter{Zadání}
 \setcounter{page}{1}
 
-Úkolem bude rozšířit mobilní aplikaci pro spravu skladového systému. 
+Úkolem bude rozšířit mobilní aplikaci pro správu skladového systému. Kompletní dokumentace skladového systému je zde: \url{https://github.com/kohlicekjan/BPINI/blob/master/docs/bpini/BPINI.pdf}
 
 První rozšíření se bude vázat ke změně autentizace, aktuálně se používá \texttt{HTTP Basic auth} a nahradit by ho měl bezpečnější protokol pro autentizaci \texttt{OAuth 2.0}.
 
@@ -94,6 +94,91 @@ Jazyk se vybírá automaticky podle nastavení v systému a pokud se nenajde po�
 Na straně serveru se pracuje s časem bez časových zón.
 Aby čas nebyl irelevantní k uživateli, musí se podle časové zóny, kterou má systém \texttt{Android} nastavenou, přepočítat čas.
 Toto přináší výhodu, ať je uživatel odkudkoliv, vždy se mu zobrazí správný čas.
+
+\newpage
+\section{Struktura projektu}
+Popis struktury projektu:
+\begingroup
+\fontsize{8pt}{12pt}\selectfont		
+\begin{itemize}[noitemsep,nolistsep]
+
+\item [-] \texttt{adapter}
+	\begin{itemize}[noitemsep, nolistsep]
+		\item [] \texttt{BaseAdapter.java} - Vylepšený adapter o zobrazení načítání
+		\item [] \texttt{DeviceAdapter.java} - Adapter pro seznam zařízení
+		\item [] \texttt{ItemAdapter.java} - Adapter pro seznam skladových položek
+		\item [] \texttt{TagAdapter.java} - Adapter pro seznam tagů
+		\item [] \texttt{UserAdapter.java} - Adapter pro seznam uživatelů
+	\end{itemize}
+	
+\item [-] \texttt{model}
+	\begin{itemize}[noitemsep, nolistsep]
+		\item [] \texttt{Account.java} - Model účtu, ukládá a maže přihlašovací údaje
+		\item [] \texttt{BasicModel.java} - Základní model, obsahuje datum vytvoření a změny
+		\item [] \texttt{Device.java} - Model zařízení
+		\item [] \texttt{Item.java} - Model skladové položky
+		\item [] \texttt{Tag.java} - Model tagu
+		\item [] \texttt{User.java} - Model uživatele
+	\end{itemize}
+	
+\item [-] \texttt{service}
+	\begin{itemize}[noitemsep, nolistsep]
+		\item [] \texttt{BPINIClient.java} - Připojí se k serveru
+		\item [] \texttt{BPINIService.java} - Rozhraní popisující REST API serveru
+		\item [] \texttt{ServiceGenerator.java} - Stará se o HTTPS komunikaci
+	\end{itemize}
+	
+\item [-] \texttt{ui}
+	\begin{itemize}[noitemsep, nolistsep]
+		\item [-] \texttt{account} 
+		\begin{itemize}[noitemsep, nolistsep]
+			\item [] \texttt{AccountActivity.java} - Detail účtu
+			\item [] \texttt{PasswordActivity.java} - Změna hesla
+		\end{itemize}
+		
+		\item [-] \texttt{device} 
+		\begin{itemize}[noitemsep, nolistsep]
+			\item [] \texttt{DeviceListFragment.java} - Seznam zařízení
+		\end{itemize}
+		
+		\item [-] \texttt{item} 
+		\begin{itemize}[noitemsep, nolistsep]
+			\item [] \texttt{ItemFormActivity.java} - Editace skladové položky
+			\item [] \texttt{ItemListFragment.java} - Seznam skladových položek
+		\end{itemize}
+		
+		\item [-] \texttt{tag} 
+		\begin{itemize}[noitemsep, nolistsep]
+			\item [] \texttt{TagFormActivity.java} - Editace tagu
+			\item [] \texttt{TagListFragment.java} - Seznam tagu
+			\item [] \texttt{TagReaderActivity.java} - Čtečka tagů
+		\end{itemize}
+		
+		\item [-] \texttt{user} 
+		\begin{itemize}[noitemsep, nolistsep]
+			\item [] \texttt{UserFormActivity.java} - Editace uživatele
+			\item [] \texttt{UserListFragment.java} - Seznam uživatelů
+		\end{itemize}
+		
+		\item [-] \texttt{view} 
+		\begin{itemize}[noitemsep, nolistsep]
+			\item [] \texttt{EmptyRecyclerView.java} - Vylepšený RecyclerView o zobrazení popisku jeli prázdný
+			\item [] \texttt{EndlessRecyclerViewScrollListener.java} - Stará se o infinity scroll
+		\end{itemize}
+				
+		\item [] \texttt{LoginActivity.java} - Přihlašovací formulář
+		\item [] \texttt{MainActivity.java} - Hlavní aktivita, obsahuje postranní menu 		
+	\end{itemize}
+	
+\item [-] \texttt{util}
+	\begin{itemize}[noitemsep, nolistsep]
+		\item [] \texttt{DialogUtils.java} - Nástroje pro vytváření dialogů
+		\item [] \texttt{InputFilterUtils.java} - Nástroje na ošetření vstupních polí
+		\item [] \texttt{NetworkUtils.java} - Nástroje pro práci s připojením
+	\end{itemize}	
+	
+\end{itemize}
+\endgroup
 
 \chapter{Uživatelská dokumentace}
 
@@ -194,7 +279,7 @@ Položku lze smazat jen tehdy, když se její počet rovná nule.
 
 
 \section{Tagy}
-Tagy nelze přidávat ručně, jen pomocí čtečky. Kliknutím na tag se zobrazí editace (viz obrázek \ref{fig:Screenshot_20170607-165805}), která nabízí změnu typu. Tag může být tří typů:
+Tagy nelze přidávat ručně, jen pomocí čtečky. Kliknutím na tag se zobrazí editace (viz obrázek \ref{fig:Screenshot_20180412-031459}), která nabízí změnu typu. Tag může být tří typů:
 \begin{description}
 \item [neznámý] - tag nemá nastavenou žádnou funkci
 \item [režim] - tag umožňuje čtečce RFID přepínat režimy přidat/odebrat položku
@@ -318,13 +403,13 @@ node server.js
 
 \section{Mobilní aplikace}
 Aplikace je určena pro \texttt{Android 6.0} a vyšší.	
-Soubor \texttt{BPINI-1.6.0.apk} nahrajte do mobilního zařízení a spusťte instalaci.
+Soubor \texttt{BPINI-1.6.2.apk} nahrajte do mobilního zařízení a spusťte instalaci.
 Při instalaci bude potřeba dočasně povolit \texttt{instalaci z neznámých zdrojů}.
 Po dokončení najdete aplikaci v menu mezi ostatními aplikacemi.
 
 
 \chapter{Testování}
-Aplikace byla testovaná na zařízení \texttt{Samsung A3 (2017)} s \texttt{Androidem 7.0.0} 
+Aplikace byla testovaná na zařízení \texttt{Samsung A3 (2017)} s \texttt{Androidem 7.0.0}, vše fungovalo správně.
 
 \chapter{Závěr}
 V rámci semestralní práce jsem také musel upravit \texttt{REST API}, což zkomplikovalo a zdrželo vývoj jednoduchých rozšíření.
@@ -340,6 +425,6 @@ Další chybou bylo možnost spustit \uv{Čtečka}, aniž by byl uživatel přih
 
 Také jsem přidal automatické odhlášení uživatele, při spuštění aplikace s vyšší vezí než když se přihlašoval. Touhle funčností se předchazí chybám z nekonzistence dat mezi verzema. 
 
-Mám v planu plno dalších rozšířeních, ale nejdřív musím dodělat podporu na staně \texttt{REST API}.
+Do budoucna plánuji možnost zobrazit archiv všech změn daného záznamu. Pak přidám cenu zboží ke kterému je zapotřebí i měna. Pro uživatelé s jinou měnou se bude cena přepočítávat podle aktuálního kurzu. Přidat cenu zboží nebude jednoduchá záležitost.
 
 \end{document}
