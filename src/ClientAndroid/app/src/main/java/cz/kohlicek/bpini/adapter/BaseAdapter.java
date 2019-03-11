@@ -1,11 +1,12 @@
 package cz.kohlicek.bpini.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Stará se o zobrazení loadingu při načítání dalších dat

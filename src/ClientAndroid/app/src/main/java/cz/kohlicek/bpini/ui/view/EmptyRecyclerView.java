@@ -2,9 +2,10 @@ package cz.kohlicek.bpini.ui.view;
 
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerView rozšířena o schovávání/zorazování popisku pro prazdný seznam

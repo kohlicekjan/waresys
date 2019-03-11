@@ -7,15 +7,16 @@ import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kohlicek.bpini.R;
@@ -119,7 +120,7 @@ public class TagReaderActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case android.support.design.R.id.snackbar_action:
+            case R.id.snackbar_action:
                 startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
                 break;
             case R.id.layout_tag:

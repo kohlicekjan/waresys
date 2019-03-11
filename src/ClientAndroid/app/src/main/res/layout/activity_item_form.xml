@@ -21,14 +21,14 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/form_row_vertical_margin"
                 android:layout_marginTop="@dimen/form_row_vertical_margin">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -36,16 +36,16 @@
                     android:inputType="text"
                     android:maxLength="200" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/form_row_vertical_margin"
                 android:layout_marginTop="@dimen/form_row_vertical_margin">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                     android:inputType="textMultiLine"
                     android:maxLength="2000" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <LinearLayout
@@ -63,21 +63,21 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/form_row_vertical_margin"
                     android:layout_marginTop="@dimen/form_row_vertical_margin">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/input_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/item_form_input_amount"
                         android:inputType="number" />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
