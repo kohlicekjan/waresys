@@ -1,14 +1,14 @@
-﻿var errs = require('restify-errors');
-var Router = require('restify-router').Router;
-var querymen = require('querymen');
+const errs = require('restify-errors');
+const { Router } = require('restify-router');
+const querymen = require('querymen');
 
 const router = new Router();
 
-var auth = require('./auth');
-var Item = require('../../models/item');
-//var ItemHistory = Item.historyModel();
-var Tag = require('../../models/tag');
-//var ObjectId = require('mongoose').Types.ObjectId;
+const auth = require('./auth');
+const Item = require('../../models/item');
+// var ItemHistory = Item.historyModel();
+const Tag = require('../../models/tag');
+// var ObjectId = require('mongoose').Types.ObjectId;
 
 
 router.use(auth.authenticate);
@@ -55,31 +55,29 @@ router.use(auth.authenticate);
  *       - BasicAuth: []
  */
 
-var itemSchemaQuerymen = new querymen.Schema({
-    search: {
-        type: RegExp,
-        paths: ['name', 'description'],
-        bindTo: 'search'
-    },
-    skip: {
-        type: Number,
-        default: 0,
-        min: 0,
-        bindTo: 'cursor'
-    }
-}, {page: false});
+const itemSchemaQuerymen = new querymen.Schema({
+  search: {
+    type: RegExp,
+    paths: ['name', 'description'],
+    bindTo: 'search',
+  },
+  skip: {
+    type: Number,
+    default: 0,
+    min: 0,
+    bindTo: 'cursor',
+  },
+}, { page: false });
 
 
-router.get('/items', querymen.middleware(itemSchemaQuerymen), function (req, res, next) {
-    var query = req.querymen;
+router.get('/items', querymen.middleware(itemSchemaQuerymen), (req, res, next) => {
+  const query = req.querymen;
 
-    Item.find(query.search, query.select, query.cursor, function (err, items) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+  Item.find(query.search, query.select, query.cursor, (err, items) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-        res.json(items);
-    });
-
+    return res.json(items);
+  });
 });
 
 
@@ -110,19 +108,14 @@ router.get('/items', querymen.middleware(itemSchemaQuerymen), function (req, res
  *     security:
  *       - BasicAuth: []
  */
-router.get('/items/:item_id', function (req, res, next) {
+router.get('/items/:item_id', (req, res, next) => {
+  Item.findById(req.params.item_id, (err, item) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Item.findById(req.params.item_id, function (err, item) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!item) { return next(new errs.NotFoundError('Item not found')); }
 
-        if (!item)
-            return next(new errs.NotFoundError('Item not found'));
-
-        res.json(item);
-
-    });
-
+    return res.json(item);
+  });
 });
 
 
@@ -170,10 +163,12 @@ router.get('/items/:item_id', function (req, res, next) {
 //     sort: '-t'
 // }, {page: false});
 //
-// router.get('/items/:item_id/history', querymen.middleware(itemHistorySchemaQuerymen), function (req, res, next) {
+// router.get('/items/:item_id/history', querymen.middleware(itemHistorySchemaQuerymen),
+// function (req, res, next) {
 //     var query = req.querymen;
 //
-//     ItemHistory.find({'d._id': new ObjectId(req.params.item_id)}, query.select, query.cursor, function (err, history) {
+//     ItemHistory.find({'d._id': new ObjectId(req.params.item_id)}, query.select, query.cursor,
+//     function (err, history) {
 //         if (err)
 //             return next(new errs.BadRequestError(err.message));
 //
@@ -212,20 +207,17 @@ router.get('/items/:item_id', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.post('/items', function (req, res, next) {
+router.post('/items', (req, res, next) => {
+  const item = new Item();
+  item.name = req.body.name;
+  item.description = req.body.description;
 
-    var item = new Item();
-    item.name = req.body.name;
-    item.description = req.body.description;
+  item.save((err, item) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    item.save(function (err, item) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
-
-        req.log.info('create item', item);
-        res.json(201, item);
-    });
-
+    req.log.info('create item', item);
+    return res.json(201, item);
+  });
 });
 
 
@@ -270,28 +262,23 @@ router.post('/items', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.put('/items/:item_id', function (req, res, next) {
+router.put('/items/:item_id', (req, res, next) => {
+  Item.findById(req.params.item_id, (err, item) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Item.findById(req.params.item_id, function (err, item) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!item) { return next(new errs.NotFoundError('Item not found')); }
 
-        if (!item)
-            return next(new errs.NotFoundError('Item not found'));
+    item.name = req.body.name;
+    item.description = req.body.description;
+    item.amount = req.body.amount;
 
-        item.name = req.body.name;
-        item.description = req.body.description;
-        item.amount = req.body.amount;
+    return item.save((err, item) => {
+      if (err) { return next(new errs.BadRequestError(err.message)); }
 
-        item.save(function (err, item) {
-            if (err)
-                return next(new errs.BadRequestError(err.message));
-
-            req.log.info('update item', item);
-            res.json(item);
-        });
+      req.log.info('update item', item);
+      return res.json(item);
     });
-
+  });
 });
 
 
@@ -320,37 +307,31 @@ router.put('/items/:item_id', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.del('/items/:item_id', function (req, res, next) {
+router.del('/items/:item_id', (req, res, next) => {
+  Item.findById(req.params.item_id, (err, item) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Item.findById(req.params.item_id, function (err, item) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!item) { return next(new errs.NotFoundError('Item not found')); }
 
-        if (!item)
-            return next(new errs.NotFoundError('Item not found'));
+    return item.remove((err, item) => {
+      if (err) { return next(new errs.InternalError('Error removing item')); }
 
-        item.remove(function (err, item) {
-            if (err)
-                return next(new errs.InternalError("Error removing item"));
+      const tag = {
+        type: 'unknown',
+        $unset: { item: true },
+      };
 
-            var tag = {
-                type: 'unknown',
-                $unset: {item: true}
-            };
+      Tag.update({ item: item._id }, tag, { new: true }, (err, tags) => {
+        if (err) { return next(new errs.InternalError(err.message)); }
 
-            Tag.update({item: item._id}, tag, {new: true}, function (err, tags) {
-                if (err)
-                    return next(new errs.InternalError(err.message));
+        if (tags) { return req.log.info('update tags', tags); }
+        return null;
+      });
 
-                if (tags)
-                    req.log.info('update tags', tags);
-            });
-
-            req.log.info('delete item', item);
-            res.send(204);
-        });
+      req.log.info('delete item', item);
+      return res.send(204);
     });
-
+  });
 });
 
 

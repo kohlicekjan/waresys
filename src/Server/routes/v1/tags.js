@@ -1,13 +1,13 @@
-﻿var errs = require('restify-errors');
-var Router = require('restify-router').Router;
-var querymen = require('querymen');
+const errs = require('restify-errors');
+const { Router } = require('restify-router');
+const querymen = require('querymen');
 
 const router = new Router();
 
-var auth = require('./auth');
-var Tag = require('../../models/tag');
-//var TagHistory = Tag.historyModel();
-//var ObjectId = require('mongoose').Types.ObjectId;
+const auth = require('./auth');
+const Tag = require('../../models/tag');
+// var TagHistory = Tag.historyModel();
+// var ObjectId = require('mongoose').Types.ObjectId;
 
 router.use(auth.authenticate);
 
@@ -48,26 +48,24 @@ router.use(auth.authenticate);
  *       - BasicAuth: []
  */
 
-var tagSchemaQuerymen = new querymen.Schema({
-    skip: {
-        type: Number,
-        default: 0,
-        min: 0,
-        bindTo: 'cursor'
-    }
-}, {page: false});
+const tagSchemaQuerymen = new querymen.Schema({
+  skip: {
+    type: Number,
+    default: 0,
+    min: 0,
+    bindTo: 'cursor',
+  },
+}, { page: false });
 
 
-router.get('/tags', querymen.middleware(tagSchemaQuerymen), function (req, res, next) {
-    var query = req.querymen;
+router.get('/tags', querymen.middleware(tagSchemaQuerymen), (req, res, next) => {
+  const query = req.querymen;
 
-    Tag.find(query.query, query.select, query.cursor, function (err, tags) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+  Tag.find(query.query, query.select, query.cursor, (err, tags) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-        res.json(tags);
-    });
-
+    return res.json(tags);
+  });
 });
 
 
@@ -98,18 +96,14 @@ router.get('/tags', querymen.middleware(tagSchemaQuerymen), function (req, res, 
  *     security:
  *       - BasicAuth: []
  */
-router.get('/tags/:tag_id', function (req, res, next) {
+router.get('/tags/:tag_id', (req, res, next) => {
+  Tag.findById(req.params.tag_id, (err, tag) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Tag.findById(req.params.tag_id, function (err, tag) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!tag) { return next(new errs.NotFoundError('Tag not found')); }
 
-        if (!tag)
-            return next(new errs.NotFoundError('Tag not found'));
-
-        res.json(tag);
-    });
-
+    return res.json(tag);
+  });
 });
 
 
@@ -157,10 +151,12 @@ router.get('/tags/:tag_id', function (req, res, next) {
 //     sort: '-t'
 // }, {page: false});
 //
-// router.get('/tags/:tag_id/history', querymen.middleware(tagHistorySchemaQuerymen), function (req, res, next) {
+// router.get('/tags/:tag_id/history', querymen.middleware(tagHistorySchemaQuerymen),
+// function (req, res, next) {
 //     var query = req.querymen;
 //
-//     TagHistory.find({'d._id': new ObjectId(req.params.tag_id)}, query.select, query.cursor, function (err, history) {
+//     TagHistory.find({'d._id': new ObjectId(req.params.tag_id)}, query.select, query.cursor,
+//     function (err, history) {
 //         if (err)
 //             return next(new errs.BadRequestError(err.message));
 //
@@ -199,28 +195,23 @@ router.get('/tags/:tag_id', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.get('/tags/uid/:tag_uid', function (req, res, next) {
+router.get('/tags/uid/:tag_uid', (req, res, next) => {
+  Tag.findOne({ uid: req.params.tag_uid }, (err, tag) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Tag.findOne({'uid': req.params.tag_uid}, function (err, tag) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!tag) {
+      const newTag = new Tag();
+      newTag.uid = req.params.tag_uid;
 
-        if (!tag) {
-            var newTag = new Tag();
-            newTag.uid = req.params.tag_uid;
+      return newTag.save((err, tag) => {
+        if (err) { return next(new errs.BadRequestError(err.message)); }
 
-            newTag.save(function (err, tag) {
-                if (err)
-                    return next(new errs.BadRequestError(err.message));
-
-                req.log.info('create tag', tag);
-                res.json(201, tag);
-            });
-        } else {
-            res.json(tag);
-        }
-    });
-
+        req.log.info('create tag', tag);
+        return res.json(201, tag);
+      });
+    }
+    return res.json(tag);
+  });
 });
 
 
@@ -264,37 +255,31 @@ router.get('/tags/uid/:tag_uid', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.put('/tags/:tag_id', function (req, res, next) {
+router.put('/tags/:tag_id', (req, res, next) => {
+  Tag.findById(req.params.tag_id, (err, tag) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Tag.findById(req.params.tag_id, function (err, tag) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!tag) { return next(new errs.NotFoundError('Tag not found')); }
 
-        if (!tag)
-            return next(new errs.NotFoundError('Tag not found'));
+    tag.type = req.body.type;
 
-        tag.type = req.body.type;
+    if (typeof req.body.item === 'string') {
+      tag.item = req.body.item;
+    } else {
+      tag.item = req.body.item.id ? req.body.item.id : req.body.item._id;
+    }
 
-        if (typeof req.body.item === 'string') {
-            tag.item = req.body.item;
-        } else {
-            tag.item = req.body.item.id ? req.body.item.id : req.body.item._id;
-        }
+    return tag.save((err, tag) => {
+      if (err) { return next(new errs.BadRequestError(err.message)); }
 
-        tag.save(function (err, tag) {
-            if (err)
-                return next(new errs.BadRequestError(err.message));
+      req.log.info('update tag', tag);
+      return tag.populate('item', (err, tag) => {
+        if (err) { return next(new errs.BadRequestError(err.message)); }
 
-            req.log.info('update tag', tag);
-            tag.populate('item', function(err, tag) {
-                if (err)
-                    return next(new errs.BadRequestError(err.message));
-
-                res.json(tag);
-            });
-        });
+        return res.json(tag);
+      });
     });
-
+  });
 });
 
 
@@ -323,25 +308,19 @@ router.put('/tags/:tag_id', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.del('/tags/:tag_id', function (req, res, next) {
+router.del('/tags/:tag_id', (req, res, next) => {
+  Tag.findById(req.params.tag_id, (err, tag) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Tag.findById(req.params.tag_id, function (err, tag) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!tag) { return next(new errs.NotFoundError('Tag not found')); }
 
-        if (!tag)
-            return next(new errs.NotFoundError('Tag not found'));
+    return tag.remove((err, tag) => {
+      if (err) { return next(new errs.InternalError('Error removing tag')); }
 
-        tag.remove(function (err, tag) {
-            if (err)
-                return next(new errs.InternalError("Error removing tag"));
-
-            req.log.info('delete tag', tag);
-            res.send(204);
-        });
+      req.log.info('delete tag', tag);
+      return res.send(204);
     });
-
-
+  });
 });
 
 

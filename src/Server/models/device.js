@@ -1,37 +1,39 @@
-﻿var mongoose = require('mongoose');
-var history = require('mongoose-history');
+const mongoose = require('mongoose');
+// const history = require('mongoose-history');
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-var deviceSchema = new Schema({
-    device_id: {type: String, trim: true, required: true},
-    name: {type: String, trim: true, required: true},
-    version: {type: String, trim: true},
-    description: {type: String, trim: true},
-    status: {type: String, enum: ['active', 'inactive', 'error'], default: 'inactive', required: true},
-    allowed: {type: Boolean, default: false, required: true},
+const deviceSchema = new Schema({
+  device_id: { type: String, trim: true, required: true },
+  name: { type: String, trim: true, required: true },
+  version: { type: String, trim: true },
+  description: { type: String, trim: true },
+  status: {
+    type: String, enum: ['active', 'inactive', 'error'], default: 'inactive', required: true,
+  },
+  allowed: { type: Boolean, default: false, required: true },
 
-    serial_number: {type: String, trim: true},
-    ip_address: {type: String, trim: true},
+  serial_number: { type: String, trim: true },
+  ip_address: { type: String, trim: true },
 
-    metadata: {type: Schema.Types.Mixed}
-    //messages: [{ type: Schema.Types.ObjectId }]
+  metadata: { type: Schema.Types.Mixed },
+  // messages: [{ type: Schema.Types.ObjectId }]
 });
 
 deviceSchema.set('strict', true);
 deviceSchema.set('versionKey', false);
-deviceSchema.set('timestamps', {createdAt: 'created', updatedAt: 'updated'});
-deviceSchema.index({device_id: 1, name: 1}, {unique: true});
+deviceSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
+deviceSchema.index({ device_id: 1, name: 1 }, { unique: true });
 
 deviceSchema.virtual('client_id').get(function () {
-    return (this.name + '/' + this.device_id);
+  return (this.name + '/' + this.device_id);
 });
 
 deviceSchema.set('toJSON', {
-    virtuals: true
+  virtuals: true,
 });
 
-//deviceSchema.plugin(history, {diffOnly: true});
+// deviceSchema.plugin(history, {diffOnly: true});
 
 module.exports = mongoose.model('Device', deviceSchema);
 

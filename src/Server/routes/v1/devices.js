@@ -1,13 +1,13 @@
-﻿var errs = require('restify-errors');
-var Router = require('restify-router').Router;
-var querymen = require('querymen');
+const errs = require('restify-errors');
+const { Router } = require('restify-router');
+const querymen = require('querymen');
 
 const router = new Router();
 
-var auth = require('./auth');
-var Device = require('../../models/device');
-//var DeviceHistory = Device.historyModel();
-//var ObjectId = require('mongoose').Types.ObjectId;
+const auth = require('./auth');
+const Device = require('../../models/device');
+// var DeviceHistory = Device.historyModel();
+// var ObjectId = require('mongoose').Types.ObjectId;
 
 router.use(auth.authenticate);
 router.use(auth.isRole('admin'));
@@ -54,31 +54,29 @@ router.use(auth.isRole('admin'));
  *       - BasicAuth: []
  */
 
-var deviceSchemaQuerymen = new querymen.Schema({
-    search: {
-        type: RegExp,
-        paths: ['device_id', 'name', 'description', 'serial_number', 'ip_address'],
-        bindTo: 'search'
-    },
-    skip: {
-        type: Number,
-        default: 0,
-        min: 0,
-        bindTo: 'cursor'
-    }
-}, {page: false});
+const deviceSchemaQuerymen = new querymen.Schema({
+  search: {
+    type: RegExp,
+    paths: ['device_id', 'name', 'description', 'serial_number', 'ip_address'],
+    bindTo: 'search',
+  },
+  skip: {
+    type: Number,
+    default: 0,
+    min: 0,
+    bindTo: 'cursor',
+  },
+}, { page: false });
 
 
-router.get('/devices', querymen.middleware(deviceSchemaQuerymen), function (req, res, next) {
-    var query = req.querymen;
+router.get('/devices', querymen.middleware(deviceSchemaQuerymen), (req, res, next) => {
+  const query = req.querymen;
 
-    Device.find(query.query, query.select, query.cursor, function (err, devices) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+  Device.find(query.query, query.select, query.cursor, (err, devices) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-        res.json(devices);
-    });
-
+    return res.json(devices);
+  });
 });
 
 
@@ -109,18 +107,14 @@ router.get('/devices', querymen.middleware(deviceSchemaQuerymen), function (req,
  *     security:
  *       - BasicAuth: []
  */
-router.get('/devices/:device_id', function (req, res, next) {
+router.get('/devices/:device_id', (req, res, next) => {
+  Device.findById(req.params.device_id, (err, device) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Device.findById(req.params.device_id, function (err, device) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!device) { return next(new errs.NotFoundError('Device not found')); }
 
-        if (!device)
-            return next(new errs.NotFoundError('Device not found'));
-
-        res.json(device);
-    });
-
+    return res.json(device);
+  });
 });
 
 
@@ -168,10 +162,12 @@ router.get('/devices/:device_id', function (req, res, next) {
 //     sort: '-t'
 // }, {page: false});
 //
-// router.get('/devices/:device_id/history', querymen.middleware(deviceHistorySchemaQuerymen), function (req, res, next) {
+// router.get('/devices/:device_id/history', querymen.middleware(deviceHistorySchemaQuerymen),
+// function (req, res, next) {
 //     var query = req.querymen;
 //
-//     DeviceHistory.find({'d._id': new ObjectId(req.params.device_id)}, query.select, query.cursor, function (err, history) {
+//     DeviceHistory.find({'d._id': new ObjectId(req.params.device_id)}, query.select, query.cursor,
+//     function (err, history) {
 //         if (err)
 //             return next(new errs.BadRequestError(err.message));
 //
@@ -213,26 +209,21 @@ router.get('/devices/:device_id', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.put('/devices/:device_id', function (req, res, next) {
+router.put('/devices/:device_id', (req, res, next) => {
+  Device.findById(req.params.device_id, (err, device) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Device.findById(req.params.device_id, function (err, device) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!device) { return next(new errs.NotFoundError('Device not found')); }
 
-        if (!device)
-            return next(new errs.NotFoundError('Device not found'));
+    device.allowed = req.body.allowed;
 
-        device.allowed = req.body.allowed;
+    return device.save((err, device) => {
+      if (err) { return next(new errs.BadRequestError(err.message)); }
 
-        device.save(function (err, device) {
-            if (err)
-                return next(new errs.BadRequestError(err.message));
-
-            req.log.info('update device', device);
-            res.json(device);
-        });
+      req.log.info('update device', device);
+      return res.json(device);
     });
-
+  });
 });
 
 
@@ -261,24 +252,19 @@ router.put('/devices/:device_id', function (req, res, next) {
  *     security:
  *       - BasicAuth: []
  */
-router.del('/devices/:device_id', function (req, res, next) {
+router.del('/devices/:device_id', (req, res, next) => {
+  Device.findById(req.params.device_id, (err, device) => {
+    if (err) { return next(new errs.BadRequestError(err.message)); }
 
-    Device.findById(req.params.device_id, function (err, device) {
-        if (err)
-            return next(new errs.BadRequestError(err.message));
+    if (!device) { return next(new errs.NotFoundError('Device not found')); }
 
-        if (!device)
-            return next(new errs.NotFoundError('Device not found'));
+    return device.remove((err, device) => {
+      if (err) { return next(new errs.InternalError('Error removing device')); }
 
-        device.remove(function (err, device) {
-            if (err)
-                return next(new errs.InternalError("Error removing device"));
-
-            req.log.info('delete device', device);
-            res.send(204);
-        });
+      req.log.info('delete device', device);
+      return res.send(204);
     });
-
+  });
 });
 
 

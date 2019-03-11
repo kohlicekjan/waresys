@@ -1,66 +1,79 @@
-﻿var mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');
-var history = require('mongoose-history');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+// const history = require('mongoose-history');
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-var SALT_LENGTH = 10;
+const SALT_LENGTH = 10;
 
-var userSchema = new Schema({
-    username: {type: String, lowercase: true, trim: true, minlength: 3, maxlength: 20, required: true, unique: true},
-    password: {type: String, default: '', required: true, select: false},
-    firstname: {type: String, default: '', trim: true, maxlength: 30},
-    lastname: {type: String, default: '', trim: true, maxlength: 30},
-    roles: {type: [{type: String, enum: ['admin', 'user']}], required: true}
-    // settings:{
-    //
-    // }
+const userSchema = new Schema({
+  username: {
+    type: String,
+    lowercase: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 20,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String, default: '', required: true, select: false,
+  },
+  firstname: {
+    type: String, default: '', trim: true, maxlength: 30,
+  },
+  lastname: {
+    type: String, default: '', trim: true, maxlength: 30,
+  },
+  roles: { type: [{ type: String, enum: ['admin', 'user'] }], required: true },
+  // settings:{
+  //
+  // }
 });
 
 userSchema.set('strict', true);
 userSchema.set('versionKey', false);
-userSchema.set('timestamps', {createdAt: 'created', updatedAt: 'updated'});
+userSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
 userSchema.virtual('fullname').get(function () {
-    return (this.firstname + ' ' + this.lastname).trim();
+  return (this.firstname + ' ' + this.lastname).trim();
 });
 
 userSchema.pre('save', function (next) {
-    var user = this;
+  var user = this;
 
-    if (!user.isModified('password')) return next();
+  if (!user.isModified('password')) return next();
 
-    bcrypt.hash(user.password, SALT_LENGTH, function (err, hash) {
-        if (err) return next(err);
+  return bcrypt.hash(user.password, SALT_LENGTH, (err, hash) => {
+    if (err) return next(err);
 
-        user.password = hash;
-        next();
-    });
-
+    user.password = hash;
+    return next();
+  });
 });
 
 userSchema.methods.validPassword = function (candidatePassword) {
-    return bcrypt.compareSync(candidatePassword, this.password);
+  return bcrypt.compareSync(candidatePassword, this.password);
 };
 
 userSchema.set('toJSON', {
-    virtuals: true
+  virtuals: true,
 });
 
-//userSchema.plugin(history, {diffOnly: true});
+// userSchema.plugin(history, {diffOnly: true});
 
-var User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
-//DEFAULT USER
-User.findOne({'username': 'admin'}, function (err, user) {
-    if (!user) {
-        var adminUser = new User({
-            username: 'admin',
-            password: 'heslo',
-            roles: ['admin']
-        });
-        adminUser.save();
-    }
+// DEFAULT USER
+User.findOne({ username: 'admin' }, (err, user) => {
+  if (!user) {
+    const adminUser = new User({
+      username: 'admin',
+      password: 'heslo',
+      roles: ['admin'],
+    });
+    adminUser.save();
+  }
 });
 
 

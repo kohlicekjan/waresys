@@ -1,34 +1,38 @@
-﻿var mongoose = require('mongoose');
-var history = require('mongoose-history');
+const mongoose = require('mongoose');
+// const history = require('mongoose-history');
 
-var Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-var itemSchema = new Schema({
-    name: {type: String, trim: true, minlength: 3, maxlength: 200, required: true},
-    description: {type: String, trim: true, maxlength: 2000},
-    amount: {type: Number, default: 0, min: 0, required: true}
-    // price: {
-    //     currency: {},
-    //     value: {}
-    // },
-    // weight: {type: Number, default: 0, min:0},
-    // dimensions: {
-    //     x: {type: Number, default: 0, min:0},
-    //     y: {type: Number, default: 0, min:0},
-    //     z: {type: Number, default: 0, min:0}
-    // }
+const itemSchema = new Schema({
+  name: {
+    type: String, trim: true, minlength: 3, maxlength: 200, required: true,
+  },
+  description: { type: String, trim: true, maxlength: 2000 },
+  amount: {
+    type: Number, default: 0, min: 0, required: true,
+  },
+  // price: {
+  //     currency: {},
+  //     value: {}
+  // },
+  // weight: {type: Number, default: 0, min:0},
+  // dimensions: {
+  //     x: {type: Number, default: 0, min:0},
+  //     y: {type: Number, default: 0, min:0},
+  //     z: {type: Number, default: 0, min:0}
+  // }
 });
 
 itemSchema.set('strict', true);
 itemSchema.set('versionKey', false);
-itemSchema.set('timestamps', {createdAt: 'created', updatedAt: 'updated'});
+itemSchema.set('timestamps', { createdAt: 'created', updatedAt: 'updated' });
 
 
 itemSchema.set('toJSON', {
-    virtuals: true
+  virtuals: true,
 });
 
-//itemSchema.plugin(history, {diffOnly: true});
+// itemSchema.plugin(history, {diffOnly: true});
 
 module.exports = mongoose.model('Item', itemSchema);
 

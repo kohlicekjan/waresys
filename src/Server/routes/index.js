@@ -1,23 +1,41 @@
-﻿var restify = require('restify');
-var Router = require('restify-router').Router;
+const restify = require('restify');
+const { Router } = require('restify-router');
 
 const router = new Router();
+const pathToSwaggerUi = require('swagger-ui-dist')
+  .absolutePath();
+const config = require('config');
 
 
-router.get('/', function (req, res, next) {
-    res.redirect('/api/docs/', next);
+function redirectToDocs(res, next) {
+  res.redirect({
+    hostname: config.host,
+    pathname: '/api/docs/',
+    port: config.port.https,
+    secure: true,
+    permanent: true,
+    query: {
+      url: '/api/v1/swagger.json',
+    },
+  }, next);
+}
+
+router.get('/', (req, res, next) => {
+  redirectToDocs(res, next);
 });
 
-router.get('/api', function (req, res, next) {
-    res.redirect('/api/docs/', next);
+router.get('/api', (req, res, next) => {
+  redirectToDocs(res, next);
 });
 
-router.get(/\/api\/docs\/*/, function (req, res, next) {
-    req.url = ('/' + req.url.split('/api/docs')[1]).replace('//', '/');
-    return restify.plugins.serveStatic({
-        directory: './public/swagger-ui',
-        default: 'index.html'
-    })(req, res, next);
+router.get('/api/docs/*', (req, res, next) => {
+  var filePath = req.params['*'];
+
+  if (req.query.url == null && ['', 'index.html'].indexOf(filePath) >= 0) {
+    redirectToDocs(res, next);
+  } else {
+    restify.plugins.serveStaticFiles(pathToSwaggerUi)(req, res, next);
+  }
 });
 
 router.add('/api/v1', require('./v1'));
