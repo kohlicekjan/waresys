@@ -1,22 +1,22 @@
 import sys
 import os
 
-__version__ = '1.0.6'
-__author__ = 'Jan Kohlicek'
+__version__ = "1.0.6"
+__author__ = "Jan Kohlicek"
 
-APP_NAME = 'reader_rfid'
-HOST = 'localhost'
+APP_NAME = "reader_rfid"
+HOST = "localhost"
 PORT = 1883
 
-#piny LED diody
-LED_PINS = {'RED': 36, 'GREEN': 38 , 'BLUE': 40}
+# piny LED diody
+LED_PINS = {"RED": 36, "GREEN": 38, "BLUE": 40}
 
-#témata zpráv
+# témata zpráv
 MQTT_TOPIC = {}
-MQTT_TOPIC['LED'] = '{0}/led'
-MQTT_TOPIC['TAG'] = '{0}/tag'
-MQTT_TOPIC['INFO'] = '{0}/info'
+MQTT_TOPIC["LED"] = "{0}/led"
+MQTT_TOPIC["TAG"] = "{0}/tag"
+MQTT_TOPIC["INFO"] = "{0}/info"
 
-#nastevení logu
-LOG_FILE = os.getenv('LOGFILE', APP_NAME + '.log')
-LOG_FORMAT = '%(asctime)s [%(levelname)s] %(message)s'
+# nastevení logu
+LOG_FILE = os.getenv("LOGFILE", APP_NAME + ".log")
+LOG_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"

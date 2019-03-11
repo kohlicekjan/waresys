@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "*"
+
+[packages]
+paho-mqtt = ">=1.4.0"
+spidev = ">=3.4"
+pi-rc522 = ">=2.2.1"
+
+[scripts]
+start = "python ./reader_rfid/"
+format = "black ./reader_rfid/"
+
+[requires]
+python_version = "3"

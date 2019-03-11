@@ -10,9 +10,9 @@ def serial_number():
     """ Vrací seriové číslo Raspbbery Pi """
     serial = None
     try:
-        f = open('/proc/cpuinfo', 'r')
+        f = open("/proc/cpuinfo", "r")
         for line in f:
-            if line[0:6] == 'Serial':
+            if line[0:6] == "Serial":
                 serial = line[10:26]
         f.close()
     except:

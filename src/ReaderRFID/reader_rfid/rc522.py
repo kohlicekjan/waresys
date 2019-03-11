@@ -12,7 +12,7 @@ class RFID(RFID):
             (error, data) = self.request()
             if not error:
 
-                if (self.undetected_num > 2):
+                if self.undetected_num > 2:
                     (error, uid) = self.anticoll()
                     if not error:
                         return uid
