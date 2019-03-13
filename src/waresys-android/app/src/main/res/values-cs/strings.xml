@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Waresys</string>
+
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Zrušit</string>
+    <string name="dialog_yes">Ano</string>
+    <string name="dialog_no">Ne</string>
+
+
+    <string name="user_role_admin">administrátor</string>
+    <string name="user_role_user">uživatel</string>
+
+    <string-array name="user_roles">
+        <item>@string/user_role_user</item>
+        <item>@string/user_role_admin</item>
+    </string-array>
+
+    <string-array name="user_roles_value">
+        <item>user</item>
+        <item>admin</item>
+    </string-array>
+
+
+    <string name="tag_type_unknown">neznámý</string>
+    <string name="tag_type_mode">režim</string>
+    <string name="tag_type_item">položka</string>
+
+    <string-array name="tag_types">
+        <item>@string/tag_type_unknown</item>
+        <item>@string/tag_type_mode</item>
+        <item>@string/tag_type_item</item>
+    </string-array>
+    <string-array name="tag_types_value">
+        <item>unknown</item>
+        <item>mode</item>
+        <item>item</item>
+    </string-array>
+
+
+    <string name="device_status_unknown">neznámý</string>
+    <string name="device_status_active">aktivní</string>
+    <string name="device_status_inactive">neaktivní</string>
+    <string name="device_status_error">chyba</string>
+
+    <string-array name="device_statuses">
+        <item>@string/device_status_unknown</item>
+        <item>@string/device_status_active</item>
+        <item>@string/device_status_inactive</item>
+        <item>@string/device_status_error</item>
+    </string-array>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_items">Položky</string>
+    <string name="nav_tags">Tagy</string>
+    <string name="nav_devices">Zařízení</string>
+    <string name="nav_users">Uživatelé</string>
+    <string name="nav_tag_reader">Čtečka</string>
+    <string name="nav_account">Účet</string>
+    <string name="nav_about">O aplikaci</string>
+
+    <string name="action_login">Přihlásit se</string>
+    <string name="action_logout">Odhlásit se</string>
+    <string name="action_change_password">Změnit heslo</string>
+    <string name="action_save">Uložit</string>
+    <string name="action_close">Zavřít</string>
+
+
+    <!-- LoginActivity-->
+    <string name="login_title">Přihlásit</string>
+    <string name="login_input_host">Server</string>
+    <string name="login_input_username">Uživatelské jméno</string>
+    <string name="login_input_password">Heslo</string>
+    <string name="login_loggingin">Přihlašování...</string>
+
+    <string name="login_validate_host">Zadejte adresu serveru</string>
+    <string name="login_validate_username">Zadejte uživatelské jméno</string>
+    <string name="login_validate_password">Zadejte heslo</string>
+    <string name="login_validate_auth">Uživatelské jméno nebo heslo je nesprávné</string>
+
+
+    <!-- AccountActivity-->
+    <string name="account_title">Účet</string>
+
+    <string name="account_form_fullname">Jméno a příjmení</string>
+    <string name="account_form_username">Uživatelské jméno</string>
+    <string name="account_form_roles">Práva</string>
+
+
+    <!-- PasswordActivity-->
+    <string name="password_title">Změnit heslo</string>
+    <string name="password_input_password_old">Staré heslo</string>
+    <string name="password_input_password_new">Nové heslo</string>
+    <string name="password_input_password_again">Potvrďte nové heslo</string>
+
+    <string name="password_validate_password_old">Zadejte své aktuální heslo</string>
+    <string name="password_validate_password_new">Zadejte nové heslo</string>
+    <string name="password_validate_password_again">Znovu zadejte nové heslo, obě hesla musí být shodná</string>
+
+    <string name="password_successful">Heslo změněno. Znovu se přihlašte.</string>
+
+
+    <!-- ItemListFragmnet-->
+    <string name="item_list_title">Položky</string>
+    <string name="item_list_empty">Žádné položky</string>
+
+    <!-- ItemFromActivity-->
+    <string name="item_form_title_edit">Upravit položku</string>
+    <string name="item_form_title_new">Nová položka</string>
+    <string name="item_form_input_name">Název</string>
+    <string name="item_form_input_description">Popis</string>
+    <string name="item_form_input_amount">Množství</string>
+
+    <string name="item_form_validate_name">Zadejte název položky, alespoň 3 znaky dlouhý</string>
+    <string name="item_form_validate_name_max_len">Název položky může být dlouhý maximálně 255 znaků</string>
+    <string name="item_form_validate_description_max_len">Popis položky může být dlouhý maximálně 2000 znaků</string>
+    <string name="item_form_validate_amount">Zadejte množství</string>
+
+    <!-- TagListFragmnet-->
+    <string name="tag_list_title">Tagy</string>
+    <string name="tag_list_empty">Žádné tagy</string>
+
+    <string name="card_tag_type">typ:</string>
+    <string name="card_tag_item">položka:</string>
+
+    <!-- TagFromActivity-->
+    <string name="tag_form_title_edit">Upravit tag</string>
+    <string name="tag_form_input_uid">UID</string>
+    <string name="tag_form_input_type">Typ</string>
+    <string name="tag_form_input_item">Položka</string>
+    <string name="tag_form_input_item_suggest">Vyhledat položku...</string>
+    <string name="tag_form_input_item_empty">Položka nenalezena</string>
+    <string name="tag_form_validate_item">Vyhledejte položku</string>
+
+
+    <!-- TagReaderActivity-->
+    <string name="tag_reader_title">Waresys čtečka</string>
+    <string name="tag_reader_wait_tag">Přiložte tag</string>
+    <string name="tag_reader_label_item">Položka</string>
+    <string name="tag_reader_label_tag">Tag</string>
+
+    <string name="tag_reader_nfc_no_support">Toto zařízení nepodporuje NFC.</string>
+    <string name="tag_reader_nfc_disabled">NFC je vypnuto.</string>
+    <string name="tag_reader_nfc_enabled">Zapnout</string>
+    <string name="tag_reader_nfc_not_login">Nejste přihlášen.</string>
+
+
+    <!-- DeviceListFragmnet-->
+    <string name="device_list_title">Zařízení</string>
+    <string name="device_list_empty">Žádné zařízení</string>
+    <string name="device_list_allowed">Zařízení povoleno</string>
+    <string name="device_list_disabled">Zařízení zakázáno</string>
+
+    <string name="device_list_context_menu_disabled">Zakázat</string>
+    <string name="device_list_context_menu_enabled">Povolit</string>
+
+    <string name="card_device_version">verze:</string>
+    <string name="card_device_status">stav:</string>
+    <string name="card_device_serial_number">sériové číslo:</string>
+    <string name="card_device_ip_address">IP adresa:</string>
+
+
+    <!-- UserListFragmnet-->
+    <string name="user_list_title">Uživatelé</string>
+    <string name="user_list_empty">Žádní uživatelé</string>
+
+    <string name="card_user_roles">práva:</string>
+
+
+    <!-- UserFormActivity-->
+    <string name="user_form_title_edit">Upravit uživatele</string>
+    <string name="user_form_title_new">Nový uživatel</string>
+
+    <string name="user_form_input_username">Uživatelské jméno</string>
+    <string name="user_form_input_password">Heslo</string>
+    <string name="user_form_input_firstname">Jméno</string>
+    <string name="user_form_input_lastname">Příjmení</string>
+    <string name="user_form_input_roles">Práva</string>
+
+    <string name="user_form_validate_username">Zadejte uživatelské jméno, alespoň 3 znaky dlouhé</string>
+    <string name="user_form_validate_username_max_len">Uživatelské jméno může být dlouhé maximálně 20 znaků</string>
+    <string name="user_form_validate_password">Zadejte heslo</string>
+
+
+    <string name="dialog_message_delete">Záznam bude smazán.</string>
+
+    <string name="context_menu_edit">Upravit</string>
+    <string name="context_menu_delete">Smazat</string>
+
+
+    <string name="form_saving">Ukládání...</string>
+    <string name="form_saved">Uloženo</string>
+    <string name="form_deleted">Smazáno</string>
+
+    <string name="timestamp_created">vytvořeno:</string>
+    <string name="timestamp_updated">změněno:</string>
+
+    <string name="request_unauthorized">Chybné přihlašovací údaje. Přihlašte se znovu.</string>
+    <string name="request_forbidden">Pro tuto akci nemáte práva.</string>
+    <string name="request_notfound">Záznam nebyl nalezen.</string>
+    <string name="request_error">Na serveru nastala neočekávaná chyba.</string>
+
+    <string name="no_connection_message">Připojení se nezdařilo...</string>
+    <string name="no_connection_repeat">Opakovat</string>
+    <string name="no_connection_server">Nepodařilo se připojit k serveru.</string>
+    <string name="no_connection_internet">Připojte se k internetu.</string>
+
+
+    <string name="about"><![CDATA[
+        <b>verze %1$s</b>
+        <p>Tato aplikace slouží pro správu skladového hospodářství Waresys. Díky této aplikaci budete online sledovat položky, přírůstky a úbytky ve skladu, spravovat zařízení a také nastavovat tagy.</p>
+        <b>Autor:</b> Jan Kohlíček
+        ]]>
+    </string>
+
+
+</resources>
