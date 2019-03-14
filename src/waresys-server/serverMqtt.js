@@ -106,7 +106,7 @@ module.exports.start = () => {
     serverMqtt.authorizePublish = authorizePublish;
     serverMqtt.authorizeSubscribe = authorizeSubscribe;
 
-    logger.info('%s MQTT v%s listening at %s:%s in %s', config.name, config.version, config.host, config.port.mqtt, process.env.NODE_ENV);
+    logger.info('%s MQTT v%s listening at mqtt://%s:%s in %s', config.name, config.version, config.host, config.port.mqtt, process.env.NODE_ENV);
   });
 
   serverMqtt.on('error', (err) => {
