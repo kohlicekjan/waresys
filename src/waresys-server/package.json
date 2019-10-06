@@ -8,7 +8,9 @@
     "start:dev": "SET NODE_ENV=development&& node index.js",
     "test": "mocha",
     "eslint": "eslint ./ & exit 0",
-    "eslint:fix": "eslint ./ --fix & exit 0"
+    "eslint:fix": "eslint ./ --fix & exit 0",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -37,7 +39,8 @@
     "restify-errors": "^6.1.1",
     "restify-router": "^0.5.1",
     "swagger-jsdoc": "^3.2.7",
-    "swagger-ui-dist": "^3.21.0"
+    "swagger-ui-dist": "^3.21.0",
+    "snyk": "^1.231.0"
   },
   "devDependencies": {
     "eslint": "^5.15.1",
@@ -45,5 +48,6 @@
     "eslint-plugin-import": "^2.16.0",
     "faker": "^4.1.0",
     "newman": "^4.4.0"
-  }
+  },
+  "snyk": true
 }
