@@ -22,7 +22,7 @@
   "homepage": "https://github.com/kohlicekjan/waresys#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "bunyan": "^1.8.12",
+    "bunyan": "^1.8.13",
     "bunyan-format": "^0.2.1",
     "config": "^3.0.1",
     "mkdirp": "^0.5.1",
